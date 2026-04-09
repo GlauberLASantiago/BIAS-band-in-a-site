@@ -97,11 +97,12 @@
         <!-- Header -->
         <header class="flex flex-col sm:flex-row items-center justify-between pt-6">
             <div class="text-center sm:text-left">
-                <h1 class="text-4xl sm:text-5xl font-bold flex items-center justify-center sm:justify-start gap-2 text-brand-charcoal dark:text-white mb-2">
-                    <i class="fas fa-guitar text-brand-purple"></i> BIAS: Band-in-a-Site
+                <h1 class="text-4xl sm:text-5xl font-bold flex items-center justify-center sm:justify-start gap-3 text-brand-charcoal dark:text-white mb-2">
+                    <span class="bg-brand-purple text-white rounded-xl px-3 py-1.5 text-3xl sm:text-4xl font-black tracking-tighter shadow-sm leading-none flex items-center justify-center">GL</span>
+                    BIAS: Band-in-a-Site
                 </h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-1 font-medium tracking-wide">
-                    Sincronização, BPM Flexível e Reverb
+                    Escolha seus acordes e ouça a sequência. Na cifragem: 9 significa um acorde com sétima (menor) e nona; e dim7 é uma tétrade diminuta.
                 </p>
             </div>
             <div class="mt-6 sm:mt-0">
@@ -120,29 +121,10 @@
                 
                 <div>
                     <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-plus-circle mr-2 text-brand-purple"></i>Montar Acorde</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Ajuste a duração, selecione a nota fundamental e clique no tipo para adicionar à música.</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Selecione a nota fundamental e clique no tipo para adicionar à música.</p>
                 </div>
 
-                <!-- 1. DURAÇÃO -->
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Duração do Acorde</label>
-                    <div class="flex gap-3 bg-brand-ghost dark:bg-gray-700/50 p-2 rounded-full border border-brand-lavmist dark:border-gray-600 w-full sm:w-fit">
-                        <label class="flex-1 sm:flex-none cursor-pointer group">
-                            <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
-                            <div class="px-6 py-2.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all">
-                                Inteiro (4T)
-                            </div>
-                        </label>
-                        <label class="flex-1 sm:flex-none cursor-pointer group">
-                            <input type="radio" name="chord-duration" value="2" class="peer hidden">
-                            <div class="px-6 py-2.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all">
-                                Metade (2T)
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 2. QUALIDADES -->
+                <!-- 1. QUALIDADES -->
                 <div class="flex flex-col gap-3">
                     <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Tipo (Clique para Adicionar)</label>
                     <div id="quality-palette" class="grid grid-cols-3 sm:grid-cols-6 gap-3">
@@ -150,7 +132,7 @@
                     </div>
                 </div>
 
-                <!-- 3. TOM -->
+                <!-- 2. TOM -->
                 <div class="flex flex-col gap-3">
                     <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Fundamental</label>
                     <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x">
@@ -162,12 +144,31 @@
             <!-- Área da Sequência -->
             <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-6 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
                 
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-2 text-brand-purple"></i>Sua Sequência</h2>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-2 text-brand-purple"></i>Sua Sequência</h2>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
+                        </div>
+                        
+                        <!-- DURAÇÃO MOVIDA PARA CÁ -->
+                        <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
+                            <label class="cursor-pointer group mb-0">
+                                <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
+                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">
+                                    Inteiro (4T)
+                                </div>
+                            </label>
+                            <label class="cursor-pointer group mb-0">
+                                <input type="radio" name="chord-duration" value="2" class="peer hidden">
+                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">
+                                    Metade (2T)
+                                </div>
+                            </label>
+                        </div>
                     </div>
-                    <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2">
+                    
+                    <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 shrink-0">
                         <i class="fas fa-trash"></i> Limpar Tudo
                     </button>
                 </div>
@@ -277,19 +278,19 @@
             NATIVE_BPM: 130,
             BEATS_PER_MEASURE: 4,
 
-            ROOT_NOTES: [
-                { label: "C", display: "C", filePrefix: "c" },
-                { label: "C# / Db", display: "C#", filePrefix: "cs" },
-                { label: "D", display: "D", filePrefix: "d" },
-                { label: "D# / Eb", display: "Eb", filePrefix: "ds" },
-                { label: "E", display: "E", filePrefix: "e" },
-                { label: "F", display: "F", filePrefix: "f" },
-                { label: "F# / Gb", display: "F#", filePrefix: "fs" },
-                { label: "G", display: "G", filePrefix: "g" },
-                { label: "G# / Ab", display: "Ab", filePrefix: "gs" },
-                { label: "A", display: "A", filePrefix: "a" },
-                { label: "A# / Bb", display: "Bb", filePrefix: "as" },
-                { label: "B", display: "B", filePrefix: "b" }
+            ROOT_GROUPS: [
+                [{ display: "C", filePrefix: "c" }],
+                [{ display: "C#", filePrefix: "cs" }, { display: "Db", filePrefix: "cs" }],
+                [{ display: "D", filePrefix: "d" }],
+                [{ display: "D#", filePrefix: "ds" }, { display: "Eb", filePrefix: "ds" }],
+                [{ display: "E", filePrefix: "e" }],
+                [{ display: "F", filePrefix: "f" }],
+                [{ display: "F#", filePrefix: "fs" }, { display: "Gb", filePrefix: "fs" }],
+                [{ display: "G", filePrefix: "g" }],
+                [{ display: "G#", filePrefix: "gs" }, { display: "Ab", filePrefix: "gs" }],
+                [{ display: "A", filePrefix: "a" }],
+                [{ display: "A#", filePrefix: "as" }, { display: "Bb", filePrefix: "as" }],
+                [{ display: "B", filePrefix: "b" }]
             ],
 
             QUALITIES: [
@@ -311,7 +312,7 @@
         let objectUrl = null;            
         let isPlaying = false;
         let animationFrameId = null;
-        let selectedRootIndex = 0; 
+        let selectedRoot = CONFIG.ROOT_GROUPS[0][0]; 
         let needsConsolidation = true; 
         let editingChordId = null; 
 
@@ -346,15 +347,24 @@
             reverbSlider.addEventListener('input', updateReverbMix);
 
             const rootPalette = document.getElementById('root-palette');
-            CONFIG.ROOT_NOTES.forEach((root, index) => {
-                const btn = document.createElement('button');
-                btn.className = "root-btn snap-center flex-none min-w-[3.5rem] px-2 py-3 rounded-full font-medium transition-all text-center border-2";
-                btn.innerText = root.display;
-                btn.onclick = () => {
-                    selectedRootIndex = index;
-                    updateRootButtonsUI();
-                };
-                rootPalette.appendChild(btn);
+            CONFIG.ROOT_GROUPS.forEach((group) => {
+                const col = document.createElement('div');
+                col.className = "flex flex-col gap-2 flex-none min-w-[4rem] snap-center justify-center";
+                
+                group.forEach((root) => {
+                    const btn = document.createElement('button');
+                    // O 'flex-1' faz com que a nota única ocupe a altura total e notas divididas ocupem metade
+                    btn.className = "root-btn flex-1 px-1 py-2 sm:py-3 rounded-xl font-medium transition-all text-center border-2 text-sm sm:text-base";
+                    btn.innerText = root.display;
+                    btn.dataset.display = root.display; // Atributo para identificar o botão facilmente
+                    btn.onclick = () => {
+                        selectedRoot = root;
+                        updateRootButtonsUI();
+                    };
+                    col.appendChild(btn);
+                });
+                
+                rootPalette.appendChild(col);
             });
             updateRootButtonsUI(); 
 
@@ -365,7 +375,7 @@
                 btn.innerText = quality.label;
                 
                 btn.onclick = () => {
-                    const root = CONFIG.ROOT_NOTES[selectedRootIndex];
+                    const root = selectedRoot;
                     const chordName = root.display + quality.label;
                     const fileName = `swing130_${root.filePrefix}${quality.fileSuffix}`;
                     const beats = parseInt(document.querySelector('input[name="chord-duration"]:checked').value);
@@ -381,8 +391,8 @@
 
         function updateRootButtonsUI() {
             const buttons = document.querySelectorAll('.root-btn');
-            buttons.forEach((btn, index) => {
-                if (index === selectedRootIndex) {
+            buttons.forEach((btn) => {
+                if (btn.dataset.display === selectedRoot.display) {
                     btn.classList.add('bg-brand-purple', 'text-white', 'border-brand-purple');
                     btn.classList.remove('bg-white', 'text-brand-charcoal', 'border-brand-lavmist', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:border-gray-600');
                 } else {
