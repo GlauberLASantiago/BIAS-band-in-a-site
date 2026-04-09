@@ -88,6 +88,16 @@
 
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Modal Tabs */
+        .export-tab {
+            transition: all 0.2s;
+        }
+        .export-tab.active {
+            background-color: #B57EDC;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="bg-brand-lavmist dark:bg-gray-900 min-h-screen text-brand-charcoal dark:text-gray-200 font-sans flex flex-col transition-colors duration-200">
@@ -151,7 +161,7 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
                         </div>
                         
-                        <!-- DURAÇÃO MOVIDA PARA CÁ -->
+                        <!-- DURAÇÃO -->
                         <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
                             <label class="cursor-pointer group mb-0">
                                 <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
@@ -168,9 +178,11 @@
                         </div>
                     </div>
                     
-                    <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 shrink-0">
-                        <i class="fas fa-trash"></i> Limpar Tudo
-                    </button>
+                    <div class="flex items-center gap-3 shrink-0 flex-wrap">
+                        <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2">
+                            <i class="fas fa-trash"></i> Limpar Tudo
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Sequence Grid -->
@@ -182,13 +194,18 @@
             </div>
 
             <!-- Player & Controls (Sticky Floating Bar) -->
-            <div class="sticky bottom-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+            <div class="sticky bottom-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-lg border border-gray-200 dark:border-gray-700 z-40">
                 
-                <!-- Status & FX -->
-                <div class="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
+                <!-- Status & FX & Export -->
+                <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
                     <div id="status-text" class="text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[200px]">
                         Pronto para montar.
                     </div>
+
+                    <!-- NOVO LOCAL: Botão de Exportação/Importação -->
+                    <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2 px-4 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
+                        <i class="fas fa-file-export"></i> Dados & Exportação
+                    </button>
                     
                     <!-- REVERB -->
                     <div class="flex items-center gap-4 bg-brand-ghost dark:bg-gray-700 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-600">
@@ -215,14 +232,156 @@
                     <button id="btn-stop" disabled class="bg-red-400 hover:bg-red-500 text-white px-5 py-3 rounded-full font-bold transition-all disabled:opacity-50 flex items-center justify-center shadow-sm">
                         <i class="fas fa-stop"></i>
                     </button>
-
-                    <a id="btn-download" style="display: none;" class="bg-brand-charcoal hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 text-white px-5 py-3 rounded-full transition-all flex items-center justify-center shadow-sm" title="Baixar Áudio">
-                        <i class="fas fa-download"></i>
-                    </a>
+                    
                     <audio id="main-player" class="hidden"></audio>
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- MODAL DE EXPORTAÇÃO E DADOS -->
+    <div id="export-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-[2rem] w-full max-w-5xl shadow-2xl ring-1 ring-white/10 flex flex-col max-h-[90vh] overflow-hidden">
+            
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-700">
+                <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-save mr-2 text-brand-purple"></i>Dados & Exportação</h2>
+                <button id="close-modal" class="text-gray-400 hover:text-brand-purple dark:hover:text-brand-purple transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
+                
+                <!-- Sidebar Menu -->
+                <div class="w-full md:w-56 bg-brand-ghost dark:bg-gray-900/50 p-4 flex flex-row md:flex-col gap-2 overflow-x-auto hide-scrollbar border-r border-gray-100 dark:border-gray-700">
+                    <button class="export-tab active text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="data">
+                        <i class="fas fa-file-code w-5 text-center mr-1"></i> Projeto (.txt)
+                    </button>
+                    <!-- Nova Aba de Áudio -->
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="audio">
+                        <i class="fas fa-file-audio w-5 text-center mr-1"></i> Áudio (.wav)
+                    </button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="img">
+                        <i class="fas fa-image w-5 text-center mr-1"></i> Imagem (.png)
+                    </button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="tab">
+                        <i class="fas fa-table w-5 text-center mr-1"></i> Tabela (MD)
+                    </button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="mus">
+                        <i class="fas fa-music w-5 text-center mr-1"></i> MusicXML
+                    </button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="biab">
+                        <i class="fas fa-align-left w-5 text-center mr-1"></i> BIAB
+                    </button>
+                </div>
+                
+                <!-- View Container -->
+                <div class="flex-grow p-6 sm:p-8 overflow-y-auto flex flex-col gap-6 bg-white dark:bg-gray-800">
+                    
+                    <!-- Metadados -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Título do Trabalho</label>
+                            <input type="text" id="work-title" placeholder="Trabalho Sem Título" class="w-full bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white rounded-lg p-3 mt-1 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-brand-purple outline-none transition-shadow font-semibold">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Nome do Autor</label>
+                            <input type="text" id="author-name" placeholder="Anônimo" class="w-full bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white rounded-lg p-3 mt-1 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-brand-purple outline-none transition-shadow font-semibold">
+                        </div>
+                    </div>
+                    
+                    <hr class="border-gray-100 dark:border-gray-700">
+                    
+                    <!-- Views de Funcionalidade -->
+                    
+                    <!-- 1. DATA -->
+                    <div id="view-data" class="export-view flex flex-col gap-6">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Salve a estrutura do seu trabalho num ficheiro local para continuar a editar mais tarde. Também pode carregar um projeto existente para a tela principal.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple dark:hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
+                                <i class="fas fa-download mr-2"></i> Salvar Projeto (.txt)
+                            </button>
+                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
+                                <i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.txt)
+                            </button>
+                            <!-- Input de ficheiro oculto -->
+                            <input type="file" id="file-import-input" accept=".txt" class="hidden">
+                        </div>
+                    </div>
+
+                    <!-- 2. AUDIO -->
+                    <div id="view-audio" class="export-view hidden flex flex-col gap-6">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Exporte a sua trilha sonora já processada e em alta qualidade (WAV) para usar noutros softwares ou partilhar.
+                        </p>
+                        <div class="bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-xl border border-brand-lavmist dark:border-gray-600">
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-info-circle text-brand-purple mr-1"></i> <strong>Aviso:</strong> O botão abaixo só ficará disponível após você clicar em "Tocar" na tela principal para processar o áudio com as alterações mais recentes.
+                            </p>
+                        </div>
+                        <a id="btn-dl-audio-modal" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 pointer-events-none opacity-50 flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fas fa-file-audio"></i> Baixar Áudio (.wav)
+                        </a>
+                    </div>
+                    
+                    <!-- 3. IMAGE -->
+                    <div id="view-img" class="export-view hidden flex flex-col gap-6 h-full">
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Gera uma folha estruturada com marcação de compassos.</p>
+                            <button id="btn-dl-img" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
+                                Baixar (.png)
+                            </button>
+                        </div>
+                        <div class="flex-grow overflow-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 rounded-2xl flex items-center justify-center">
+                            <canvas id="export-canvas" class="shadow-md bg-white rounded"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. TABELA TEXTO -->
+                    <div id="view-tab" class="export-view hidden flex flex-col gap-6 h-full">
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Formato de texto simples focado na estrutura tabular (Markdown).</p>
+                            <button id="btn-dl-tab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
+                                Baixar (.md)
+                            </button>
+                        </div>
+                        <textarea id="export-tab-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none"></textarea>
+                    </div>
+
+                    <!-- 5. MUSICXML -->
+                    <div id="view-mus" class="export-view hidden flex flex-col gap-6">
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Exporte a grelha de acordes nativa em formato MusicXML 3.1. Este formato pode ser aberto e analisado nativamente em aplicações como <strong>MuseScore, Finale, Sibelius ou Dorico</strong>.
+                        </p>
+                        <div class="bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-xl border border-brand-lavmist dark:border-gray-600">
+                            <ul class="text-xs text-gray-500 dark:text-gray-400 list-disc list-inside ml-4 space-y-1">
+                                <li>A pauta terá clave de Sol e compasso 4/4.</li>
+                                <li>Os acordes aparecerão como notação harmónica (Cifras).</li>
+                            </ul>
+                        </div>
+                        <button id="btn-dl-mus" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110">
+                            <i class="fas fa-file-code mr-2"></i> Baixar MusicXML (.musicxml)
+                        </button>
+                    </div>
+
+                    <!-- 6. BIAB -->
+                    <div id="view-biab" class="export-view hidden flex flex-col gap-6 h-full">
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Exporta como string limpa para softwares Band in a Box ou sequenciadores de texto.</p>
+                            <button id="btn-dl-biab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
+                                Baixar (.txt)
+                            </button>
+                        </div>
+                        <textarea id="export-biab-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none"></textarea>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -331,7 +490,7 @@
         const mainPlayer = document.getElementById('main-player');
         const bpmInput = document.getElementById('bpm-input');
         const reverbSlider = document.getElementById('reverb-slider');
-        const btnDownload = document.getElementById('btn-download');
+        const btnDownloadAudio = document.getElementById('btn-dl-audio-modal');
 
         function initUI() {
             bpmInput.addEventListener('input', () => {
@@ -340,7 +499,7 @@
                     mainPlayer.playbackRate = newBpm / CONFIG.NATIVE_BPM;
                 }
                 if (objectUrl) {
-                    btnDownload.download = `BandInABox_${newBpm}BPM.wav`;
+                    btnDownloadAudio.download = `BandInABox_${newBpm}BPM.wav`;
                 }
             });
 
@@ -356,7 +515,7 @@
                     // O 'flex-1' faz com que a nota única ocupe a altura total e notas divididas ocupem metade
                     btn.className = "root-btn flex-1 px-1 py-2 sm:py-3 rounded-xl font-medium transition-all text-center border-2 text-sm sm:text-base";
                     btn.innerText = root.display;
-                    btn.dataset.display = root.display; // Atributo para identificar o botão facilmente
+                    btn.dataset.display = root.display; 
                     btn.onclick = () => {
                         selectedRoot = root;
                         updateRootButtonsUI();
@@ -407,6 +566,10 @@
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
             btnPlay.disabled = false;
+            
+            // Desabilita o download de áudio pois a sequência mudou
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
             if (editingChordId) {
                 const index = sequence.findIndex(c => c.id === editingChordId);
@@ -461,7 +624,7 @@
                     radio4T.disabled = false;
                     radio2T.disabled = false;
                     label4T.classList.remove('opacity-50');
-                    label2T.classList.remove('opacity-50');
+                    label4T.classList.remove('opacity-50');
                 }
             }
         }
@@ -472,6 +635,9 @@
             needsConsolidation = true;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
+            
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
             if (sequence.length > 0) {
                 btnPlay.disabled = false;
@@ -491,9 +657,11 @@
             needsConsolidation = true;
             editingChordId = null;
             btnPlay.disabled = true;
-            btnDownload.style.display = 'none';
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             mainPlayer.src = "";
+            
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
             statusText.innerHTML = "Pronto para montar.";
             statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
@@ -696,10 +864,11 @@
                 objectUrl = URL.createObjectURL(wavBlob);
                 mainPlayer.src = objectUrl;
 
-                btnDownload.href = objectUrl;
-                btnDownload.download = `BandInABox_${bpmInput.value || CONFIG.NATIVE_BPM}BPM.wav`;
-                btnDownload.style.display = 'flex';
-                
+                // Disponibiliza o botão de baixar áudio no modal
+                btnDownloadAudio.href = objectUrl;
+                btnDownloadAudio.download = `BandInABox_${bpmInput.value || CONFIG.NATIVE_BPM}BPM.wav`;
+                btnDownloadAudio.classList.remove('pointer-events-none', 'opacity-50');
+
                 statusText.innerHTML = "<i class='fas fa-check-circle'></i> Áudio Consolidado! Tocando...";
                 statusText.className = "text-sm font-medium text-brand-mint dark:text-green-400 w-full sm:w-auto text-center sm:text-left";
                 
@@ -874,6 +1043,282 @@
             }
             return new Blob([arrayBuffer], { type: 'audio/wav' });
         }
+        
+        /**
+         * ==========================================
+         * DADOS E EXPORTAÇÃO (MODAL)
+         * ==========================================
+         */
+        const exportModal = document.getElementById('export-modal');
+        const btnExport = document.getElementById('btn-export');
+        const btnCloseModal = document.getElementById('close-modal');
+        const exportTabs = document.querySelectorAll('.export-tab');
+        const exportViews = document.querySelectorAll('.export-view');
+        
+        const workTitleInput = document.getElementById('work-title');
+        const authorNameInput = document.getElementById('author-name');
+
+        // Abre modal
+        btnExport.addEventListener('click', () => {
+            exportModal.classList.remove('hidden');
+            exportModal.classList.add('flex');
+            showExportView('data'); // Padrão é mostrar a aba de Dados/Projeto
+        });
+
+        // Fecha modal
+        btnCloseModal.addEventListener('click', () => {
+            exportModal.classList.add('hidden');
+            exportModal.classList.remove('flex');
+        });
+
+        // Alterna entre abas
+        exportTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const type = e.currentTarget.getAttribute('data-type');
+                showExportView(type);
+            });
+        });
+
+        function showExportView(type) {
+            // Atualiza botões do menu lateral
+            exportTabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`.export-tab[data-type="${type}"]`).classList.add('active');
+
+            // Esconde todas as views
+            exportViews.forEach(v => {
+                v.classList.add('hidden');
+                v.classList.remove('flex');
+            });
+
+            // Mostra a view solicitada
+            const targetView = document.getElementById(`view-${type}`);
+            targetView.classList.remove('hidden');
+            targetView.classList.add('flex');
+
+            // Gatilhos específicos por view
+            if (type === 'img') {
+                generateImageExport(document.getElementById('export-canvas'));
+            } else if (type === 'tab') {
+                document.getElementById('export-tab-text').value = exportTableText();
+            } else if (type === 'biab') {
+                document.getElementById('export-biab-text').value = exportBIABText();
+            }
+        }
+
+        // Helper para nomes de ficheiros
+        function getSanitizedFilename(extension) {
+            const title = workTitleInput.value || '';
+            const sanitized = title.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'projeto_swing';
+            return `${sanitized}.${extension}`;
+        }
+
+        // Helper genérico para download local
+        function downloadContent(content, mimeType, filename) {
+            const blob = new Blob([content], { type: mimeType });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        // --- 1. PROJETO (.txt) ---
+        document.getElementById('btn-save-project').addEventListener('click', () => {
+            const content = JSON.stringify({
+                projeto: {
+                    identificacao: {
+                        titulo: workTitleInput.value,
+                        nome: authorNameInput.value
+                    },
+                    dados_harmonicos: sequence.map(item => ({
+                        label: item.name,
+                        arquivo: item.file,
+                        beats: item.beats
+                    }))
+                }
+            }, null, 2);
+            downloadContent(content, 'text/plain', getSanitizedFilename('txt'));
+        });
+
+        const fileImportInput = document.getElementById('file-import-input');
+        document.getElementById('btn-open-project').addEventListener('click', () => {
+            fileImportInput.click();
+        });
+
+        fileImportInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const data = JSON.parse(text);
+
+                // Suporta o formato legado e o novo formato
+                const info = data.projeto || data;
+                const acordes = info.dados_harmonicos || info.sequence || [];
+
+                workTitleInput.value = info.identificacao?.titulo || info.title || "";
+                authorNameInput.value = info.identificacao?.nome || info.author || "";
+
+                sequence = acordes.map(item => ({
+                    id: Date.now() + Math.random(),
+                    name: item.label || item.name,
+                    file: item.arquivo || item.file,
+                    beats: item.beats || 4
+                }));
+                
+                needsConsolidation = true;
+                if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+                mainPlayer.src = "";
+                
+                statusText.innerHTML = "Projeto carregado com sucesso. <span class='text-brand-purple'>Clique em Tocar.</span>";
+                renderSequence();
+                
+                // Fecha o modal após carregar
+                exportModal.classList.add('hidden');
+                exportModal.classList.remove('flex');
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao ler o ficheiro do projeto.");
+            }
+            e.target.value = '';
+        });
+
+        // --- 2. IMAGEM (.png) ---
+        function generateImageExport(canvas) {
+            const ctx = canvas.getContext('2d');
+            const cols = 8;
+            // Se estiver vazio, gera 1 linha pelo menos
+            const rows = Math.max(1, Math.ceil(sequence.length / cols));
+            const mWidth = 140;
+            const mHeight = 40;
+            const padding = 20;
+
+            canvas.width = (cols * mWidth) + (padding * 2);
+            canvas.height = 90 + (rows * mHeight) + padding;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const title = workTitleInput.value || 'Trabalho Sem Título';
+            const author = authorNameInput.value || 'Anônimo';
+
+            ctx.fillStyle = '#B57EDC'; // brand-purple
+            ctx.font = 'bold 24px sans-serif';
+            ctx.fillText(title, padding, padding + 25);
+
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText(`Autor: ${author}`, padding, padding + 45);
+
+            sequence.forEach((item, i) => {
+                const x = padding + (i % cols) * mWidth;
+                const y = padding + 70 + Math.floor(i / cols) * mHeight;
+
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.strokeRect(x, y, mWidth - 4, mHeight - 4);
+
+                // Barra indicadora colorida baseada na métrica
+                ctx.fillStyle = item.beats === 4 ? '#B57EDC' : '#70E0A6';
+                ctx.fillRect(x + mWidth - 7, y, 3, mHeight - 4);
+
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = 'bold 16px monospace';
+                ctx.fillText(String(i + 1), x + 3, y + 15);
+
+                ctx.fillStyle = '#1e293b';
+                ctx.font = 'bold 13px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(item.name, x + (mWidth / 2) - 3, y + (mHeight / 2) + 4);
+                ctx.textAlign = 'start';
+            });
+        }
+
+        document.getElementById('btn-dl-img').addEventListener('click', () => {
+            const canvas = document.getElementById('export-canvas');
+            const dataUrl = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = getSanitizedFilename('png');
+            a.click();
+        });
+
+        // --- 3. TABELA (Markdown) ---
+        function exportTableText() {
+            const title = workTitleInput.value || 'Trabalho Sem Título';
+            let text = `// TRABALHO: ${title}\n| Compasso | Acorde |\n|-----------|---------|\n`;
+            sequence.forEach((item, index) => {
+                text += `| ${index + 1} | ${item.name} |\n`;
+            });
+            return text;
+        }
+
+        document.getElementById('btn-dl-tab').addEventListener('click', () => {
+            downloadContent(document.getElementById('export-tab-text').value, 'text/plain', getSanitizedFilename('md'));
+        });
+
+        // --- 4. MUSICXML ---
+        function exportMusicXML() {
+            const title = workTitleInput.value || 'Swing Harmony';
+            const author = authorNameInput.value || 'Aluno';
+            let xml = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">\n<score-partwise version="3.1">\n  <work><work-title>${title}</work-title></work>\n  <identification><creator type="composer">${author}</creator></identification>\n  <part-list><score-part id="P1"><part-name>Piano</part-name></score-part></part-list>\n  <part id="P1">\n`;
+
+            sequence.forEach((item, i) => {
+                const match = item.name.match(/^([A-G][#b]?)(.*)$/);
+                if (!match) return;
+
+                const rootStr = match[1];
+                const type = match[2];
+
+                const step = rootStr.charAt(0).toUpperCase();
+                const alter = rootStr.includes('#') ? '1' : rootStr.includes('b') ? '-1' : '0';
+
+                let kind = 'major';
+                let kindText = type;
+
+                if (type === 'maj7') kind = 'major-seventh';
+                else if (type === '9') kind = 'dominant-ninth';
+                else if (type === '7b9') {
+                    kind = 'dominant';
+                    kindText = '7(b9)';
+                } else if (type === 'm7b5') {
+                    kind = 'half-diminished';
+                    kindText = 'm7(b5)';
+                } else if (type === 'm7') {
+                    kind = 'minor-seventh';
+                } else if (type === 'dim7') {
+                    kind = 'diminished-seventh';
+                }
+
+                xml += `    <measure number="${i + 1}">\n`;
+                if (i === 0) {
+                    xml += `      <attributes><divisions>1</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>\n`;
+                }
+
+                xml += `      <harmony><root><root-step>${step}</root-step>${alter !== '0' ? `<root-alter>${alter}</root-alter>` : ''}</root><kind text="${kindText}">${kind}</kind></harmony>\n      <note><rest/><duration>4</duration><type>whole</type></note>\n    </measure>\n`;
+            });
+
+            xml += `  </part>\n</score-partwise>`;
+            return xml;
+        }
+
+        document.getElementById('btn-dl-mus').addEventListener('click', () => {
+            downloadContent(exportMusicXML(), 'text/xml', getSanitizedFilename('musicxml'));
+        });
+
+        // --- 5. BIAB ---
+        function exportBIABText() {
+            const title = workTitleInput.value || 'Trabalho Sem Título';
+            let biab = `// TRABALHO: ${title}\n[Song]\n[Chords]\n|:a) `;
+            sequence.forEach(item => {
+                biab += item.name.replace(/\(|\)/g, '') + '| ';
+            });
+            return biab.trim() + '\n[ChordsEnd]\n[SongEnd]';
+        }
+
+        document.getElementById('btn-dl-biab').addEventListener('click', () => {
+            downloadContent(document.getElementById('export-biab-text').value, 'text/plain', getSanitizedFilename('txt'));
+        });
 
         window.onload = initUI;
     </script>
