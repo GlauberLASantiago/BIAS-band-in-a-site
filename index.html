@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Band in a Box - TocaSwing130</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .chord-block { transition: all 0.1s ease; }
+        .chord-block.active {
+            transform: scale(1.05);
+            background-color: #3b82f6;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+        .loading-spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Estilo do Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px; width: 16px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+        /* Oculta scrollbar da fileira unica mas permite rolagem */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 font-sans flex flex-col">
+
+    <div class="max-w-6xl mx-auto p-4 sm:p-8 flex-grow w-full">
+        
+        <!-- Header -->
+        <header class="mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
+                    <i class="fas fa-guitar text-blue-600"></i> Web Band in a Box
+                </h1>
+                <p class="text-gray-500 mt-1">Sincronização, BPM Flexível e Reverb</p>
+            </div>
+            <div class="mt-4 sm:mt-0 flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+                <label for="bpm-input">Andamento (BPM):</label>
+                <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-16 bg-white border border-blue-300 rounded px-1 text-center focus:outline-none focus:ring focus:ring-blue-200 text-black">
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Painel de Acordes (Lado Esquerdo, ocupa 4 colunas) -->
+            <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-6">
+                
+                <div>
+                    <h2 class="text-xl font-bold mb-2 border-b pb-2"><i class="fas fa-plus-circle mr-2"></i>Montar Acorde</h2>
+                    <p class="text-xs text-gray-500 mb-4">Ajuste a duração, selecione a nota fundamental e clique no tipo para adicionar à música.</p>
+                </div>
+
+                <!-- 1. DURAÇÃO NO COMPASSO -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">1. Duração do Acorde</label>
+                    <div class="flex gap-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="chord-duration" value="4" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium">Inteiro (4T)</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="chord-duration" value="2" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm font-medium">Metade (2T)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 2. QUALIDADES (Acima da Fundamental conforme pedido) -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">2. Tipo (Clique para Adicionar)</label>
+                    <div id="quality-palette" class="grid grid-cols-3 gap-2">
+                        <!-- Buttons populated by JS -->
+                    </div>
+                </div>
+
+                <!-- 3. TOM (Fundamental em fileira única abaixo da qualidade) -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">3. Tom (Fundamental)</label>
+                    <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-2 pb-2 snap-x">
+                        <!-- Buttons populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área da Sequência e Player (Lado Direito, ocupa 8 colunas) -->
+            <div class="lg:col-span-8 bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-xl font-bold"><i class="fas fa-music mr-2"></i>Sua Sequência</h2>
+                    <button id="btn-clear" class="text-red-500 hover:text-red-700 text-sm font-semibold transition">
+                        <i class="fas fa-trash"></i> Limpar Tudo
+                    </button>
+                </div>
+
+                <!-- Timeline de Acordes: Grade fixa com 8 frações. (4 compassos por linha) -->
+                <!-- col-span-2 = Compasso Inteiro | col-span-1 = Meio Compasso -->
+                <div id="sequence-container" class="flex-grow bg-gray-50 rounded-lg p-4 mb-6 border border-gray-300 min-h-[200px] grid grid-cols-8 gap-x-2 gap-y-3 content-start">
+                    <div class="col-span-8 text-center text-gray-400 mt-12" id="empty-state">
+                        Sua música está vazia. Comece a montar no painel ao lado.
+                    </div>
+                </div>
+
+                <!-- Controles do Player -->
+                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        
+                        <!-- Status & Efeitos -->
+                        <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                            <div id="status-text" class="text-sm font-medium text-gray-600 text-center sm:text-left">
+                                Pronto para montar.
+                            </div>
+                            
+                            <!-- SLIDER DE REVERB -->
+                            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md border border-gray-300 shadow-sm">
+                                <label for="reverb-slider" class="text-xs font-bold text-gray-500 uppercase tracking-wider"><i class="fas fa-water"></i> Reverb</label>
+                                <input type="range" id="reverb-slider" min="0" max="100" value="15" class="w-24">
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button id="btn-consolidate" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-cogs"></i> Consolidar Áudio
+                            </button>
+                            
+                            <button id="btn-play" disabled class="flex-1 sm:flex-none bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-play"></i> Tocar
+                            </button>
+
+                            <button id="btn-stop" disabled class="flex-1 sm:flex-none bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-lg font-bold transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fas fa-stop"></i>
+                            </button>
+
+                            <a id="btn-download" style="display: none;" class="flex-1 sm:flex-none bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-bold transition flex items-center justify-center" title="Transferir Base">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <audio id="main-player" class="hidden"></audio>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- RODAPÉ COM CRÉDITOS -->
+    <footer class="bg-white border-t border-gray-200 mt-auto py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-gray-600 font-medium">Desenvolvido com <i class="fas fa-heart text-red-500"></i> para o projeto <strong>TocaSwing130</strong></p>
+            <p class="text-sm text-gray-500 mt-1">
+                Áudios e concepção por <a href="https://github.com/GlauberLASantiago" target="_blank" class="text-blue-600 hover:underline font-bold">Glauber Santiago</a>.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * ==========================================
+         * CONFIGURAÇÕES
+         * ==========================================
+         */
+        const CONFIG = {
+            REPO_BASE_URL: "https://glauberlasantiago.github.io/TocaSwing130/",
+            FILE_EXTENSION: ".mp3", 
+            NATIVE_BPM: 130,
+            BEATS_PER_MEASURE: 4,
+
+            ROOT_NOTES: [
+                { label: "C", display: "C", filePrefix: "c" },
+                { label: "C# / Db", display: "C#", filePrefix: "cs" },
+                { label: "D", display: "D", filePrefix: "d" },
+                { label: "D# / Eb", display: "Eb", filePrefix: "ds" },
+                { label: "E", display: "E", filePrefix: "e" },
+                { label: "F", display: "F", filePrefix: "f" },
+                { label: "F# / Gb", display: "F#", filePrefix: "fs" },
+                { label: "G", display: "G", filePrefix: "g" },
+                { label: "G# / Ab", display: "Ab", filePrefix: "gs" },
+                { label: "A", display: "A", filePrefix: "a" },
+                { label: "A# / Bb", display: "Bb", filePrefix: "as" },
+                { label: "B", display: "B", filePrefix: "b" }
+            ],
+
+            QUALITIES: [
+                { label: "maj7", fileSuffix: "maj7" },
+                { label: "9", fileSuffix: "9" },
+                { label: "7b9", fileSuffix: "7b9" },
+                { label: "m7", fileSuffix: "m7" },
+                { label: "m7b5", fileSuffix: "m7b5" },
+                { label: "dim7", fileSuffix: "dim7" }
+            ]
+        };
+
+        const NATIVE_MEASURE_DURATION = (60 / CONFIG.NATIVE_BPM) * CONFIG.BEATS_PER_MEASURE;
+
+        /**
+         * ==========================================
+         * ESTADO DA APLICAÇÃO
+         * ==========================================
+         */
+        let audioContext = null;         
+        let sequence = [];               
+        let audioCache = new Map();      
+        let consolidatedBuffer = null;   
+        let objectUrl = null;            
+        let isPlaying = false;
+        let animationFrameId = null;
+        let selectedRootIndex = 0; // Guarda qual fundamental está selecionada
+
+        // NÓS DE ÁUDIO
+        let isRoutingSetup = false;
+        let mediaElementSource = null;
+        let dryGainNode = null;
+        let wetGainNode = null;
+        let convolverNode = null;
+
+        // Elementos da UI
+        const sequenceContainer = document.getElementById('sequence-container');
+        const emptyState = document.getElementById('empty-state');
+        const btnConsolidate = document.getElementById('btn-consolidate');
+        const btnPlay = document.getElementById('btn-play');
+        const btnStop = document.getElementById('btn-stop');
+        const btnClear = document.getElementById('btn-clear');
+        const statusText = document.getElementById('status-text');
+        const mainPlayer = document.getElementById('main-player');
+        const bpmInput = document.getElementById('bpm-input');
+        const reverbSlider = document.getElementById('reverb-slider');
+        const btnDownload = document.getElementById('btn-download');
+
+        /**
+         * ==========================================
+         * INICIALIZAÇÃO DA INTERFACE
+         * ==========================================
+         */
+        function initUI() {
+            bpmInput.addEventListener('input', () => {
+                const newBpm = parseFloat(bpmInput.value);
+                if (newBpm && newBpm > 0 && isPlaying) {
+                    mainPlayer.playbackRate = newBpm / CONFIG.NATIVE_BPM;
+                }
+                if (objectUrl) {
+                    btnDownload.download = `BandInABox_${newBpm}BPM.wav`;
+                }
+            });
+
+            reverbSlider.addEventListener('input', updateReverbMix);
+
+            // 1. Popular Botões de Tons (Raiz) - Fileira Única Horizontal
+            const rootPalette = document.getElementById('root-palette');
+            CONFIG.ROOT_NOTES.forEach((root, index) => {
+                const btn = document.createElement('button');
+                btn.className = "root-btn snap-center flex-none min-w-[3.5rem] px-2 py-3 rounded-lg shadow-sm font-bold border-2 transition text-center";
+                btn.innerText = root.display;
+                btn.onclick = () => {
+                    selectedRootIndex = index;
+                    updateRootButtonsUI();
+                };
+                rootPalette.appendChild(btn);
+            });
+            updateRootButtonsUI(); // Aplica a cor no selecionado padrão (Dó)
+
+            // 2. Popular Botões de Qualidade (Aciona a adição à música)
+            const qualityPalette = document.getElementById('quality-palette');
+            CONFIG.QUALITIES.forEach(quality => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-indigo-100 hover:border-indigo-500 hover:bg-indigo-50 text-indigo-900 font-bold py-3 rounded-lg shadow-sm transition text-sm sm:text-base";
+                btn.innerText = quality.label;
+                
+                btn.onclick = () => {
+                    const root = CONFIG.ROOT_NOTES[selectedRootIndex];
+                    const chordName = root.display + quality.label;
+                    const fileName = `swing130_${root.filePrefix}${quality.fileSuffix}`;
+                    
+                    const beats = parseInt(document.querySelector('input[name="chord-duration"]:checked').value);
+                    
+                    addChordToSequence({ name: chordName, file: fileName, beats: beats });
+                };
+                qualityPalette.appendChild(btn);
+            });
+
+            btnConsolidate.onclick = handleConsolidate;
+            btnPlay.onclick = togglePlay;
+            btnStop.onclick = stopAudio;
+            btnClear.onclick = clearSequence;
+        }
+
+        // Atualiza o visual da fileira de botões de notas fundamentais
+        function updateRootButtonsUI() {
+            const buttons = document.querySelectorAll('.root-btn');
+            buttons.forEach((btn, index) => {
+                if (index === selectedRootIndex) {
+                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200', 'hover:border-blue-400');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200', 'hover:border-blue-400');
+                }
+            });
+        }
+
+        function addChordToSequence(chord) {
+            consolidatedBuffer = null;
+            btnPlay.disabled = true;
+            statusText.innerHTML = "Sequência alterada. Clique em Consolidar.";
+            statusText.className = "text-sm font-medium text-orange-600 w-full sm:w-auto text-center sm:text-left";
+
+            const id = Date.now() + Math.random();
+            sequence.push({ ...chord, id: id });
+            renderSequence();
+        }
+
+        function removeChord(id) {
+            sequence = sequence.filter(c => c.id !== id);
+            consolidatedBuffer = null;
+            btnPlay.disabled = true;
+            statusText.innerHTML = "Sequência alterada. Clique em Consolidar.";
+            renderSequence();
+        }
+
+        function clearSequence() {
+            sequence = [];
+            consolidatedBuffer = null;
+            btnPlay.disabled = true;
+            btnDownload.style.display = 'none';
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            mainPlayer.src = "";
+            
+            statusText.innerHTML = "Pronto para montar.";
+            statusText.className = "text-sm font-medium text-gray-600 w-full sm:w-auto text-center sm:text-left";
+            stopAudio();
+            renderSequence();
+        }
+
+        function renderSequence() {
+            Array.from(sequenceContainer.children).forEach(child => {
+                if (child.id !== 'empty-state') child.remove();
+            });
+
+            if (sequence.length === 0) {
+                emptyState.style.display = 'block';
+                btnConsolidate.disabled = true;
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            btnConsolidate.disabled = false;
+
+            sequence.forEach((chord, index) => {
+                const el = document.createElement('div');
+                
+                // MÁGICA DA GRADE:
+                // Se o acorde tiver 4 tempos (compasso inteiro), ele ocupa 2 colunas da grade (col-span-2)
+                // Se tiver 2 tempos (meio compasso), ele ocupa 1 coluna da grade (col-span-1)
+                // Como a grade tem 8 colunas no total, sempre caberão 4 compassos inteiros por linha!
+                const gridSpanClass = chord.beats === 4 ? 'col-span-2' : 'col-span-1';
+                
+                // Estilos visuais para diferenciar meio compasso de compasso inteiro
+                const styleClass = chord.beats === 2 ? 'bg-indigo-50 border-dashed border-indigo-300 text-sm' : 'bg-white border-solid border-gray-300 text-lg';
+                
+                el.className = `chord-block relative border-2 rounded-lg h-16 flex items-center justify-center font-bold cursor-pointer group ${gridSpanClass} ${styleClass}`;
+                el.id = `seq-${index}`;
+                el.innerText = chord.name;
+                
+                // Indicador visual
+                const durationLabel = document.createElement('div');
+                durationLabel.className = "absolute bottom-0 right-1 text-[9px] text-gray-400 font-normal uppercase";
+                durationLabel.innerText = chord.beats === 4 ? "4T" : "2T";
+                el.appendChild(durationLabel);
+
+                const delBtn = document.createElement('div');
+                delBtn.className = "absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow-md z-10";
+                delBtn.innerHTML = '<i class="fas fa-times"></i>';
+                delBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeChord(chord.id);
+                };
+                
+                el.appendChild(delBtn);
+                sequenceContainer.appendChild(el);
+            });
+        }
+
+        /**
+         * ==========================================
+         * MOTOR DE ÁUDIO E CONSOLIDAÇÃO
+         * ==========================================
+         */
+        function getAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            return audioContext;
+        }
+
+        async function fetchAudioBuffer(chord) {
+            const ctx = getAudioContext();
+            const cacheKey = chord.name;
+            if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
+
+            const url = `${CONFIG.REPO_BASE_URL}${chord.file}${CONFIG.FILE_EXTENSION}`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+                audioCache.set(cacheKey, audioBuffer);
+                return audioBuffer;
+            } catch (error) {
+                console.warn(`Erro ao carregar ${url}. Gerando fallback.`);
+                const synthBuffer = await createFallbackSynth(chord.name, ctx);
+                audioCache.set(cacheKey, synthBuffer);
+                return synthBuffer;
+            }
+        }
+
+        async function createFallbackSynth(chordName, ctx) {
+            const offlineCtx = new OfflineAudioContext(1, ctx.sampleRate * NATIVE_MEASURE_DURATION, ctx.sampleRate);
+            let rootFreq = 220; 
+            const charCode = chordName.charCodeAt(0);
+            if(charCode >= 65 && charCode <= 71) { 
+                const offsets = { 'C': -9, 'D': -7, 'E': -5, 'F': -4, 'G': -2, 'A': 0, 'B': 2 };
+                let semitones = offsets[chordName[0]];
+                if (chordName.includes('#')) semitones += 1;
+                if (chordName.includes('b') && !chordName.includes('b5') && !chordName.includes('b9')) semitones -= 1;
+                rootFreq = 220 * Math.pow(2, semitones / 12);
+            }
+            const isMinor = chordName.includes('m');
+            const freqs = [rootFreq, rootFreq * (isMinor ? 1.189 : 1.25), rootFreq * 1.5]; 
+            
+            freqs.forEach(freq => {
+                const osc = offlineCtx.createOscillator();
+                const gain = offlineCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0, offlineCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.15, offlineCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.15, offlineCtx.currentTime + NATIVE_MEASURE_DURATION - 0.1);
+                gain.gain.linearRampToValueAtTime(0, offlineCtx.currentTime + NATIVE_MEASURE_DURATION);
+                osc.connect(gain);
+                gain.connect(offlineCtx.destination);
+                osc.start(0);
+                osc.stop(NATIVE_MEASURE_DURATION);
+            });
+            return await offlineCtx.startRendering();
+        }
+
+        async function handleConsolidate() {
+            if (sequence.length === 0) return;
+            const ctx = getAudioContext();
+            btnConsolidate.disabled = true;
+            btnConsolidate.innerHTML = '<span class="loading-spinner"></span> A Consolidar...';
+            statusText.innerHTML = "A processar áudios na memória...";
+            statusText.className = "text-sm font-medium text-blue-600 w-full sm:w-auto text-center sm:text-left";
+
+            try {
+                const NATIVE_BEAT_DURATION = 60 / CONFIG.NATIVE_BPM;
+                let totalDuration = sequence.reduce((acc, chord) => acc + (chord.beats * NATIVE_BEAT_DURATION), 0);
+                totalDuration += 2.0; // Cauda do reverb
+                
+                const offlineCtx = new OfflineAudioContext(2, ctx.sampleRate * totalDuration, ctx.sampleRate);
+                let currentStartTime = 0;
+
+                for (let i = 0; i < sequence.length; i++) {
+                    const chord = sequence[i];
+                    const durationSecs = chord.beats * NATIVE_BEAT_DURATION;
+                    const buffer = await fetchAudioBuffer(chord);
+                    
+                    const source = offlineCtx.createBufferSource();
+                    source.buffer = buffer;
+                    
+                    const fadeGain = offlineCtx.createGain();
+                    fadeGain.gain.setValueAtTime(1, currentStartTime);
+                    fadeGain.gain.setValueAtTime(1, Math.max(currentStartTime, currentStartTime + durationSecs - 0.02));
+                    fadeGain.gain.linearRampToValueAtTime(0, currentStartTime + durationSecs); 
+
+                    source.connect(fadeGain);
+                    fadeGain.connect(offlineCtx.destination);
+                    
+                    source.start(currentStartTime, 0, durationSecs);
+                    
+                    chord.startTime = currentStartTime;
+                    chord.endTime = currentStartTime + durationSecs;
+                    currentStartTime += durationSecs; 
+                }
+
+                statusText.innerHTML = "A renderizar ficheiro final...";
+                consolidatedBuffer = await offlineCtx.startRendering();
+                
+                const wavBlob = audioBufferToWav(consolidatedBuffer);
+                if (objectUrl) URL.revokeObjectURL(objectUrl);
+                objectUrl = URL.createObjectURL(wavBlob);
+                mainPlayer.src = objectUrl;
+
+                btnDownload.href = objectUrl;
+                btnDownload.download = `BandInABox_${bpmInput.value || CONFIG.NATIVE_BPM}BPM.wav`;
+                btnDownload.style.display = 'flex';
+                
+                btnPlay.disabled = false;
+                statusText.innerHTML = "<i class='fas fa-check-circle'></i> Áudio Consolidado! Pronto a tocar.";
+                statusText.className = "text-sm font-medium text-green-600 w-full sm:w-auto text-center sm:text-left";
+                
+            } catch (error) {
+                console.error("Erro na consolidação:", error);
+                statusText.innerHTML = "<i class='fas fa-exclamation-triangle'></i> Erro ao consolidar áudio.";
+                statusText.className = "text-sm font-medium text-red-600 w-full sm:w-auto text-center sm:text-left";
+            } finally {
+                btnConsolidate.disabled = false;
+                btnConsolidate.innerHTML = '<i class="fas fa-cogs"></i> Consolidar Áudio';
+            }
+        }
+
+        /**
+         * ==========================================
+         * ROTEAMENTO DE EFEITOS (REVERB)
+         * ==========================================
+         */
+        function setupLiveEffects() {
+            if (isRoutingSetup) return; 
+            const ctx = getAudioContext();
+            mediaElementSource = ctx.createMediaElementSource(mainPlayer);
+            dryGainNode = ctx.createGain();
+            wetGainNode = ctx.createGain();
+            convolverNode = ctx.createConvolver();
+            convolverNode.buffer = createReverbImpulse(ctx, 2.5); 
+            mediaElementSource.connect(dryGainNode);          
+            mediaElementSource.connect(convolverNode);        
+            convolverNode.connect(wetGainNode);               
+            dryGainNode.connect(ctx.destination);             
+            wetGainNode.connect(ctx.destination);             
+            isRoutingSetup = true;
+            updateReverbMix(); 
+        }
+
+        function createReverbImpulse(ctx, duration) {
+            const sampleRate = ctx.sampleRate;
+            const length = sampleRate * duration;
+            const impulse = ctx.createBuffer(2, length, sampleRate);
+            for (let channel = 0; channel < 2; channel++) {
+                const channelData = impulse.getChannelData(channel);
+                for (let i = 0; i < length; i++) {
+                    const decay = Math.exp(-3 * (i / length));
+                    channelData[i] = (Math.random() * 2 - 1) * decay;
+                }
+            }
+            return impulse;
+        }
+
+        function updateReverbMix() {
+            if (!dryGainNode || !wetGainNode) return;
+            const value = parseInt(reverbSlider.value) / 100; 
+            dryGainNode.gain.value = Math.cos(value * 0.5 * Math.PI);
+            wetGainNode.gain.value = Math.sin(value * 0.5 * Math.PI);
+        }
+
+        /**
+         * ==========================================
+         * PLAYER E SINCRONIZAÇÃO VISUAL
+         * ==========================================
+         */
+        function togglePlay() {
+            if (isPlaying) { stopAudio(); } else { playAudio(); }
+        }
+
+        function playAudio() {
+            if (!objectUrl) return;
+            setupLiveEffects();
+
+            const targetBPM = parseFloat(bpmInput.value) || CONFIG.NATIVE_BPM;
+            mainPlayer.playbackRate = targetBPM / CONFIG.NATIVE_BPM;
+            mainPlayer.preservesPitch = true;
+            if (typeof mainPlayer.mozPreservesPitch !== 'undefined') mainPlayer.mozPreservesPitch = true;
+            if (typeof mainPlayer.webkitPreservesPitch !== 'undefined') mainPlayer.webkitPreservesPitch = true;
+
+            mainPlayer.onended = () => { if(isPlaying) stopAudio(); };
+            mainPlayer.play();
+            isPlaying = true;
+
+            btnPlay.innerHTML = '<i class="fas fa-pause"></i> Pausa';
+            btnPlay.classList.replace('bg-green-500', 'bg-yellow-500');
+            btnPlay.classList.replace('hover:bg-green-600', 'hover:bg-yellow-600');
+            btnStop.disabled = false;
+            btnConsolidate.disabled = true;
+            requestAnimationFrame(syncVisuals);
+        }
+
+        function stopAudio() {
+            mainPlayer.pause();
+            mainPlayer.currentTime = 0;
+            isPlaying = false;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
+            btnPlay.classList.replace('bg-yellow-500', 'bg-green-500');
+            btnPlay.classList.replace('hover:bg-yellow-600', 'hover:bg-green-600');
+            btnStop.disabled = true;
+            btnConsolidate.disabled = false;
+            clearHighlights();
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('.chord-block').forEach(b => b.classList.remove('active'));
+        }
+
+        function syncVisuals() {
+            if (!isPlaying) return;
+            const elapsedTime = mainPlayer.currentTime;
+            const currentIndex = sequence.findIndex(c => elapsedTime >= c.startTime && elapsedTime < c.endTime);
+
+            clearHighlights();
+            if (currentIndex >= 0 && currentIndex < sequence.length) {
+                const activeBlock = document.getElementById(`seq-${currentIndex}`);
+                if (activeBlock) activeBlock.classList.add('active');
+            }
+            animationFrameId = requestAnimationFrame(syncVisuals);
+        }
+
+        /**
+         * ==========================================
+         * UTILITÁRIO: CONVERTER AUDIOBUFFER PARA WAV
+         * ==========================================
+         */
+        function audioBufferToWav(buffer) {
+            const numChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = 1; 
+            const bitDepth = 16;
+            
+            const bytesPerSample = bitDepth / 8;
+            const blockAlign = numChannels * bytesPerSample;
+            const byteRate = sampleRate * blockAlign;
+            const dataSize = buffer.length * blockAlign;
+            
+            const arrayBuffer = new ArrayBuffer(44 + dataSize);
+            const view = new DataView(arrayBuffer);
+            let offset = 0;
+            
+            const writeString = (str) => {
+                for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+                offset += str.length;
+            };
+            
+            writeString('RIFF');
+            view.setUint32(offset, 36 + dataSize, true); offset += 4;
+            writeString('WAVE');
+            writeString('fmt ');
+            view.setUint32(offset, 16, true); offset += 4;
+            view.setUint16(offset, format, true); offset += 2;
+            view.setUint16(offset, numChannels, true); offset += 2;
+            view.setUint32(offset, sampleRate, true); offset += 4;
+            view.setUint32(offset, byteRate, true); offset += 4;
+            view.setUint16(offset, blockAlign, true); offset += 2;
+            view.setUint16(offset, bitDepth, true); offset += 2;
+            writeString('data');
+            view.setUint32(offset, dataSize, true); offset += 4;
+            
+            const channelData = [];
+            for (let i = 0; i < numChannels; i++) channelData.push(buffer.getChannelData(i));
+            
+            for (let i = 0; i < buffer.length; i++) {
+                for (let channel = 0; channel < numChannels; channel++) {
+                    let sample = channelData[channel][i];
+                    sample = Math.max(-1, Math.min(1, sample));
+                    sample = sample < 0 ? sample * 32768 : sample * 32767;
+                    view.setInt16(offset, sample, true);
+                    offset += 2;
+                }
+            }
+            return new Blob([arrayBuffer], { type: 'audio/wav' });
+        }
+
+        window.onload = initUI;
+    </script>
+</body>
+</html>
