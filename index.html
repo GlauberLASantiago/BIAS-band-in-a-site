@@ -1,32 +1,64 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Band in a Box - TocaSwing130</title>
+    <title>BIAS: Band-in-a-Site</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .chord-block { transition: all 0.1s ease; }
-        .chord-block.active {
-            transform: scale(1.05);
-            background-color: #3b82f6;
-            color: white;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border-color: #2563eb;
+    
+    <!-- Configuração da Paleta Original -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            mint: '#70E0A6',
+                            purple: '#B57EDC',
+                            lavmist: '#E6E6FA',
+                            charcoal: '#36454F',
+                            ghost: '#F8F8FF'
+                        }
+                    }
+                }
+            }
         }
+    </script>
+
+    <style>
+        .chord-block { 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        /* Cor do acorde quando está tocando na animação */
+        .chord-block.active {
+            transform: scale(1.05) translateY(-2px);
+            background-color: #70E0A6 !important; 
+            color: #36454F !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #70E0A6 !important;
+        }
+
         .loading-spinner {
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 3px solid rgba(54, 69, 79, 0.2);
             border-radius: 50%;
-            border-top: 3px solid #fff;
+            border-top: 3px solid currentColor;
             width: 20px;
             height: 20px;
             animation: spin 1s linear infinite;
             display: inline-block;
             vertical-align: middle;
         }
+        .dark .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top: 3px solid #fff;
+        }
+
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Estilo do Slider */
+        
+        /* Estilo do Slider de Reverb */
         input[type=range] {
             -webkit-appearance: none;
             background: transparent;
@@ -35,157 +67,205 @@
             -webkit-appearance: none;
             height: 16px; width: 16px;
             border-radius: 50%;
-            background: #4f46e5;
+            background: #B57EDC;
             cursor: pointer;
             margin-top: -6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
         }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%; height: 4px;
             cursor: pointer;
             background: #cbd5e1;
-            border-radius: 2px;
+            border-radius: 9999px;
         }
-        /* Oculta scrollbar da fileira unica mas permite rolagem */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
+        .dark input[type=range]::-webkit-slider-runnable-track {
+            background: #4b5563;
         }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen text-gray-800 font-sans flex flex-col">
+<body class="bg-brand-lavmist dark:bg-gray-900 min-h-screen text-brand-charcoal dark:text-gray-200 font-sans flex flex-col transition-colors duration-200">
 
-    <div class="max-w-6xl mx-auto p-4 sm:p-8 flex-grow w-full">
+    <div class="max-w-6xl mx-auto p-4 sm:p-8 flex-grow w-full flex flex-col gap-10">
         
         <!-- Header -->
-        <header class="mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                    <i class="fas fa-guitar text-blue-600"></i> Web Band in a Box
+        <header class="flex flex-col sm:flex-row items-center justify-between pt-6">
+            <div class="text-center sm:text-left">
+                <h1 class="text-4xl sm:text-5xl font-bold flex items-center justify-center sm:justify-start gap-2 text-brand-charcoal dark:text-white mb-2">
+                    <i class="fas fa-guitar text-brand-purple"></i> BIAS: Band-in-a-Site
                 </h1>
-                <p class="text-gray-500 mt-1">Sincronização, BPM Flexível e Reverb</p>
+                <p class="text-gray-600 dark:text-gray-400 mt-1 font-medium tracking-wide">
+                    Sincronização, BPM Flexível e Reverb
+                </p>
             </div>
-            <div class="mt-4 sm:mt-0 flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
-                <label for="bpm-input">Andamento (BPM):</label>
-                <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-16 bg-white border border-blue-300 rounded px-1 text-center focus:outline-none focus:ring focus:ring-blue-200 text-black">
+            <div class="mt-6 sm:mt-0">
+                <!-- Botão de Tema (Claro/Escuro) -->
+                <button id="theme-toggle" class="p-4 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-white dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-brand-purple transition-all">
+                    <i class="fas fa-moon text-lg" id="theme-icon"></i>
+                </button>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Main Workspace -->
+        <div class="flex flex-col gap-8">
             
-            <!-- Painel de Acordes (Lado Esquerdo, ocupa 4 colunas) -->
-            <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col gap-6">
+            <!-- Painel de Acordes -->
+            <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-8 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
                 
                 <div>
-                    <h2 class="text-xl font-bold mb-2 border-b pb-2"><i class="fas fa-plus-circle mr-2"></i>Montar Acorde</h2>
-                    <p class="text-xs text-gray-500 mb-4">Ajuste a duração, selecione a nota fundamental e clique no tipo para adicionar à música.</p>
+                    <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-plus-circle mr-2 text-brand-purple"></i>Montar Acorde</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Ajuste a duração, selecione a nota fundamental e clique no tipo para adicionar à música.</p>
                 </div>
 
-                <!-- 1. DURAÇÃO NO COMPASSO -->
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">1. Duração do Acorde</label>
-                    <div class="flex gap-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="chord-duration" value="4" checked class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium">Inteiro (4T)</span>
+                <!-- 1. DURAÇÃO -->
+                <div class="flex flex-col gap-3">
+                    <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Duração do Acorde</label>
+                    <div class="flex gap-3 bg-brand-ghost dark:bg-gray-700/50 p-2 rounded-full border border-brand-lavmist dark:border-gray-600 w-full sm:w-fit">
+                        <label class="flex-1 sm:flex-none cursor-pointer group">
+                            <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
+                            <div class="px-6 py-2.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all">
+                                Inteiro (4T)
+                            </div>
                         </label>
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="chord-duration" value="2" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                            <span class="text-sm font-medium">Metade (2T)</span>
+                        <label class="flex-1 sm:flex-none cursor-pointer group">
+                            <input type="radio" name="chord-duration" value="2" class="peer hidden">
+                            <div class="px-6 py-2.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all">
+                                Metade (2T)
+                            </div>
                         </label>
                     </div>
                 </div>
 
-                <!-- 2. QUALIDADES (Acima da Fundamental conforme pedido) -->
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">2. Tipo (Clique para Adicionar)</label>
-                    <div id="quality-palette" class="grid grid-cols-3 gap-2">
+                <!-- 2. QUALIDADES -->
+                <div class="flex flex-col gap-3">
+                    <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Tipo (Clique para Adicionar)</label>
+                    <div id="quality-palette" class="grid grid-cols-3 sm:grid-cols-6 gap-3">
                         <!-- Buttons populated by JS -->
                     </div>
                 </div>
 
-                <!-- 3. TOM (Fundamental em fileira única abaixo da qualidade) -->
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">3. Tom (Fundamental)</label>
-                    <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-2 pb-2 snap-x">
+                <!-- 3. TOM -->
+                <div class="flex flex-col gap-3">
+                    <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Fundamental</label>
+                    <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x">
                         <!-- Buttons populated by JS -->
                     </div>
                 </div>
             </div>
 
-            <!-- Área da Sequência e Player (Lado Direito, ocupa 8 colunas) -->
-            <div class="lg:col-span-8 bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="text-xl font-bold"><i class="fas fa-music mr-2"></i>Sua Sequência</h2>
-                    <button id="btn-clear" class="text-red-500 hover:text-red-700 text-sm font-semibold transition">
+            <!-- Área da Sequência -->
+            <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-6 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-2 text-brand-purple"></i>Sua Sequência</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
+                    </div>
+                    <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2">
                         <i class="fas fa-trash"></i> Limpar Tudo
                     </button>
                 </div>
 
-                <!-- Timeline de Acordes: Grade fixa com 8 frações. (4 compassos por linha) -->
-                <!-- col-span-2 = Compasso Inteiro | col-span-1 = Meio Compasso -->
-                <div id="sequence-container" class="flex-grow bg-gray-50 rounded-lg p-4 mb-6 border border-gray-300 min-h-[200px] grid grid-cols-8 gap-x-2 gap-y-3 content-start">
-                    <div class="col-span-8 text-center text-gray-400 mt-12" id="empty-state">
-                        Sua música está vazia. Comece a montar no painel ao lado.
+                <!-- Sequence Grid -->
+                <div id="sequence-container" class="flex-grow bg-brand-ghost dark:bg-gray-900/50 rounded-[1.5rem] p-6 min-h-[200px] grid grid-cols-8 gap-x-3 gap-y-4 content-start border border-brand-lavmist dark:border-gray-700">
+                    <div class="col-span-8 text-center text-gray-500 mt-12 font-medium" id="empty-state">
+                        Sua música está vazia. Comece a montar no painel acima.
                     </div>
                 </div>
-
-                <!-- Controles do Player -->
-                <div class="bg-gray-100 p-4 rounded-lg border border-gray-200">
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        
-                        <!-- Status & Efeitos -->
-                        <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                            <div id="status-text" class="text-sm font-medium text-gray-600 text-center sm:text-left">
-                                Pronto para montar.
-                            </div>
-                            
-                            <!-- SLIDER DE REVERB -->
-                            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-md border border-gray-300 shadow-sm">
-                                <label for="reverb-slider" class="text-xs font-bold text-gray-500 uppercase tracking-wider"><i class="fas fa-water"></i> Reverb</label>
-                                <input type="range" id="reverb-slider" min="0" max="100" value="15" class="w-24">
-                            </div>
-                        </div>
-
-                        <!-- Botões -->
-                        <div class="flex gap-2 w-full sm:w-auto">
-                            <button id="btn-consolidate" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i class="fas fa-cogs"></i> Consolidar Áudio
-                            </button>
-                            
-                            <button id="btn-play" disabled class="flex-1 sm:flex-none bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i class="fas fa-play"></i> Tocar
-                            </button>
-
-                            <button id="btn-stop" disabled class="flex-1 sm:flex-none bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-lg font-bold transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                                <i class="fas fa-stop"></i>
-                            </button>
-
-                            <a id="btn-download" style="display: none;" class="flex-1 sm:flex-none bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-bold transition flex items-center justify-center" title="Transferir Base">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <audio id="main-player" class="hidden"></audio>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+            <!-- Player & Controls (Sticky Floating Bar) -->
+            <div class="sticky bottom-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                
+                <!-- Status & FX -->
+                <div class="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
+                    <div id="status-text" class="text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[200px]">
+                        Pronto para montar.
+                    </div>
+                    
+                    <!-- REVERB -->
+                    <div class="flex items-center gap-4 bg-brand-ghost dark:bg-gray-700 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-600">
+                        <label for="reverb-slider" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-water text-brand-purple mr-1"></i> Reverb</label>
+                        <input type="range" id="reverb-slider" min="0" max="100" value="50" class="w-24">
+                    </div>
+                </div>
+
+                <!-- Transport Controls -->
+                <div class="flex gap-3 w-full lg:w-auto justify-center flex-wrap sm:flex-nowrap">
+                    
+                    <!-- BPM -->
+                    <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700 px-5 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-brand-purple transition-all">
+                        <label for="bpm-input" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest">
+                            <i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM
+                        </label>
+                        <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-14 bg-transparent text-center focus:outline-none font-bold text-brand-charcoal dark:text-white text-lg">
+                    </div>
+
+                    <button id="btn-play" disabled class="bg-brand-mint hover:brightness-95 text-brand-charcoal px-8 py-3 rounded-full font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-play"></i> <span>Tocar</span>
+                    </button>
+
+                    <button id="btn-stop" disabled class="bg-red-400 hover:bg-red-500 text-white px-5 py-3 rounded-full font-bold transition-all disabled:opacity-50 flex items-center justify-center shadow-sm">
+                        <i class="fas fa-stop"></i>
+                    </button>
+
+                    <a id="btn-download" style="display: none;" class="bg-brand-charcoal hover:bg-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 text-white px-5 py-3 rounded-full transition-all flex items-center justify-center shadow-sm" title="Baixar Áudio">
+                        <i class="fas fa-download"></i>
+                    </a>
+                    <audio id="main-player" class="hidden"></audio>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- RODAPÉ COM CRÉDITOS -->
-    <footer class="bg-white border-t border-gray-200 mt-auto py-6">
-        <div class="max-w-6xl mx-auto px-4 text-center">
-            <p class="text-gray-600 font-medium">Desenvolvido com <i class="fas fa-heart text-red-500"></i> para o projeto <strong>TocaSwing130</strong></p>
-            <p class="text-sm text-gray-500 mt-1">
-                Áudios e concepção por <a href="https://github.com/GlauberLASantiago" target="_blank" class="text-blue-600 hover:underline font-bold">Glauber Santiago</a>.
+    <!-- Minimal Footer -->
+    <footer class="bg-brand-charcoal dark:bg-gray-900 mt-auto py-8 transition-colors duration-200 border-t border-white/10 dark:border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center flex flex-col gap-3">
+            <p class="text-sm font-medium text-white dark:text-gray-300">
+                Desenvolvido pelo professor <strong class="text-brand-mint font-semibold">Glauber Santiago</strong> — DAC/UFSCar
+            </p>
+            <p class="text-xs text-brand-lavmist dark:text-gray-400 flex flex-wrap items-center justify-center gap-3">
+                <a href="https://servidores.ufscar.br/glauber/" target="_blank" class="hover:text-white transition-colors">servidores.ufscar.br/glauber/</a>
+                <span class="opacity-30">•</span>
+                <a href="https://sites.google.com/view/glauberia" target="_blank" class="hover:text-white transition-colors">sites.google.com/view/glauberia</a>
             </p>
         </div>
     </footer>
 
     <script>
+        /**
+         * ==========================================
+         * MODO ESCURO (DARK THEME) TOGGLE
+         * ==========================================
+         */
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
         /**
          * ==========================================
          * CONFIGURAÇÕES
@@ -224,11 +304,6 @@
 
         const NATIVE_MEASURE_DURATION = (60 / CONFIG.NATIVE_BPM) * CONFIG.BEATS_PER_MEASURE;
 
-        /**
-         * ==========================================
-         * ESTADO DA APLICAÇÃO
-         * ==========================================
-         */
         let audioContext = null;         
         let sequence = [];               
         let audioCache = new Map();      
@@ -236,19 +311,18 @@
         let objectUrl = null;            
         let isPlaying = false;
         let animationFrameId = null;
-        let selectedRootIndex = 0; // Guarda qual fundamental está selecionada
+        let selectedRootIndex = 0; 
+        let needsConsolidation = true; 
+        let editingChordId = null; 
 
-        // NÓS DE ÁUDIO
         let isRoutingSetup = false;
         let mediaElementSource = null;
         let dryGainNode = null;
         let wetGainNode = null;
         let convolverNode = null;
 
-        // Elementos da UI
         const sequenceContainer = document.getElementById('sequence-container');
         const emptyState = document.getElementById('empty-state');
-        const btnConsolidate = document.getElementById('btn-consolidate');
         const btnPlay = document.getElementById('btn-play');
         const btnStop = document.getElementById('btn-stop');
         const btnClear = document.getElementById('btn-clear');
@@ -258,11 +332,6 @@
         const reverbSlider = document.getElementById('reverb-slider');
         const btnDownload = document.getElementById('btn-download');
 
-        /**
-         * ==========================================
-         * INICIALIZAÇÃO DA INTERFACE
-         * ==========================================
-         */
         function initUI() {
             bpmInput.addEventListener('input', () => {
                 const newBpm = parseFloat(bpmInput.value);
@@ -276,11 +345,10 @@
 
             reverbSlider.addEventListener('input', updateReverbMix);
 
-            // 1. Popular Botões de Tons (Raiz) - Fileira Única Horizontal
             const rootPalette = document.getElementById('root-palette');
             CONFIG.ROOT_NOTES.forEach((root, index) => {
                 const btn = document.createElement('button');
-                btn.className = "root-btn snap-center flex-none min-w-[3.5rem] px-2 py-3 rounded-lg shadow-sm font-bold border-2 transition text-center";
+                btn.className = "root-btn snap-center flex-none min-w-[3.5rem] px-2 py-3 rounded-full font-medium transition-all text-center border-2";
                 btn.innerText = root.display;
                 btn.onclick = () => {
                     selectedRootIndex = index;
@@ -288,118 +356,214 @@
                 };
                 rootPalette.appendChild(btn);
             });
-            updateRootButtonsUI(); // Aplica a cor no selecionado padrão (Dó)
+            updateRootButtonsUI(); 
 
-            // 2. Popular Botões de Qualidade (Aciona a adição à música)
             const qualityPalette = document.getElementById('quality-palette');
             CONFIG.QUALITIES.forEach(quality => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border-2 border-indigo-100 hover:border-indigo-500 hover:bg-indigo-50 text-indigo-900 font-bold py-3 rounded-lg shadow-sm transition text-sm sm:text-base";
+                btn.className = "bg-white dark:bg-gray-700 border-2 border-brand-lavmist dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple text-brand-charcoal dark:text-gray-200 font-bold py-3 rounded-full shadow-sm transition-all text-sm";
                 btn.innerText = quality.label;
                 
                 btn.onclick = () => {
                     const root = CONFIG.ROOT_NOTES[selectedRootIndex];
                     const chordName = root.display + quality.label;
                     const fileName = `swing130_${root.filePrefix}${quality.fileSuffix}`;
-                    
                     const beats = parseInt(document.querySelector('input[name="chord-duration"]:checked').value);
-                    
-                    addChordToSequence({ name: chordName, file: fileName, beats: beats });
+                    addOrReplaceChord({ name: chordName, file: fileName, beats: beats });
                 };
                 qualityPalette.appendChild(btn);
             });
 
-            btnConsolidate.onclick = handleConsolidate;
             btnPlay.onclick = togglePlay;
             btnStop.onclick = stopAudio;
             btnClear.onclick = clearSequence;
         }
 
-        // Atualiza o visual da fileira de botões de notas fundamentais
         function updateRootButtonsUI() {
             const buttons = document.querySelectorAll('.root-btn');
             buttons.forEach((btn, index) => {
                 if (index === selectedRootIndex) {
-                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-                    btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200', 'hover:border-blue-400');
+                    btn.classList.add('bg-brand-purple', 'text-white', 'border-brand-purple');
+                    btn.classList.remove('bg-white', 'text-brand-charcoal', 'border-brand-lavmist', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:border-gray-600');
                 } else {
-                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
-                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200', 'hover:border-blue-400');
+                    btn.classList.remove('bg-brand-purple', 'text-white', 'border-brand-purple');
+                    btn.classList.add('bg-white', 'text-brand-charcoal', 'border-brand-lavmist', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:border-gray-600', 'hover:border-brand-purple');
                 }
             });
         }
 
-        function addChordToSequence(chord) {
-            consolidatedBuffer = null;
-            btnPlay.disabled = true;
-            statusText.innerHTML = "Sequência alterada. Clique em Consolidar.";
-            statusText.className = "text-sm font-medium text-orange-600 w-full sm:w-auto text-center sm:text-left";
-
-            const id = Date.now() + Math.random();
-            sequence.push({ ...chord, id: id });
+        function addOrReplaceChord(chordData) {
+            needsConsolidation = true;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            btnPlay.disabled = false;
+            
+            if (editingChordId) {
+                const index = sequence.findIndex(c => c.id === editingChordId);
+                if (index !== -1) {
+                    chordData.beats = sequence[index].beats;
+                    sequence[index] = { ...chordData, id: editingChordId };
+                }
+                editingChordId = null; 
+                statusText.innerHTML = "Acorde substituído. Clique em Tocar para processar e ouvir.";
+            } else {
+                const id = Date.now() + Math.random();
+                sequence.push({ ...chordData, id: id });
+                statusText.innerHTML = "Sequência alterada. Clique em Tocar para processar e ouvir.";
+            }
+            
+            statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
             renderSequence();
         }
 
+        function enforceGridRules() {
+            let currentMeasureBeat = 0;
+            sequence.forEach(chord => {
+                if (currentMeasureBeat !== 0) {
+                    if (chord.beats === 4) chord.beats = 2;
+                }
+                currentMeasureBeat = (currentMeasureBeat + chord.beats) % 4;
+            });
+        }
+
+        function updateDurationUI() {
+            const radio4T = document.querySelector('input[name="chord-duration"][value="4"]');
+            const radio2T = document.querySelector('input[name="chord-duration"][value="2"]');
+            const label4T = radio4T.nextElementSibling;
+            const label2T = radio2T.nextElementSibling;
+
+            if (editingChordId) {
+                const chord = sequence.find(c => c.id === editingChordId);
+                if (chord) {
+                    if (chord.beats === 4) { radio4T.checked = true; } else { radio2T.checked = true; }
+                    radio4T.disabled = true; radio2T.disabled = true;
+                    label4T.classList.add('opacity-50'); label2T.classList.add('opacity-50');
+                }
+            } else {
+                let totalBeats = sequence.reduce((acc, c) => acc + c.beats, 0);
+                if (totalBeats % 4 !== 0) {
+                    radio2T.checked = true;
+                    radio4T.disabled = true;
+                    radio2T.disabled = false;
+                    label4T.classList.add('opacity-50');
+                    label2T.classList.remove('opacity-50');
+                } else {
+                    radio4T.disabled = false;
+                    radio2T.disabled = false;
+                    label4T.classList.remove('opacity-50');
+                    label2T.classList.remove('opacity-50');
+                }
+            }
+        }
+
         function removeChord(id) {
+            if (editingChordId === id) editingChordId = null; 
             sequence = sequence.filter(c => c.id !== id);
-            consolidatedBuffer = null;
-            btnPlay.disabled = true;
-            statusText.innerHTML = "Sequência alterada. Clique em Consolidar.";
+            needsConsolidation = true;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            
+            if (sequence.length > 0) {
+                btnPlay.disabled = false;
+                statusText.innerHTML = "Sequência alterada. Clique em Tocar para processar e ouvir.";
+                statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
+            } else {
+                btnPlay.disabled = true;
+                statusText.innerHTML = "Pronto para montar.";
+                statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
+            }
             renderSequence();
         }
 
         function clearSequence() {
             sequence = [];
             consolidatedBuffer = null;
+            needsConsolidation = true;
+            editingChordId = null;
             btnPlay.disabled = true;
             btnDownload.style.display = 'none';
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             mainPlayer.src = "";
             
             statusText.innerHTML = "Pronto para montar.";
-            statusText.className = "text-sm font-medium text-gray-600 w-full sm:w-auto text-center sm:text-left";
+            statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
             stopAudio();
             renderSequence();
         }
 
         function renderSequence() {
+            enforceGridRules(); 
+
             Array.from(sequenceContainer.children).forEach(child => {
                 if (child.id !== 'empty-state') child.remove();
             });
 
             if (sequence.length === 0) {
                 emptyState.style.display = 'block';
-                btnConsolidate.disabled = true;
+                btnPlay.disabled = true;
+                updateDurationUI(); 
                 return;
             }
 
             emptyState.style.display = 'none';
-            btnConsolidate.disabled = false;
+            btnPlay.disabled = false;
+
+            let currentBeat = 0; 
 
             sequence.forEach((chord, index) => {
                 const el = document.createElement('div');
                 
-                // MÁGICA DA GRADE:
-                // Se o acorde tiver 4 tempos (compasso inteiro), ele ocupa 2 colunas da grade (col-span-2)
-                // Se tiver 2 tempos (meio compasso), ele ocupa 1 coluna da grade (col-span-1)
-                // Como a grade tem 8 colunas no total, sempre caberão 4 compassos inteiros por linha!
                 const gridSpanClass = chord.beats === 4 ? 'col-span-2' : 'col-span-1';
                 
-                // Estilos visuais para diferenciar meio compasso de compasso inteiro
-                const styleClass = chord.beats === 2 ? 'bg-indigo-50 border-dashed border-indigo-300 text-sm' : 'bg-white border-solid border-gray-300 text-lg';
+                let styleClass = chord.beats === 2 
+                    ? 'bg-brand-lavmist/40 dark:bg-gray-800 border-dashed border-brand-purple/50 dark:border-gray-600 text-sm' 
+                    : 'bg-white dark:bg-gray-700 border-solid border-brand-lavmist dark:border-gray-600 text-lg';
                 
-                el.className = `chord-block relative border-2 rounded-lg h-16 flex items-center justify-center font-bold cursor-pointer group ${gridSpanClass} ${styleClass}`;
+                if (editingChordId === chord.id) {
+                    styleClass += ' ring-4 ring-brand-purple border-transparent bg-brand-lavmist dark:bg-gray-600 scale-105';
+                } else {
+                    styleClass += ' hover:border-brand-purple'; 
+                }
+                
+                el.className = `chord-block relative border-2 rounded-2xl h-16 flex items-center justify-center font-bold cursor-pointer group text-brand-charcoal dark:text-white ${gridSpanClass} ${styleClass}`;
                 el.id = `seq-${index}`;
                 el.innerText = chord.name;
                 
-                // Indicador visual
+                const measureNumber = Math.floor(currentBeat / 4) + 1;
+                const beatNumber = (currentBeat % 4) + 1; 
+                
+                let displayMeasure = measureNumber;
+                if (chord.beats < 4 || beatNumber !== 1) {
+                    displayMeasure = `${measureNumber}.${beatNumber}`;
+                }
+
+                const measureLabel = document.createElement('div');
+                measureLabel.className = "absolute top-1.5 left-2 text-[10px] text-gray-500 dark:text-gray-400 font-bold opacity-80";
+                measureLabel.innerText = displayMeasure;
+                el.appendChild(measureLabel);
+
+                currentBeat += chord.beats;
+
+                el.onclick = () => {
+                    if (editingChordId === chord.id) {
+                        editingChordId = null; 
+                        statusText.innerHTML = "Pronto para montar.";
+                        statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
+                    } else {
+                        editingChordId = chord.id; 
+                        statusText.innerHTML = `Acorde <strong class="text-brand-purple">${chord.name}</strong> selecionado. Escolha um novo no painel para substituir.`;
+                        statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+                    }
+                    renderSequence();
+                };
+
                 const durationLabel = document.createElement('div');
-                durationLabel.className = "absolute bottom-0 right-1 text-[9px] text-gray-400 font-normal uppercase";
+                durationLabel.className = "absolute bottom-1 right-2 text-[9px] text-gray-400 dark:text-gray-500 font-normal uppercase";
                 durationLabel.innerText = chord.beats === 4 ? "4T" : "2T";
                 el.appendChild(durationLabel);
 
                 const delBtn = document.createElement('div');
-                delBtn.className = "absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow-md z-10";
+                delBtn.className = "absolute -top-2 -right-2 bg-red-400 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow-md z-10";
                 delBtn.innerHTML = '<i class="fas fa-times"></i>';
                 delBtn.onclick = (e) => {
                     e.stopPropagation();
@@ -409,13 +573,10 @@
                 el.appendChild(delBtn);
                 sequenceContainer.appendChild(el);
             });
+
+            updateDurationUI(); 
         }
 
-        /**
-         * ==========================================
-         * MOTOR DE ÁUDIO E CONSOLIDAÇÃO
-         * ==========================================
-         */
         function getAudioContext() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -480,17 +641,16 @@
         }
 
         async function handleConsolidate() {
-            if (sequence.length === 0) return;
+            if (sequence.length === 0) return false;
             const ctx = getAudioContext();
-            btnConsolidate.disabled = true;
-            btnConsolidate.innerHTML = '<span class="loading-spinner"></span> A Consolidar...';
-            statusText.innerHTML = "A processar áudios na memória...";
-            statusText.className = "text-sm font-medium text-blue-600 w-full sm:w-auto text-center sm:text-left";
+            
+            statusText.innerHTML = "Processando áudios na memória...";
+            statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
 
             try {
                 const NATIVE_BEAT_DURATION = 60 / CONFIG.NATIVE_BPM;
                 let totalDuration = sequence.reduce((acc, chord) => acc + (chord.beats * NATIVE_BEAT_DURATION), 0);
-                totalDuration += 2.0; // Cauda do reverb
+                totalDuration += 2.0; 
                 
                 const offlineCtx = new OfflineAudioContext(2, ctx.sampleRate * totalDuration, ctx.sampleRate);
                 let currentStartTime = 0;
@@ -509,7 +669,7 @@
                     fadeGain.gain.linearRampToValueAtTime(0, currentStartTime + durationSecs); 
 
                     source.connect(fadeGain);
-                    fadeGain.connect(offlineCtx.destination);
+                    fadeGain.connect(offlineCtx.destination); 
                     
                     source.start(currentStartTime, 0, durationSecs);
                     
@@ -518,7 +678,7 @@
                     currentStartTime += durationSecs; 
                 }
 
-                statusText.innerHTML = "A renderizar ficheiro final...";
+                statusText.innerHTML = "Renderizando arquivo final...";
                 consolidatedBuffer = await offlineCtx.startRendering();
                 
                 const wavBlob = audioBufferToWav(consolidatedBuffer);
@@ -530,25 +690,18 @@
                 btnDownload.download = `BandInABox_${bpmInput.value || CONFIG.NATIVE_BPM}BPM.wav`;
                 btnDownload.style.display = 'flex';
                 
-                btnPlay.disabled = false;
-                statusText.innerHTML = "<i class='fas fa-check-circle'></i> Áudio Consolidado! Pronto a tocar.";
-                statusText.className = "text-sm font-medium text-green-600 w-full sm:w-auto text-center sm:text-left";
+                statusText.innerHTML = "<i class='fas fa-check-circle'></i> Áudio Consolidado! Tocando...";
+                statusText.className = "text-sm font-medium text-brand-mint dark:text-green-400 w-full sm:w-auto text-center sm:text-left";
                 
+                return true;
             } catch (error) {
                 console.error("Erro na consolidação:", error);
-                statusText.innerHTML = "<i class='fas fa-exclamation-triangle'></i> Erro ao consolidar áudio.";
-                statusText.className = "text-sm font-medium text-red-600 w-full sm:w-auto text-center sm:text-left";
-            } finally {
-                btnConsolidate.disabled = false;
-                btnConsolidate.innerHTML = '<i class="fas fa-cogs"></i> Consolidar Áudio';
+                statusText.innerHTML = "<i class='fas fa-exclamation-triangle'></i> Erro ao processar áudio.";
+                statusText.className = "text-sm font-medium text-red-500 w-full sm:w-auto text-center sm:text-left";
+                return false;
             }
         }
 
-        /**
-         * ==========================================
-         * ROTEAMENTO DE EFEITOS (REVERB)
-         * ==========================================
-         */
         function setupLiveEffects() {
             if (isRoutingSetup) return; 
             const ctx = getAudioContext();
@@ -582,18 +735,33 @@
 
         function updateReverbMix() {
             if (!dryGainNode || !wetGainNode) return;
-            const value = parseInt(reverbSlider.value) / 100; 
-            dryGainNode.gain.value = Math.cos(value * 0.5 * Math.PI);
-            wetGainNode.gain.value = Math.sin(value * 0.5 * Math.PI);
+            const rawValue = parseInt(reverbSlider.value) / 100; 
+            const mappedValue = 0.35 * Math.pow(rawValue, 1.222);
+            dryGainNode.gain.value = Math.cos(mappedValue * 0.5 * Math.PI);
+            wetGainNode.gain.value = Math.sin(mappedValue * 0.5 * Math.PI);
         }
 
-        /**
-         * ==========================================
-         * PLAYER E SINCRONIZAÇÃO VISUAL
-         * ==========================================
-         */
-        function togglePlay() {
-            if (isPlaying) { stopAudio(); } else { playAudio(); }
+        async function togglePlay() {
+            if (isPlaying) { 
+                stopAudio(); 
+            } else { 
+                if (needsConsolidation) {
+                    btnPlay.innerHTML = '<span class="loading-spinner"></span> <span class="hidden sm:inline">Processando...</span>';
+                    btnPlay.classList.add('opacity-80');
+                    btnPlay.disabled = true;
+                    
+                    const success = await handleConsolidate();
+                    
+                    if (!success) {
+                        btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
+                        btnPlay.classList.remove('opacity-80');
+                        btnPlay.disabled = false;
+                        return;
+                    }
+                    needsConsolidation = false;
+                }
+                playAudio(); 
+            }
         }
 
         function playAudio() {
@@ -610,11 +778,11 @@
             mainPlayer.play();
             isPlaying = true;
 
-            btnPlay.innerHTML = '<i class="fas fa-pause"></i> Pausa';
-            btnPlay.classList.replace('bg-green-500', 'bg-yellow-500');
-            btnPlay.classList.replace('hover:bg-green-600', 'hover:bg-yellow-600');
+            btnPlay.disabled = false;
+            btnPlay.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+            btnPlay.classList.replace('bg-brand-mint', 'bg-yellow-400');
+            btnPlay.classList.remove('opacity-80');
             btnStop.disabled = false;
-            btnConsolidate.disabled = true;
             requestAnimationFrame(syncVisuals);
         }
 
@@ -624,11 +792,10 @@
             isPlaying = false;
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
+            btnPlay.disabled = false;
             btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
-            btnPlay.classList.replace('bg-yellow-500', 'bg-green-500');
-            btnPlay.classList.replace('hover:bg-yellow-600', 'hover:bg-green-600');
+            btnPlay.classList.replace('bg-yellow-400', 'bg-brand-mint');
             btnStop.disabled = true;
-            btnConsolidate.disabled = false;
             clearHighlights();
         }
 
@@ -649,11 +816,6 @@
             animationFrameId = requestAnimationFrame(syncVisuals);
         }
 
-        /**
-         * ==========================================
-         * UTILITÁRIO: CONVERTER AUDIOBUFFER PARA WAV
-         * ==========================================
-         */
         function audioBufferToWav(buffer) {
             const numChannels = buffer.numberOfChannels;
             const sampleRate = buffer.sampleRate;
