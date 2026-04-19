@@ -2,6 +2,9 @@
 
 Uma aplicação web interativa para montar e ouvir sequências de acordes de jazz/swing diretamente no navegador, sem necessidade de instalação.
 
+<img width="1174" height="865" alt="image" src="https://github.com/user-attachments/assets/c21a554b-d1c4-47b7-bccf-c2aa9afe267a" />
+
+
 Desenvolvida pelo professor **Glauber Santiago** — DAC/UFSCar.
 
 ---
