@@ -219,7 +219,7 @@
                         <div class="flex justify-between items-center flex-wrap gap-4">
                             <div class="flex flex-col gap-1 w-full sm:w-2/3">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    Gera o código para o Moodle com marcadores "invisíveis" no editor visual mas claros no código-fonte.
+                                    Gera o código para o Moodle. O formato visual agora acompanha uma grade de partitura (barras de compasso), numerando apenas o início de cada medida.
                                 </p>
                                 <p class="text-xs text-brand-purple font-semibold">
                                     Dica: Use "Mais Leve (MP3)" se o Moodle reclamar do tamanho do código.
@@ -1107,7 +1107,7 @@
             e.target.value = '';
         });
 
-        // --- EXPORTAÇÃO MOODLE (MP3 vs WAV) ---
+        // --- EXPORTAÇÃO MOODLE (MP3 vs WAV) - COM BARRAS DE COMPASSO ---
         async function generateMoodleHTML(useCompression) {
             if (!consolidatedBuffer) {
                 alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de exportar.");
@@ -1131,10 +1131,8 @@
             let finalBlob;
             
             if (useCompression) {
-                // Comprime para MP3 usando lamejs
                 finalBlob = await encodeMp3(consolidatedBuffer);
             } else {
-                // Usa o WAV original
                 finalBlob = currentWavBlob;
             }
 
@@ -1143,12 +1141,44 @@
                 const base64data = reader.result;
                 const sizeKb = Math.round(base64data.length / 1024);
 
-                let chordsHtml = '';
+                // NOVA LÓGICA: Partitura (Lead Sheet) com Barras de Compasso
+                let measures = [];
+                let currentMeasure = [];
+                let currentBeats = 0;
+
+                // Agrupa a sequência em compassos de 4 tempos
                 sequence.forEach(chord => {
-                    chordsHtml += `<span style="display:inline-block; background-color:#ffffff; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; font-weight:bold; color:#36454F; margin:4px; font-size:14px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${chord.name}</span>`;
+                    currentMeasure.push(chord);
+                    currentBeats += chord.beats;
+                    if (currentBeats >= 4) {
+                        measures.push(currentMeasure);
+                        currentMeasure = [];
+                        currentBeats = 0;
+                    }
+                });
+                if (currentMeasure.length > 0) measures.push(currentMeasure);
+
+                let chordsHtml = '<div style="display: flex; flex-wrap: wrap; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px 5px; font-family: monospace;">';
+
+                measures.forEach((measure, index) => {
+                    // Inicia o compasso com a barra à esquerda e o número do compasso
+                    chordsHtml += `<div style="display: flex; align-items: center; border-left: 2px solid #475569; padding: 15px 10px 5px 10px; position: relative; min-width: 120px; margin-bottom: 10px;">`;
+                    chordsHtml += `<span style="position: absolute; top: 2px; left: 6px; font-size: 11px; color: #64748b; font-weight: bold;">${index + 1}</span>`;
+
+                    // Desenha as cifras de dentro do compasso
+                    measure.forEach(chord => {
+                        chordsHtml += `<div style="flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: #1e293b; padding: 0 5px;">${chord.name}</div>`;
+                    });
+                    
+                    chordsHtml += `</div>`;
                 });
 
-                const mimeTypeStr = useCompression ? 'audio/mp3' : 'audio/wav';
+                // Fecha com a barra final à direita, se houver música
+                if (measures.length > 0) {
+                    chordsHtml += `<div style="border-left: 2px solid #475569; margin-bottom: 10px;"></div>`;
+                }
+
+                chordsHtml += '</div>';
 
                 const htmlStr = `
 <div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
