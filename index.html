@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -28,10 +30,7 @@
     </script>
 
     <style>
-        .chord-block { 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        
+        .chord-block { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .chord-block.active {
             transform: scale(1.05) translateY(-2px);
             background-color: #70E0A6 !important; 
@@ -57,44 +56,18 @@
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        input[type=range] {
-            -webkit-appearance: none;
-            background: transparent;
-        }
+        input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 16px; width: 16px;
-            border-radius: 50%;
-            background: #B57EDC;
-            cursor: pointer;
-            margin-top: -6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            transition: transform 0.1s;
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #B57EDC; cursor: pointer; margin-top: -6px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: transform 0.1s;
         }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px;
-            cursor: pointer;
-            background: #cbd5e1;
-            border-radius: 9999px;
-        }
-        .dark input[type=range]::-webkit-slider-runnable-track {
-            background: #4b5563;
-        }
-
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #cbd5e1; border-radius: 9999px; }
+        .dark input[type=range]::-webkit-slider-runnable-track { background: #4b5563; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .export-tab {
-            transition: all 0.2s;
-        }
-        .export-tab.active {
-            background-color: #B57EDC;
-            color: white;
-            font-weight: bold;
-        }
+        .export-tab { transition: all 0.2s; }
+        .export-tab.active { background-color: #B57EDC; color: white; font-weight: bold; }
     </style>
 </head>
 <body class="bg-brand-lavmist dark:bg-gray-900 min-h-screen text-brand-charcoal dark:text-gray-200 font-sans flex flex-col transition-colors duration-200">
@@ -121,50 +94,38 @@
         <div class="flex flex-col gap-8">
             
             <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-8 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
-                
                 <div>
                     <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-plus-circle mr-2 text-brand-purple"></i>Montar Acorde</h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Selecione a nota fundamental e clique no tipo para adicionar à música.</p>
                 </div>
-
                 <div class="flex flex-col gap-3">
                     <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Tipo (Clique para Adicionar)</label>
-                    <div id="quality-palette" class="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                        </div>
+                    <div id="quality-palette" class="grid grid-cols-3 sm:grid-cols-6 gap-3"></div>
                 </div>
-
                 <div class="flex flex-col gap-3">
                     <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Fundamental</label>
-                    <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x">
-                        </div>
+                    <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x"></div>
                 </div>
             </div>
 
             <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-6 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
-                
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                         <div>
                             <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-2 text-brand-purple"></i>Sua Sequência</h2>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
                         </div>
-                        
                         <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
                             <label class="cursor-pointer group mb-0">
                                 <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
-                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">
-                                    Inteiro (4T)
-                                </div>
+                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Inteiro (4T)</div>
                             </label>
                             <label class="cursor-pointer group mb-0">
                                 <input type="radio" name="chord-duration" value="2" class="peer hidden">
-                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">
-                                    Metade (2T)
-                                </div>
+                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Metade (2T)</div>
                             </label>
                         </div>
                     </div>
-                    
                     <div class="flex items-center gap-3 shrink-0 flex-wrap">
                         <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2">
                             <i class="fas fa-trash"></i> Limpar Tudo
@@ -173,18 +134,13 @@
                 </div>
 
                 <div id="sequence-container" class="flex-grow bg-brand-ghost dark:bg-gray-900/50 rounded-[1.5rem] p-6 min-h-[200px] grid grid-cols-8 gap-x-3 gap-y-4 content-start border border-brand-lavmist dark:border-gray-700">
-                    <div class="col-span-8 text-center text-gray-500 mt-12 font-medium" id="empty-state">
-                        Sua música está vazia. Comece a montar no painel acima.
-                    </div>
+                    <div class="col-span-8 text-center text-gray-500 mt-12 font-medium" id="empty-state">Sua música está vazia. Comece a montar no painel acima.</div>
                 </div>
             </div>
 
             <div class="sticky bottom-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-lg border border-gray-200 dark:border-gray-700 z-40">
-                
                 <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
-                    <div id="status-text" class="text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[200px]">
-                        Pronto para montar.
-                    </div>
+                    <div id="status-text" class="text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[200px]">Pronto para montar.</div>
 
                     <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2 px-4 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
                         <i class="fas fa-file-export"></i> Dados & Exportação
@@ -197,22 +153,16 @@
                 </div>
 
                 <div class="flex gap-3 w-full lg:w-auto justify-center flex-wrap sm:flex-nowrap">
-                    
                     <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700 px-5 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-brand-purple transition-all">
-                        <label for="bpm-input" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest">
-                            <i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM
-                        </label>
+                        <label for="bpm-input" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM</label>
                         <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-14 bg-transparent text-center focus:outline-none font-bold text-brand-charcoal dark:text-white text-lg">
                     </div>
-
                     <button id="btn-play" disabled class="bg-brand-mint hover:brightness-95 text-brand-charcoal px-8 py-3 rounded-full font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-2">
                         <i class="fas fa-play"></i> <span>Tocar</span>
                     </button>
-
                     <button id="btn-stop" disabled class="bg-red-400 hover:bg-red-500 text-white px-5 py-3 rounded-full font-bold transition-all disabled:opacity-50 flex items-center justify-center shadow-sm">
                         <i class="fas fa-stop"></i>
                     </button>
-                    
                     <audio id="main-player" class="hidden"></audio>
                 </div>
             </div>
@@ -233,27 +183,13 @@
             <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
                 
                 <div class="w-full md:w-56 bg-brand-ghost dark:bg-gray-900/50 p-4 flex flex-row md:flex-col gap-2 overflow-x-auto hide-scrollbar border-r border-gray-100 dark:border-gray-700">
-                    <button class="export-tab active text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="data">
-                        <i class="fas fa-file-code w-5 text-center mr-1"></i> Projeto (.txt)
-                    </button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="moodle">
-                        <i class="fas fa-graduation-cap w-5 text-center mr-1"></i> Moodle (HTML)
-                    </button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="audio">
-                        <i class="fas fa-file-audio w-5 text-center mr-1"></i> Áudio (.wav)
-                    </button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="img">
-                        <i class="fas fa-image w-5 text-center mr-1"></i> Imagem (.png)
-                    </button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="tab">
-                        <i class="fas fa-table w-5 text-center mr-1"></i> Tabela (MD)
-                    </button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="mus">
-                        <i class="fas fa-music w-5 text-center mr-1"></i> MusicXML
-                    </button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="biab">
-                        <i class="fas fa-align-left w-5 text-center mr-1"></i> BIAB
-                    </button>
+                    <button class="export-tab active text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="data"><i class="fas fa-file-code w-5 text-center mr-1"></i> Projeto (.txt)</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="moodle"><i class="fas fa-graduation-cap w-5 text-center mr-1"></i> Moodle (HTML)</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="audio"><i class="fas fa-file-audio w-5 text-center mr-1"></i> Áudio (.wav)</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="img"><i class="fas fa-image w-5 text-center mr-1"></i> Imagem (.png)</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="tab"><i class="fas fa-table w-5 text-center mr-1"></i> Tabela (MD)</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="mus"><i class="fas fa-music w-5 text-center mr-1"></i> MusicXML</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="biab"><i class="fas fa-align-left w-5 text-center mr-1"></i> BIAB</button>
                 </div>
                 
                 <div class="flex-grow p-6 sm:p-8 overflow-y-auto flex flex-col gap-6 bg-white dark:bg-gray-800">
@@ -268,47 +204,52 @@
                             <input type="text" id="author-name" placeholder="Anônimo" class="w-full bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white rounded-lg p-3 mt-1 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-brand-purple outline-none transition-shadow font-semibold">
                         </div>
                     </div>
-                    
                     <hr class="border-gray-100 dark:border-gray-700">
                     
                     <div id="view-data" class="export-view flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Salve a estrutura do seu trabalho num ficheiro local para continuar a editar mais tarde.
-                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Salve a estrutura do seu trabalho num ficheiro local para continuar a editar mais tarde.</p>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
-                                <i class="fas fa-download mr-2"></i> Salvar Projeto (.txt)
-                            </button>
-                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
-                                <i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.txt)
-                            </button>
+                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-download mr-2"></i> Salvar Projeto (.txt)</button>
+                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.txt)</button>
                             <input type="file" id="file-import-input" accept=".txt" class="hidden">
                         </div>
                     </div>
 
                     <div id="view-moodle" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center flex-wrap gap-4">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 w-full sm:w-2/3">
-                                Gera o código para o Moodle. O Moodle apaga comentários normais, então o código gerado possui blocos de texto <b>invisíveis na página</b>, mas gigantes e inapagáveis no modo código-fonte <b>&lt;&gt;</b>.
-                            </p>
-                            <button id="btn-gen-moodle" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
-                                <i class="fas fa-code mr-1"></i> Gerar Código Moodle
+                            <div class="flex flex-col gap-1 w-full sm:w-2/3">
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Gera o código para o Moodle com marcadores "invisíveis" no editor visual mas claros no código-fonte.
+                                </p>
+                                <p class="text-xs text-brand-purple font-semibold">
+                                    Dica: Use "Mais Leve (MP3)" se o Moodle reclamar do tamanho do código.
+                                </p>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button id="btn-gen-moodle-mp3" class="bg-brand-mint text-brand-charcoal py-2 px-4 rounded-full font-bold transition-colors shadow-sm hover:brightness-95 shrink-0 text-sm">
+                                    <i class="fas fa-compress-arrows-alt mr-1"></i> Mais Leve (MP3)
+                                </button>
+                                <button id="btn-gen-moodle-wav" class="bg-brand-purple text-white py-2 px-4 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0 text-sm">
+                                    <i class="fas fa-gem mr-1"></i> Alta Qualidade (WAV)
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <textarea id="export-moodle-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none" placeholder="Escolha uma opção de geração acima (Requer tocar a música antes)."></textarea>
+                        
+                        <div class="flex justify-between items-center w-full">
+                            <span id="moodle-size-info" class="text-xs text-gray-500 font-mono font-bold"></span>
+                            <button id="btn-copy-moodle" class="hidden bg-brand-mint text-brand-charcoal py-3 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-95 flex items-center justify-center">
+                                <i class="fas fa-copy mr-2"></i> Copiar Código HTML
                             </button>
                         </div>
-                        <textarea id="export-moodle-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none" placeholder="Clique em 'Gerar Código Moodle' (Toque a música pelo menos uma vez antes)."></textarea>
-                        <button id="btn-copy-moodle" class="hidden bg-brand-mint text-brand-charcoal py-3 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-95 w-full sm:w-auto self-end flex items-center justify-center">
-                            <i class="fas fa-copy mr-2"></i> Copiar Código HTML
-                        </button>
                     </div>
 
                     <div id="view-audio" class="export-view hidden flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Exporte a sua trilha sonora já processada e em alta qualidade (WAV).
-                        </p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Exporte a sua trilha sonora já processada e em alta qualidade (WAV).</p>
                         <div class="bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-xl border border-brand-lavmist dark:border-gray-600">
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                <i class="fas fa-info-circle text-brand-purple mr-1"></i> <strong>Aviso:</strong> Só ficará disponível após clicar em "Tocar" na tela principal.
-                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-info-circle text-brand-purple mr-1"></i> <strong>Aviso:</strong> Só ficará disponível após clicar em "Tocar" na tela principal.</p>
                         </div>
                         <a id="btn-dl-audio-modal" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 pointer-events-none opacity-50 flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fas fa-file-audio"></i> Baixar Áudio (.wav)
@@ -318,9 +259,7 @@
                     <div id="view-img" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Gera uma folha estruturada com marcação de compassos.</p>
-                            <button id="btn-dl-img" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
-                                Baixar (.png)
-                            </button>
+                            <button id="btn-dl-img" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">Baixar (.png)</button>
                         </div>
                         <div class="flex-grow overflow-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 rounded-2xl flex items-center justify-center">
                             <canvas id="export-canvas" class="shadow-md bg-white rounded"></canvas>
@@ -330,28 +269,20 @@
                     <div id="view-tab" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Formato de texto simples focado na estrutura tabular (Markdown).</p>
-                            <button id="btn-dl-tab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
-                                Baixar (.md)
-                            </button>
+                            <button id="btn-dl-tab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">Baixar (.md)</button>
                         </div>
                         <textarea id="export-tab-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none"></textarea>
                     </div>
 
                     <div id="view-mus" class="export-view hidden flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Exporte a grelha de acordes nativa em formato MusicXML 3.1.
-                        </p>
-                        <button id="btn-dl-mus" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110">
-                            <i class="fas fa-file-code mr-2"></i> Baixar MusicXML
-                        </button>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Exporte a grelha de acordes nativa em formato MusicXML 3.1.</p>
+                        <button id="btn-dl-mus" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110"><i class="fas fa-file-code mr-2"></i> Baixar MusicXML</button>
                     </div>
 
                     <div id="view-biab" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Exporta string limpa para softwares Band in a Box.</p>
-                            <button id="btn-dl-biab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
-                                Baixar (.txt)
-                            </button>
+                            <button id="btn-dl-biab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">Baixar (.txt)</button>
                         </div>
                         <textarea id="export-biab-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none"></textarea>
                     </div>
@@ -363,9 +294,7 @@
 
     <footer class="bg-brand-charcoal dark:bg-gray-900 mt-auto py-8 transition-colors duration-200 border-t border-white/10 dark:border-gray-800">
         <div class="max-w-6xl mx-auto px-4 text-center flex flex-col gap-3">
-            <p class="text-sm font-medium text-white dark:text-gray-300">
-                Desenvolvido pelo professor <strong class="text-brand-mint font-semibold">Glauber Santiago</strong> — DAC/UFSCar
-            </p>
+            <p class="text-sm font-medium text-white dark:text-gray-300">Desenvolvido pelo professor <strong class="text-brand-mint font-semibold">Glauber Santiago</strong> — DAC/UFSCar</p>
             <p class="text-xs text-brand-lavmist dark:text-gray-400 flex flex-wrap items-center justify-center gap-3">
                 <a href="https://servidores.ufscar.br/glauber/" target="_blank" class="hover:text-white transition-colors">servidores.ufscar.br/glauber/</a>
                 <span class="opacity-30">•</span>
@@ -655,9 +584,7 @@
 
             sequence.forEach((chord, index) => {
                 const el = document.createElement('div');
-                
                 const gridSpanClass = chord.beats === 4 ? 'col-span-2' : 'col-span-1';
-                
                 let styleClass = chord.beats === 2 
                     ? 'bg-brand-lavmist/40 dark:bg-gray-800 border-dashed border-brand-purple/50 dark:border-gray-600 text-sm' 
                     : 'bg-white dark:bg-gray-700 border-solid border-brand-lavmist dark:border-gray-600 text-lg';
@@ -736,7 +663,6 @@
             if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
 
             const url = `${CONFIG.REPO_BASE_URL}${chord.file}${CONFIG.FILE_EXTENSION}`;
-            
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -786,7 +712,6 @@
         async function handleConsolidate() {
             if (sequence.length === 0) return false;
             const ctx = getAudioContext();
-            
             statusText.innerHTML = "Processando áudios na memória...";
             statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
 
@@ -813,7 +738,6 @@
 
                     source.connect(fadeGain);
                     fadeGain.connect(offlineCtx.destination); 
-                    
                     source.start(currentStartTime, 0, durationSecs);
                     
                     chord.startTime = currentStartTime;
@@ -892,9 +816,7 @@
                     btnPlay.innerHTML = '<span class="loading-spinner"></span> <span class="hidden sm:inline">Processando...</span>';
                     btnPlay.classList.add('opacity-80');
                     btnPlay.disabled = true;
-                    
                     const success = await handleConsolidate();
-                    
                     if (!success) {
                         btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
                         btnPlay.classList.remove('opacity-80');
@@ -910,17 +832,14 @@
         function playAudio() {
             if (!objectUrl) return;
             setupLiveEffects();
-
             const targetBPM = parseFloat(bpmInput.value) || CONFIG.NATIVE_BPM;
             mainPlayer.playbackRate = targetBPM / CONFIG.NATIVE_BPM;
             mainPlayer.preservesPitch = true;
             if (typeof mainPlayer.mozPreservesPitch !== 'undefined') mainPlayer.mozPreservesPitch = true;
             if (typeof mainPlayer.webkitPreservesPitch !== 'undefined') mainPlayer.webkitPreservesPitch = true;
-
             mainPlayer.onended = () => { if(isPlaying) stopAudio(); };
             mainPlayer.play();
             isPlaying = true;
-
             btnPlay.disabled = false;
             btnPlay.innerHTML = '<i class="fas fa-pause"></i> Pausar';
             btnPlay.classList.replace('bg-brand-mint', 'bg-yellow-400');
@@ -934,7 +853,6 @@
             mainPlayer.currentTime = 0;
             isPlaying = false;
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
-
             btnPlay.disabled = false;
             btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
             btnPlay.classList.replace('bg-yellow-400', 'bg-brand-mint');
@@ -942,15 +860,12 @@
             clearHighlights();
         }
 
-        function clearHighlights() {
-            document.querySelectorAll('.chord-block').forEach(b => b.classList.remove('active'));
-        }
+        function clearHighlights() { document.querySelectorAll('.chord-block').forEach(b => b.classList.remove('active')); }
 
         function syncVisuals() {
             if (!isPlaying) return;
             const elapsedTime = mainPlayer.currentTime;
             const currentIndex = sequence.findIndex(c => elapsedTime >= c.startTime && elapsedTime < c.endTime);
-
             clearHighlights();
             if (currentIndex >= 0 && currentIndex < sequence.length) {
                 const activeBlock = document.getElementById(`seq-${currentIndex}`);
@@ -964,7 +879,6 @@
             const sampleRate = buffer.sampleRate;
             const format = 1; 
             const bitDepth = 16;
-            
             const bytesPerSample = bitDepth / 8;
             const blockAlign = numChannels * bytesPerSample;
             const byteRate = sampleRate * blockAlign;
@@ -1006,6 +920,56 @@
                 }
             }
             return new Blob([arrayBuffer], { type: 'audio/wav' });
+        }
+
+        // --- COMPRESSOR MP3 ---
+        function encodeMp3(audioBuffer) {
+            return new Promise((resolve) => {
+                const channels = audioBuffer.numberOfChannels;
+                const sampleRate = audioBuffer.sampleRate;
+                const kbps = 128; // Qualidade média para Moodle
+                
+                let mp3encoder;
+                if (channels === 1) {
+                    mp3encoder = new lamejs.Mp3Encoder(1, sampleRate, kbps);
+                } else {
+                    mp3encoder = new lamejs.Mp3Encoder(2, sampleRate, kbps);
+                }
+                
+                const mp3Data = [];
+                const left = audioBuffer.getChannelData(0);
+                const right = channels > 1 ? audioBuffer.getChannelData(1) : left;
+
+                const sampleBlockSize = 1152; // LameJS requer blocos de 1152 samples
+                const leftChunk = new Int16Array(sampleBlockSize);
+                const rightChunk = new Int16Array(sampleBlockSize);
+
+                for (let i = 0; i < left.length; i += sampleBlockSize) {
+                    for (let j = 0; j < sampleBlockSize; j++) {
+                        if (i + j < left.length) {
+                            leftChunk[j] = left[i + j] * 32767.5;
+                            rightChunk[j] = right[i + j] * 32767.5;
+                        } else {
+                            leftChunk[j] = 0;
+                            rightChunk[j] = 0;
+                        }
+                    }
+
+                    let mp3buf;
+                    if (channels === 1) {
+                        mp3buf = mp3encoder.encodeBuffer(leftChunk);
+                    } else {
+                        mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
+                    }
+                    if (mp3buf.length > 0) mp3Data.push(new Int8Array(mp3buf));
+                }
+                
+                const mp3buf = mp3encoder.flush();
+                if (mp3buf.length > 0) mp3Data.push(new Int8Array(mp3buf));
+                
+                const blob = new Blob(mp3Data, { type: 'audio/mp3' });
+                resolve(blob);
+            });
         }
         
         /**
@@ -1062,6 +1026,7 @@
             } else if (type === 'moodle') {
                 document.getElementById('export-moodle-text').value = '';
                 document.getElementById('btn-copy-moodle').classList.add('hidden');
+                document.getElementById('moodle-size-info').innerText = '';
                 document.getElementById('btn-copy-moodle').innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
             }
         }
@@ -1142,27 +1107,49 @@
             e.target.value = '';
         });
 
-        // --- EXPORTAÇÃO MOODLE (A PROVA DE PURIFICADOR DO MOODLE) ---
-        document.getElementById('btn-gen-moodle').addEventListener('click', () => {
-            if (!currentWavBlob) {
+        // --- EXPORTAÇÃO MOODLE (MP3 vs WAV) ---
+        async function generateMoodleHTML(useCompression) {
+            if (!consolidatedBuffer) {
                 alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de exportar.");
                 return;
             }
 
-            const btnCopy = document.getElementById('btn-copy-moodle');
-            btnCopy.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processando...';
-            btnCopy.classList.remove('hidden');
+            const btnMp3 = document.getElementById('btn-gen-moodle-mp3');
+            const btnWav = document.getElementById('btn-gen-moodle-wav');
+            const originalMp3Html = btnMp3.innerHTML;
+            const originalWavHtml = btnWav.innerHTML;
+
+            if (useCompression) {
+                btnMp3.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Comprimindo...';
+            } else {
+                btnWav.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Codificando...';
+            }
+            
+            btnMp3.disabled = true;
+            btnWav.disabled = true;
+
+            let finalBlob;
+            
+            if (useCompression) {
+                // Comprime para MP3 usando lamejs
+                finalBlob = await encodeMp3(consolidatedBuffer);
+            } else {
+                // Usa o WAV original
+                finalBlob = currentWavBlob;
+            }
 
             const reader = new FileReader();
             reader.onloadend = function() {
                 const base64data = reader.result;
+                const sizeKb = Math.round(base64data.length / 1024);
 
                 let chordsHtml = '';
                 sequence.forEach(chord => {
                     chordsHtml += `<span style="display:inline-block; background-color:#ffffff; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; font-weight:bold; color:#36454F; margin:4px; font-size:14px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${chord.name}</span>`;
                 });
 
-                // Hack usando <div> reais invisíveis visualmente mas intocáveis pelo Moodle Atto
+                const mimeTypeStr = useCompression ? 'audio/mp3' : 'audio/wav';
+
                 const htmlStr = `
 <div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
 ========================================================<br>
@@ -1188,10 +1175,24 @@
 `;
                 
                 document.getElementById('export-moodle-text').value = htmlStr.trim();
+                
+                const formatLabel = useCompression ? 'MP3' : 'WAV';
+                document.getElementById('moodle-size-info').innerText = `Tamanho estimado (${formatLabel}): ${sizeKb} KB`;
+                
+                const btnCopy = document.getElementById('btn-copy-moodle');
+                btnCopy.classList.remove('hidden');
                 btnCopy.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
+                
+                btnMp3.innerHTML = originalMp3Html;
+                btnWav.innerHTML = originalWavHtml;
+                btnMp3.disabled = false;
+                btnWav.disabled = false;
             };
-            reader.readAsDataURL(currentWavBlob);
-        });
+            reader.readAsDataURL(finalBlob);
+        }
+
+        document.getElementById('btn-gen-moodle-mp3').addEventListener('click', () => generateMoodleHTML(true));
+        document.getElementById('btn-gen-moodle-wav').addEventListener('click', () => generateMoodleHTML(false));
 
         document.getElementById('btn-copy-moodle').addEventListener('click', () => {
             const textArea = document.getElementById('export-moodle-text');
