@@ -289,13 +289,13 @@
                     <div id="view-moodle" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center flex-wrap gap-4">
                             <p class="text-sm text-gray-500 dark:text-gray-400 w-full sm:w-2/3">
-                                Gera um código HTML seguro, à prova de limpeza, contendo apenas a sequência visual e um botão de Play para colar no Moodle (Modo Código-Fonte <b>&lt;&gt;</b>). Inclui marcadores visuais para facilitar a edição posterior.
+                                Gera o código para o Moodle. O Moodle apaga comentários normais, então o código gerado possui blocos de texto <b>invisíveis na página</b>, mas gigantes e inapagáveis no modo código-fonte <b>&lt;&gt;</b>.
                             </p>
                             <button id="btn-gen-moodle" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
                                 <i class="fas fa-code mr-1"></i> Gerar Código Moodle
                             </button>
                         </div>
-                        <textarea id="export-moodle-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none" placeholder="Clique em 'Gerar Código Moodle' (É necessário tocar a música pelo menos uma vez antes)."></textarea>
+                        <textarea id="export-moodle-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none" placeholder="Clique em 'Gerar Código Moodle' (Toque a música pelo menos uma vez antes)."></textarea>
                         <button id="btn-copy-moodle" class="hidden bg-brand-mint text-brand-charcoal py-3 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-95 w-full sm:w-auto self-end flex items-center justify-center">
                             <i class="fas fa-copy mr-2"></i> Copiar Código HTML
                         </button>
@@ -1142,7 +1142,7 @@
             e.target.value = '';
         });
 
-        // --- EXPORTAÇÃO MOODLE ---
+        // --- EXPORTAÇÃO MOODLE (A PROVA DE PURIFICADOR DO MOODLE) ---
         document.getElementById('btn-gen-moodle').addEventListener('click', () => {
             if (!currentWavBlob) {
                 alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de exportar.");
@@ -1162,7 +1162,14 @@
                     chordsHtml += `<span style="display:inline-block; background-color:#ffffff; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; font-weight:bold; color:#36454F; margin:4px; font-size:14px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${chord.name}</span>`;
                 });
 
+                // Hack usando <div> reais invisíveis visualmente mas intocáveis pelo Moodle Atto
                 const htmlStr = `
+<div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
+========================================================<br>
+               INÍCIO DO CÓDIGO GL BIAS                 <br>
+========================================================
+</div>
+
 <div style="border: 2px solid #E6E6FA; border-radius: 12px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8F8FF; max-width: 100%; box-sizing: border-box;">
     <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical</h3>
     <div style="margin-bottom: 20px;">
@@ -1173,6 +1180,11 @@
     </audio>
 </div>
 
+<div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
+========================================================<br>
+                FIM DO CÓDIGO GL BIAS                   <br>
+========================================================
+</div>
 `;
                 
                 document.getElementById('export-moodle-text').value = htmlStr.trim();
