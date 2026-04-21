@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BIAS: Band-in-a-Site</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎹</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Configuração da Paleta Original -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -33,7 +32,6 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
         }
         
-        /* Cor do acorde quando está tocando na animação */
         .chord-block.active {
             transform: scale(1.05) translateY(-2px);
             background-color: #70E0A6 !important; 
@@ -59,7 +57,6 @@
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Estilo do Slider de Reverb */
         input[type=range] {
             -webkit-appearance: none;
             background: transparent;
@@ -90,7 +87,6 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Modal Tabs */
         .export-tab {
             transition: all 0.2s;
         }
@@ -105,7 +101,6 @@
 
     <div class="max-w-6xl mx-auto p-4 sm:p-8 flex-grow w-full flex flex-col gap-10">
         
-        <!-- Header -->
         <header class="flex flex-col sm:flex-row items-center justify-between pt-6">
             <div class="text-center sm:text-left">
                 <h1 class="text-4xl sm:text-5xl font-bold flex items-center justify-center sm:justify-start gap-3 text-brand-charcoal dark:text-white mb-2">
@@ -117,17 +112,14 @@
                 </p>
             </div>
             <div class="mt-6 sm:mt-0">
-                <!-- Botão de Tema (Claro/Escuro) -->
                 <button id="theme-toggle" class="p-4 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-white dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-brand-purple transition-all">
                     <i class="fas fa-moon text-lg" id="theme-icon"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Main Workspace -->
         <div class="flex flex-col gap-8">
             
-            <!-- Painel de Acordes -->
             <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-8 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
                 
                 <div>
@@ -135,24 +127,19 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Selecione a nota fundamental e clique no tipo para adicionar à música.</p>
                 </div>
 
-                <!-- 1. QUALIDADES -->
                 <div class="flex flex-col gap-3">
                     <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Tipo (Clique para Adicionar)</label>
                     <div id="quality-palette" class="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                        <!-- Buttons populated by JS -->
-                    </div>
+                        </div>
                 </div>
 
-                <!-- 2. TOM -->
                 <div class="flex flex-col gap-3">
                     <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Fundamental</label>
                     <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x">
-                        <!-- Buttons populated by JS -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
-            <!-- Área da Sequência -->
             <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-6 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
                 
                 <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
@@ -162,7 +149,6 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
                         </div>
                         
-                        <!-- DURAÇÃO -->
                         <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
                             <label class="cursor-pointer group mb-0">
                                 <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
@@ -186,7 +172,6 @@
                     </div>
                 </div>
 
-                <!-- Sequence Grid -->
                 <div id="sequence-container" class="flex-grow bg-brand-ghost dark:bg-gray-900/50 rounded-[1.5rem] p-6 min-h-[200px] grid grid-cols-8 gap-x-3 gap-y-4 content-start border border-brand-lavmist dark:border-gray-700">
                     <div class="col-span-8 text-center text-gray-500 mt-12 font-medium" id="empty-state">
                         Sua música está vazia. Comece a montar no painel acima.
@@ -194,31 +179,25 @@
                 </div>
             </div>
 
-            <!-- Player & Controls (Sticky Floating Bar) -->
             <div class="sticky bottom-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-lg border border-gray-200 dark:border-gray-700 z-40">
                 
-                <!-- Status & FX & Export -->
                 <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
                     <div id="status-text" class="text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[200px]">
                         Pronto para montar.
                     </div>
 
-                    <!-- NOVO LOCAL: Botão de Exportação/Importação -->
                     <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2 px-4 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
                         <i class="fas fa-file-export"></i> Dados & Exportação
                     </button>
                     
-                    <!-- REVERB -->
                     <div class="flex items-center gap-4 bg-brand-ghost dark:bg-gray-700 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-600">
                         <label for="reverb-slider" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-water text-brand-purple mr-1"></i> Reverb</label>
                         <input type="range" id="reverb-slider" min="0" max="100" value="50" class="w-24">
                     </div>
                 </div>
 
-                <!-- Transport Controls -->
                 <div class="flex gap-3 w-full lg:w-auto justify-center flex-wrap sm:flex-nowrap">
                     
-                    <!-- BPM -->
                     <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700 px-5 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-brand-purple transition-all">
                         <label for="bpm-input" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest">
                             <i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM
@@ -241,11 +220,9 @@
         </div>
     </div>
 
-    <!-- MODAL DE EXPORTAÇÃO E DADOS -->
     <div id="export-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
         <div class="bg-white dark:bg-gray-800 rounded-[2rem] w-full max-w-5xl shadow-2xl ring-1 ring-white/10 flex flex-col max-h-[90vh] overflow-hidden">
             
-            <!-- Header Modal -->
             <div class="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-700">
                 <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-save mr-2 text-brand-purple"></i>Dados & Exportação</h2>
                 <button id="close-modal" class="text-gray-400 hover:text-brand-purple dark:hover:text-brand-purple transition-colors">
@@ -253,15 +230,15 @@
                 </button>
             </div>
             
-            <!-- Modal Body -->
             <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
                 
-                <!-- Sidebar Menu -->
                 <div class="w-full md:w-56 bg-brand-ghost dark:bg-gray-900/50 p-4 flex flex-row md:flex-col gap-2 overflow-x-auto hide-scrollbar border-r border-gray-100 dark:border-gray-700">
                     <button class="export-tab active text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="data">
                         <i class="fas fa-file-code w-5 text-center mr-1"></i> Projeto (.txt)
                     </button>
-                    <!-- Nova Aba de Áudio -->
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="moodle">
+                        <i class="fas fa-graduation-cap w-5 text-center mr-1"></i> Moodle (HTML)
+                    </button>
                     <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="audio">
                         <i class="fas fa-file-audio w-5 text-center mr-1"></i> Áudio (.wav)
                     </button>
@@ -279,10 +256,8 @@
                     </button>
                 </div>
                 
-                <!-- View Container -->
                 <div class="flex-grow p-6 sm:p-8 overflow-y-auto flex flex-col gap-6 bg-white dark:bg-gray-800">
                     
-                    <!-- Metadados -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
                         <div>
                             <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Título do Trabalho</label>
@@ -296,33 +271,43 @@
                     
                     <hr class="border-gray-100 dark:border-gray-700">
                     
-                    <!-- Views de Funcionalidade -->
-                    
-                    <!-- 1. DATA -->
                     <div id="view-data" class="export-view flex flex-col gap-6">
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Salve a estrutura do seu trabalho num ficheiro local para continuar a editar mais tarde. Também pode carregar um projeto existente para a tela principal.
+                            Salve a estrutura do seu trabalho num ficheiro local para continuar a editar mais tarde.
                         </p>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple dark:hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
+                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
                                 <i class="fas fa-download mr-2"></i> Salvar Projeto (.txt)
                             </button>
-                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
+                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm">
                                 <i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.txt)
                             </button>
-                            <!-- Input de ficheiro oculto -->
                             <input type="file" id="file-import-input" accept=".txt" class="hidden">
                         </div>
                     </div>
 
-                    <!-- 2. AUDIO -->
+                    <div id="view-moodle" class="export-view hidden flex flex-col gap-6 h-full">
+                        <div class="flex justify-between items-center flex-wrap gap-4">
+                            <p class="text-sm text-gray-500 dark:text-gray-400 w-full sm:w-2/3">
+                                Gera um código HTML seguro, à prova de limpeza, contendo apenas a sequência visual e um botão de Play para colar no Moodle (Modo Código-Fonte <b>&lt;&gt;</b>). Inclui marcadores visuais para facilitar a edição posterior.
+                            </p>
+                            <button id="btn-gen-moodle" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
+                                <i class="fas fa-code mr-1"></i> Gerar Código Moodle
+                            </button>
+                        </div>
+                        <textarea id="export-moodle-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none" placeholder="Clique em 'Gerar Código Moodle' (É necessário tocar a música pelo menos uma vez antes)."></textarea>
+                        <button id="btn-copy-moodle" class="hidden bg-brand-mint text-brand-charcoal py-3 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-95 w-full sm:w-auto self-end flex items-center justify-center">
+                            <i class="fas fa-copy mr-2"></i> Copiar Código HTML
+                        </button>
+                    </div>
+
                     <div id="view-audio" class="export-view hidden flex flex-col gap-6">
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Exporte a sua trilha sonora já processada e em alta qualidade (WAV) para usar noutros softwares ou partilhar.
+                            Exporte a sua trilha sonora já processada e em alta qualidade (WAV).
                         </p>
                         <div class="bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-xl border border-brand-lavmist dark:border-gray-600">
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                <i class="fas fa-info-circle text-brand-purple mr-1"></i> <strong>Aviso:</strong> O botão abaixo só ficará disponível após você clicar em "Tocar" na tela principal para processar o áudio com as alterações mais recentes.
+                                <i class="fas fa-info-circle text-brand-purple mr-1"></i> <strong>Aviso:</strong> Só ficará disponível após clicar em "Tocar" na tela principal.
                             </p>
                         </div>
                         <a id="btn-dl-audio-modal" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 pointer-events-none opacity-50 flex items-center justify-center gap-2 cursor-pointer">
@@ -330,7 +315,6 @@
                         </a>
                     </div>
                     
-                    <!-- 3. IMAGE -->
                     <div id="view-img" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Gera uma folha estruturada com marcação de compassos.</p>
@@ -343,7 +327,6 @@
                         </div>
                     </div>
                     
-                    <!-- 4. TABELA TEXTO -->
                     <div id="view-tab" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center">
                             <p class="text-sm text-gray-500 dark:text-gray-400">Formato de texto simples focado na estrutura tabular (Markdown).</p>
@@ -354,26 +337,18 @@
                         <textarea id="export-tab-text" readonly class="w-full flex-grow bg-brand-ghost dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-brand-charcoal dark:text-gray-300 font-mono text-sm p-5 rounded-2xl outline-none resize-none"></textarea>
                     </div>
 
-                    <!-- 5. MUSICXML -->
                     <div id="view-mus" class="export-view hidden flex flex-col gap-6">
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Exporte a grelha de acordes nativa em formato MusicXML 3.1. Este formato pode ser aberto e analisado nativamente em aplicações como <strong>MuseScore, Finale, Sibelius ou Dorico</strong>.
+                            Exporte a grelha de acordes nativa em formato MusicXML 3.1.
                         </p>
-                        <div class="bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-xl border border-brand-lavmist dark:border-gray-600">
-                            <ul class="text-xs text-gray-500 dark:text-gray-400 list-disc list-inside ml-4 space-y-1">
-                                <li>A pauta terá clave de Sol e compasso 4/4.</li>
-                                <li>Os acordes aparecerão como notação harmónica (Cifras).</li>
-                            </ul>
-                        </div>
                         <button id="btn-dl-mus" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110">
-                            <i class="fas fa-file-code mr-2"></i> Baixar MusicXML (.musicxml)
+                            <i class="fas fa-file-code mr-2"></i> Baixar MusicXML
                         </button>
                     </div>
 
-                    <!-- 6. BIAB -->
                     <div id="view-biab" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center">
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Exporta como string limpa para softwares Band in a Box ou sequenciadores de texto.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Exporta string limpa para softwares Band in a Box.</p>
                             <button id="btn-dl-biab" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">
                                 Baixar (.txt)
                             </button>
@@ -386,7 +361,6 @@
         </div>
     </div>
 
-    <!-- Minimal Footer -->
     <footer class="bg-brand-charcoal dark:bg-gray-900 mt-auto py-8 transition-colors duration-200 border-t border-white/10 dark:border-gray-800">
         <div class="max-w-6xl mx-auto px-4 text-center flex flex-col gap-3">
             <p class="text-sm font-medium text-white dark:text-gray-300">
@@ -401,11 +375,6 @@
     </footer>
 
     <script>
-        /**
-         * ==========================================
-         * MODO ESCURO (DARK THEME) TOGGLE
-         * ==========================================
-         */
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         
@@ -427,11 +396,6 @@
             }
         });
 
-        /**
-         * ==========================================
-         * CONFIGURAÇÕES
-         * ==========================================
-         */
         const CONFIG = {
             REPO_BASE_URL: "https://glauberlasantiago.github.io/TocaSwing130/",
             FILE_EXTENSION: ".mp3", 
@@ -469,6 +433,7 @@
         let sequence = [];               
         let audioCache = new Map();      
         let consolidatedBuffer = null;   
+        let currentWavBlob = null;       
         let objectUrl = null;            
         let isPlaying = false;
         let animationFrameId = null;
@@ -513,7 +478,6 @@
                 
                 group.forEach((root) => {
                     const btn = document.createElement('button');
-                    // O 'flex-1' faz com que a nota única ocupe a altura total e notas divididas ocupem metade
                     btn.className = "root-btn flex-1 px-1 py-2 sm:py-3 rounded-xl font-medium transition-all text-center border-2 text-sm sm:text-base";
                     btn.innerText = root.display;
                     btn.dataset.display = root.display; 
@@ -523,7 +487,6 @@
                     };
                     col.appendChild(btn);
                 });
-                
                 rootPalette.appendChild(col);
             });
             updateRootButtonsUI(); 
@@ -533,7 +496,6 @@
                 const btn = document.createElement('button');
                 btn.className = "bg-white dark:bg-gray-700 border-2 border-brand-lavmist dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple text-brand-charcoal dark:text-gray-200 font-bold py-3 rounded-full shadow-sm transition-all text-sm";
                 btn.innerText = quality.label;
-                
                 btn.onclick = () => {
                     const root = selectedRoot;
                     const chordName = root.display + quality.label;
@@ -564,11 +526,11 @@
 
         function addOrReplaceChord(chordData) {
             needsConsolidation = true;
+            currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
             btnPlay.disabled = false;
             
-            // Desabilita o download de áudio pois a sequência mudou
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
@@ -634,6 +596,7 @@
             if (editingChordId === id) editingChordId = null; 
             sequence = sequence.filter(c => c.id !== id);
             needsConsolidation = true;
+            currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
             
@@ -656,6 +619,7 @@
             sequence = [];
             consolidatedBuffer = null;
             needsConsolidation = true;
+            currentWavBlob = null;
             editingChordId = null;
             btnPlay.disabled = true;
             if (objectUrl) URL.revokeObjectURL(objectUrl);
@@ -860,12 +824,11 @@
                 statusText.innerHTML = "Renderizando arquivo final...";
                 consolidatedBuffer = await offlineCtx.startRendering();
                 
-                const wavBlob = audioBufferToWav(consolidatedBuffer);
+                currentWavBlob = audioBufferToWav(consolidatedBuffer);
                 if (objectUrl) URL.revokeObjectURL(objectUrl);
-                objectUrl = URL.createObjectURL(wavBlob);
+                objectUrl = URL.createObjectURL(currentWavBlob);
                 mainPlayer.src = objectUrl;
 
-                // Disponibiliza o botão de baixar áudio no modal
                 btnDownloadAudio.href = objectUrl;
                 btnDownloadAudio.download = `BandInABox_${bpmInput.value || CONFIG.NATIVE_BPM}BPM.wav`;
                 btnDownloadAudio.classList.remove('pointer-events-none', 'opacity-50');
@@ -892,9 +855,9 @@
             convolverNode.buffer = createReverbImpulse(ctx, 2.5); 
             mediaElementSource.connect(dryGainNode);          
             mediaElementSource.connect(convolverNode);        
-            convolverNode.connect(wetGainNode);               
-            dryGainNode.connect(ctx.destination);             
-            wetGainNode.connect(ctx.destination);             
+            convolverNode.connect(wetGainNode);                
+            dryGainNode.connect(ctx.destination);              
+            wetGainNode.connect(ctx.destination);              
             isRoutingSetup = true;
             updateReverbMix(); 
         }
@@ -1059,20 +1022,17 @@
         const workTitleInput = document.getElementById('work-title');
         const authorNameInput = document.getElementById('author-name');
 
-        // Abre modal
         btnExport.addEventListener('click', () => {
             exportModal.classList.remove('hidden');
             exportModal.classList.add('flex');
-            showExportView('data'); // Padrão é mostrar a aba de Dados/Projeto
+            showExportView('data'); 
         });
 
-        // Fecha modal
         btnCloseModal.addEventListener('click', () => {
             exportModal.classList.add('hidden');
             exportModal.classList.remove('flex');
         });
 
-        // Alterna entre abas
         exportTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
                 const type = e.currentTarget.getAttribute('data-type');
@@ -1081,39 +1041,37 @@
         });
 
         function showExportView(type) {
-            // Atualiza botões do menu lateral
             exportTabs.forEach(t => t.classList.remove('active'));
             document.querySelector(`.export-tab[data-type="${type}"]`).classList.add('active');
 
-            // Esconde todas as views
             exportViews.forEach(v => {
                 v.classList.add('hidden');
                 v.classList.remove('flex');
             });
 
-            // Mostra a view solicitada
             const targetView = document.getElementById(`view-${type}`);
             targetView.classList.remove('hidden');
             targetView.classList.add('flex');
 
-            // Gatilhos específicos por view
             if (type === 'img') {
                 generateImageExport(document.getElementById('export-canvas'));
             } else if (type === 'tab') {
                 document.getElementById('export-tab-text').value = exportTableText();
             } else if (type === 'biab') {
                 document.getElementById('export-biab-text').value = exportBIABText();
+            } else if (type === 'moodle') {
+                document.getElementById('export-moodle-text').value = '';
+                document.getElementById('btn-copy-moodle').classList.add('hidden');
+                document.getElementById('btn-copy-moodle').innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
             }
         }
 
-        // Helper para nomes de ficheiros
         function getSanitizedFilename(extension) {
             const title = workTitleInput.value || '';
             const sanitized = title.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'projeto_swing';
             return `${sanitized}.${extension}`;
         }
 
-        // Helper genérico para download local
         function downloadContent(content, mimeType, filename) {
             const blob = new Blob([content], { type: mimeType });
             const a = document.createElement('a');
@@ -1154,7 +1112,6 @@
                 const text = await file.text();
                 const data = JSON.parse(text);
 
-                // Suporta o formato legado e o novo formato
                 const info = data.projeto || data;
                 const acordes = info.dados_harmonicos || info.sequence || [];
 
@@ -1169,13 +1126,13 @@
                 }));
                 
                 needsConsolidation = true;
+                currentWavBlob = null;
                 if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
                 mainPlayer.src = "";
                 
                 statusText.innerHTML = "Projeto carregado com sucesso. <span class='text-brand-purple'>Clique em Tocar.</span>";
                 renderSequence();
                 
-                // Fecha o modal após carregar
                 exportModal.classList.add('hidden');
                 exportModal.classList.remove('flex');
             } catch (err) {
@@ -1185,11 +1142,60 @@
             e.target.value = '';
         });
 
+        // --- EXPORTAÇÃO MOODLE ---
+        document.getElementById('btn-gen-moodle').addEventListener('click', () => {
+            if (!currentWavBlob) {
+                alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de exportar.");
+                return;
+            }
+
+            const btnCopy = document.getElementById('btn-copy-moodle');
+            btnCopy.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processando...';
+            btnCopy.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const base64data = reader.result;
+
+                let chordsHtml = '';
+                sequence.forEach(chord => {
+                    chordsHtml += `<span style="display:inline-block; background-color:#ffffff; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; font-weight:bold; color:#36454F; margin:4px; font-size:14px; box-shadow:0 1px 2px rgba(0,0,0,0.05);">${chord.name}</span>`;
+                });
+
+                const htmlStr = `
+<div style="border: 2px solid #E6E6FA; border-radius: 12px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8F8FF; max-width: 100%; box-sizing: border-box;">
+    <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical</h3>
+    <div style="margin-bottom: 20px;">
+        ${chordsHtml}
+    </div>
+    <audio controls style="width: 100%; outline: none;" src="${base64data}">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+</div>
+
+`;
+                
+                document.getElementById('export-moodle-text').value = htmlStr.trim();
+                btnCopy.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
+            };
+            reader.readAsDataURL(currentWavBlob);
+        });
+
+        document.getElementById('btn-copy-moodle').addEventListener('click', () => {
+            const textArea = document.getElementById('export-moodle-text');
+            textArea.select();
+            document.execCommand('copy');
+            const btn = document.getElementById('btn-copy-moodle');
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
+            }, 2000);
+        });
+
         // --- 2. IMAGEM (.png) ---
         function generateImageExport(canvas) {
             const ctx = canvas.getContext('2d');
             const cols = 8;
-            // Se estiver vazio, gera 1 linha pelo menos
             const rows = Math.max(1, Math.ceil(sequence.length / cols));
             const mWidth = 140;
             const mHeight = 40;
@@ -1204,7 +1210,7 @@
             const title = workTitleInput.value || 'Trabalho Sem Título';
             const author = authorNameInput.value || 'Anônimo';
 
-            ctx.fillStyle = '#B57EDC'; // brand-purple
+            ctx.fillStyle = '#B57EDC'; 
             ctx.font = 'bold 24px sans-serif';
             ctx.fillText(title, padding, padding + 25);
 
@@ -1219,7 +1225,6 @@
                 ctx.strokeStyle = '#e2e8f0';
                 ctx.strokeRect(x, y, mWidth - 4, mHeight - 4);
 
-                // Barra indicadora colorida baseada na métrica
                 ctx.fillStyle = item.beats === 4 ? '#B57EDC' : '#70E0A6';
                 ctx.fillRect(x + mWidth - 7, y, 3, mHeight - 4);
 
