@@ -127,7 +127,13 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-3 shrink-0 flex-wrap">
-                        <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2">
+                        <button id="btn-copy" disabled class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent dark:border-gray-600 shadow-sm select-none">
+                            <i class="fas fa-copy"></i> Copiar <span class="text-xs opacity-60">(Ctrl+C)</span>
+                        </button>
+                        <button id="btn-paste" disabled class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent dark:border-gray-600 shadow-sm select-none">
+                            <i class="fas fa-paste"></i> Colar <span class="text-xs opacity-60">(Ctrl+V)</span>
+                        </button>
+                        <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 select-none">
                             <i class="fas fa-trash"></i> Limpar Tudo
                         </button>
                     </div>
@@ -135,6 +141,20 @@
 
                 <div id="sequence-container" class="flex-grow bg-brand-ghost dark:bg-gray-900/50 rounded-[1.5rem] p-6 min-h-[200px] grid grid-cols-8 gap-x-3 gap-y-4 content-start border border-brand-lavmist dark:border-gray-700">
                     <div class="col-span-8 text-center text-gray-500 mt-12 font-medium" id="empty-state">Sua música está vazia. Comece a montar no painel acima.</div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <div class="text-xs text-gray-500 dark:text-gray-400 select-none">
+                        * Clique duplo num compasso para dividi-lo ao meio (2 acordes). Clique simples para selecionar o compasso e digitar o acorde.
+                    </div>
+                    <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0 select-none">
+                        <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-3">Total de Compassos</span>
+                        <div class="flex items-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-600 overflow-hidden">
+                            <button id="btn-dec-measures" class="px-3 py-1 text-gray-500 dark:text-gray-400 hover:bg-brand-lavmist dark:hover:bg-gray-700 transition-colors focus:outline-none"><i class="fas fa-minus text-xs"></i></button>
+                            <input type="number" id="measures-count" value="32" min="1" max="128" class="w-12 text-center bg-transparent text-sm font-bold focus:outline-none text-brand-charcoal dark:text-white" readonly>
+                            <button id="btn-inc-measures" class="px-3 py-1 text-gray-500 dark:text-gray-400 hover:bg-brand-lavmist dark:hover:bg-gray-700 transition-colors focus:outline-none"><i class="fas fa-plus text-xs"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -360,6 +380,23 @@
 
         let audioContext = null;         
         let sequence = [];               
+        let selectedMeasures = [];
+        let lastSelectedMeasureIdx = null;
+        let copiedMeasures = [];
+        let editMeasureIdx = null;
+        let editSubIdx = null;
+        let chordInputBuffer = "";
+
+        // Inicializa com 32 compassos vazios por padrão
+        for (let i = 0; i < 32; i++) {
+            sequence.push({
+                id: Math.random(),
+                name: "",
+                file: "",
+                beats: 4
+            });
+        }
+
         let audioCache = new Map();      
         let consolidatedBuffer = null;   
         let currentWavBlob = null;       
@@ -386,6 +423,141 @@
         const bpmInput = document.getElementById('bpm-input');
         const reverbSlider = document.getElementById('reverb-slider');
         const btnDownloadAudio = document.getElementById('btn-dl-audio-modal');
+        function getMeasuresFromSequence() {
+            let measures = [];
+            let currentMeasureChords = [];
+            let currentBeats = 0;
+            
+            sequence.forEach(chord => {
+                currentMeasureChords.push(chord);
+                currentBeats += chord.beats;
+                if (currentBeats >= 4) {
+                    measures.push(currentMeasureChords);
+                    currentMeasureChords = [];
+                    currentBeats = 0;
+                }
+            });
+            if (currentMeasureChords.length > 0) {
+                measures.push(currentMeasureChords);
+            }
+            return measures;
+        }
+
+        function resetToEmptyMeasures(count = 32) {
+            sequence = [];
+            for (let i = 0; i < count; i++) {
+                sequence.push({
+                    id: Math.random(),
+                    name: "",
+                    file: "",
+                    beats: 4
+                });
+            }
+        }
+
+        function toggleMeasureSplit(index) {
+            const chord = sequence[index];
+            if (chord.beats === 4) {
+                // Split: replace this 4-beat chord with two 2-beat chords
+                const newChords = [
+                    { id: Math.random(), name: chord.name, file: chord.file, beats: 2 },
+                    { id: Math.random(), name: "", file: "", beats: 2 }
+                ];
+                sequence.splice(index, 1, ...newChords);
+                
+                // If it was editing, update editing slot selection
+                let elapsedBeats = 0;
+                for (let i = 0; i < index; i++) elapsedBeats += sequence[i].beats;
+                const mIdx = Math.floor(elapsedBeats / 4);
+                if (editMeasureIdx === mIdx) {
+                    editSubIdx = 0;
+                    chordInputBuffer = "";
+                }
+            } else {
+                // Merge: find the measure boundary
+                let elapsedBeats = 0;
+                for (let i = 0; i < index; i++) {
+                    elapsedBeats += sequence[i].beats;
+                }
+                const measureStartBeat = Math.floor(elapsedBeats / 4) * 4;
+                
+                let currentBeat = 0;
+                let measureStartIndex = -1;
+                let measureEndIndex = -1;
+                for (let i = 0; i < sequence.length; i++) {
+                    if (currentBeat === measureStartBeat) {
+                        measureStartIndex = i;
+                    }
+                    currentBeat += sequence[i].beats;
+                    if (currentBeat === measureStartBeat + 4) {
+                        measureEndIndex = i;
+                        break;
+                    }
+                }
+                
+                if (measureStartIndex !== -1 && measureEndIndex !== -1) {
+                    const firstChord = sequence[measureStartIndex];
+                    const mergedChord = {
+                        id: Math.random(),
+                        name: firstChord.name,
+                        file: firstChord.file,
+                        beats: 4
+                    };
+                    const numToRemove = measureEndIndex - measureStartIndex + 1;
+                    sequence.splice(measureStartIndex, numToRemove, mergedChord);
+                    
+                    // If it was editing, update editing slot selection
+                    const mIdx = Math.floor(measureStartBeat / 4);
+                    if (editMeasureIdx === mIdx) {
+                        editSubIdx = 0;
+                        chordInputBuffer = "";
+                    }
+                }
+            }
+            needsConsolidation = true;
+            currentWavBlob = null;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
+            
+            renderSequence();
+        }
+
+        function setChordAtSlot(measureIdx, subIdx, chordData) {
+            needsConsolidation = true;
+            currentWavBlob = null;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            btnPlay.disabled = false;
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
+            
+            let currentBeat = 0;
+            let targetIdx = -1;
+            for (let i = 0; i < sequence.length; i++) {
+                const mIdx = Math.floor(currentBeat / 4);
+                const beatNumber = (currentBeat % 4) + 1;
+                const sIdx = beatNumber === 1 ? 0 : 1;
+                if (mIdx === measureIdx && sIdx === subIdx) {
+                    targetIdx = i;
+                    break;
+                }
+                currentBeat += sequence[i].beats;
+            }
+            
+            if (targetIdx !== -1) {
+                // Preserve beats and ID
+                chordData.beats = sequence[targetIdx].beats;
+                chordData.id = sequence[targetIdx].id;
+                sequence[targetIdx] = chordData;
+            }
+            
+            statusText.innerHTML = "Acorde alterado. Clique em Tocar para processar e ouvir.";
+            statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
+            
+            renderSequence();
+        }
 
         function initUI() {
             bpmInput.addEventListener('input', () => {
