@@ -72,121 +72,131 @@
 </head>
 <body class="bg-brand-lavmist dark:bg-gray-900 min-h-screen text-brand-charcoal dark:text-gray-200 font-sans flex flex-col transition-colors duration-200">
 
-    <div class="max-w-6xl mx-auto p-4 sm:p-8 flex-grow w-full flex flex-col gap-10">
+    <div class="w-full px-4 sm:px-6 py-4 flex-grow flex flex-col gap-4">
         
-        <header class="flex flex-col sm:flex-row items-center justify-between pt-6">
+        <header class="flex flex-col sm:flex-row items-center justify-between pt-2">
             <div class="text-center sm:text-left">
-                <h1 class="text-4xl sm:text-5xl font-bold flex items-center justify-center sm:justify-start gap-3 text-brand-charcoal dark:text-white mb-2">
-                    <span class="bg-brand-purple text-white rounded-xl px-3 py-1.5 text-3xl sm:text-4xl font-black tracking-tighter shadow-sm leading-none flex items-center justify-center">GL</span>
+                <h1 class="text-2xl sm:text-3xl font-bold flex items-center justify-center sm:justify-start gap-2 text-brand-charcoal dark:text-white mb-1">
+                    <span class="bg-brand-purple text-white rounded-lg px-2 py-1 text-xl sm:text-2xl font-black tracking-tighter shadow-sm leading-none flex items-center justify-center">GL</span>
                     BIAS: Band-in-a-Site
                 </h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-1 font-medium tracking-wide">
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-0.5 font-medium tracking-wide">
                     Escolha seus acordes e ouça a sequência. Na cifragem: 9 significa um acorde com sétima (menor) e nona; e dim7 é uma tétrade diminuta.
                 </p>
             </div>
-            <div class="mt-6 sm:mt-0">
-                <button id="theme-toggle" class="p-4 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-white dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-brand-purple transition-all">
-                    <i class="fas fa-moon text-lg" id="theme-icon"></i>
+            <div class="mt-4 sm:mt-0">
+                <button id="theme-toggle" class="p-2.5 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-white dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-brand-purple transition-all">
+                    <i class="fas fa-moon text-sm" id="theme-icon"></i>
                 </button>
             </div>
         </header>
 
-        <div class="flex flex-col gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-[max-content_1fr] gap-4 items-start">
             
-            <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-8 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
-                <div>
-                    <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-plus-circle mr-2 text-brand-purple"></i>Montar Acorde</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Selecione a nota fundamental e clique no tipo para adicionar à música.</p>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Tipo (Clique para Adicionar)</label>
-                    <div id="quality-palette" class="grid grid-cols-3 sm:grid-cols-6 gap-3"></div>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <label class="text-sm font-bold text-brand-charcoal dark:text-gray-300">Fundamental</label>
-                    <div id="root-palette" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x"></div>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 rounded-[2rem] p-6 sm:p-10 flex flex-col gap-6 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
-                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-                        <div>
-                            <h2 class="text-2xl font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-2 text-brand-purple"></i>Sua Sequência</h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
-                        </div>
-                        <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
-                            <label class="cursor-pointer group mb-0">
-                                <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
-                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Inteiro (4T)</div>
-                            </label>
-                            <label class="cursor-pointer group mb-0">
-                                <input type="radio" name="chord-duration" value="2" class="peer hidden">
-                                <div class="px-4 sm:px-5 py-2 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-sm text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Metade (2T)</div>
-                            </label>
-                        </div>
+            <!-- LATERAL ESQUERDA: Montagem de Acordes -->
+            <aside class="lg:sticky lg:top-4 flex flex-col gap-4 w-full">
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-4 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
+                    <div>
+                        <h2 class="text-lg font-bold text-brand-charcoal dark:text-white"><i class="fas fa-plus-circle mr-1.5 text-brand-purple"></i>Montar Acorde</h2>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Selecione a nota fundamental e clique no tipo para adicionar à música.</p>
                     </div>
-                    <div class="flex items-center gap-3 shrink-0 flex-wrap">
-                        <button id="btn-copy" disabled class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent dark:border-gray-600 shadow-sm select-none">
-                            <i class="fas fa-copy"></i> Copiar <span class="text-xs opacity-60">(Ctrl+C)</span>
-                        </button>
-                        <button id="btn-paste" disabled class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent dark:border-gray-600 shadow-sm select-none">
-                            <i class="fas fa-paste"></i> Colar <span class="text-xs opacity-60">(Ctrl+V)</span>
-                        </button>
-                        <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-sm font-semibold transition-colors py-2.5 px-5 rounded-full flex items-center gap-2 select-none">
-                            <i class="fas fa-trash"></i> Limpar Tudo
-                        </button>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Tipo (Clique para Adicionar)</label>
+                        <!-- Grid colunas modificado para 3 no sidebar no mobile e 6 no desktop -->
+                        <div id="quality-palette" class="grid grid-cols-3 lg:grid-cols-6 gap-1.5"></div>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Fundamental</label>
+                        <div id="root-palette" class="flex overflow-x-auto lg:overflow-x-visible hide-scrollbar gap-2 pb-4 lg:pb-0 snap-x lg:snap-none"></div>
                     </div>
                 </div>
+            </aside>
 
-                <div id="sequence-container" class="flex-grow bg-brand-ghost dark:bg-gray-900/50 rounded-[1.5rem] p-6 min-h-[200px] grid grid-cols-8 gap-x-3 gap-y-4 content-start border border-brand-lavmist dark:border-gray-700">
-                    <div class="col-span-8 text-center text-gray-500 mt-12 font-medium" id="empty-state">Sua música está vazia. Comece a montar no painel acima.</div>
-                </div>
+            <!-- LADO DIREITO: Controles e Sequência -->
+            <main class="flex flex-col gap-4 w-full min-w-0">
+                
+                <!-- CONTROLES: Fixos (sticky) acima da sequência -->
+                <div class="sticky top-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-xl flex flex-col lg:flex-row items-center justify-between gap-3 shadow border border-gray-200 dark:border-gray-700 z-40">
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                        <div id="status-text" class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[150px]">Pronto para montar.</div>
 
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2 pt-4 border-t border-gray-100 dark:border-gray-700">
-                    <div class="text-xs text-gray-500 dark:text-gray-400 select-none">
-                        * Clique duplo num compasso para dividi-lo ao meio (2 acordes). Clique simples para selecionar o compasso e digitar o acorde.
-                    </div>
-                    <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 p-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0 select-none">
-                        <span class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-3">Total de Compassos</span>
-                        <div class="flex items-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-600 overflow-hidden">
-                            <button id="btn-dec-measures" class="px-3 py-1 text-gray-500 dark:text-gray-400 hover:bg-brand-lavmist dark:hover:bg-gray-700 transition-colors focus:outline-none"><i class="fas fa-minus text-xs"></i></button>
-                            <input type="number" id="measures-count" value="32" min="1" max="128" class="w-12 text-center bg-transparent text-sm font-bold focus:outline-none text-brand-charcoal dark:text-white" readonly>
-                            <button id="btn-inc-measures" class="px-3 py-1 text-gray-500 dark:text-gray-400 hover:bg-brand-lavmist dark:hover:bg-gray-700 transition-colors focus:outline-none"><i class="fas fa-plus text-xs"></i></button>
+                        <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-xs font-semibold transition-colors py-1.5 px-3.5 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
+                            <i class="fas fa-file-export"></i> Dados & Exportação
+                        </button>
+                        
+                        <div class="flex items-center gap-3 bg-brand-ghost dark:bg-gray-700 px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-600">
+                            <label for="reverb-slider" class="text-[10px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-water text-brand-purple mr-1"></i> Reverb</label>
+                            <input type="range" id="reverb-slider" min="0" max="100" value="50" class="w-20">
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="sticky bottom-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-4 sm:p-6 rounded-[2rem] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-lg border border-gray-200 dark:border-gray-700 z-40">
-                <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
-                    <div id="status-text" class="text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[200px]">Pronto para montar.</div>
-
-                    <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-sm font-semibold transition-colors py-2 px-4 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
-                        <i class="fas fa-file-export"></i> Dados & Exportação
-                    </button>
-                    
-                    <div class="flex items-center gap-4 bg-brand-ghost dark:bg-gray-700 px-5 py-3 rounded-full border border-gray-200 dark:border-gray-600">
-                        <label for="reverb-slider" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-water text-brand-purple mr-1"></i> Reverb</label>
-                        <input type="range" id="reverb-slider" min="0" max="100" value="50" class="w-24">
+                    <div class="flex gap-2 w-full lg:w-auto justify-center flex-wrap sm:flex-nowrap">
+                        <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700 px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-brand-purple transition-all">
+                            <label for="bpm-input" class="text-[10px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM</label>
+                            <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-12 bg-transparent text-center focus:outline-none font-bold text-brand-charcoal dark:text-white text-base">
+                        </div>
+                        <button id="btn-play" disabled class="bg-brand-mint hover:brightness-95 text-brand-charcoal px-6 py-2 rounded-full font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> <span>Tocar</span>
+                        </button>
+                        <button id="btn-stop" disabled class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <audio id="main-player" class="hidden"></audio>
                     </div>
                 </div>
 
-                <div class="flex gap-3 w-full lg:w-auto justify-center flex-wrap sm:flex-nowrap">
-                    <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700 px-5 py-2.5 rounded-full border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-brand-purple transition-all">
-                        <label for="bpm-input" class="text-[11px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM</label>
-                        <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-14 bg-transparent text-center focus:outline-none font-bold text-brand-charcoal dark:text-white text-lg">
+                <!-- SEQUÊNCIA -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-4 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
+                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-1.5 text-brand-purple"></i>Sua Sequência</h2>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
+                            </div>
+                            <div class="flex items-center gap-1.5 bg-brand-ghost dark:bg-gray-700/50 p-1 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
+                                <label class="cursor-pointer group mb-0">
+                                    <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
+                                    <div class="px-3 py-1.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-xs text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Inteiro (4T)</div>
+                                </label>
+                                <label class="cursor-pointer group mb-0">
+                                    <input type="radio" name="chord-duration" value="2" class="peer hidden">
+                                    <div class="px-3 py-1.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-xs text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Metade (2T)</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                            <button id="btn-copy" disabled class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-xs font-semibold transition-colors py-1.5 px-3.5 rounded-full flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent dark:border-gray-600 shadow-sm select-none">
+                                <i class="fas fa-copy"></i> Copiar <span class="text-[10px] opacity-60">(Ctrl+C)</span>
+                            </button>
+                            <button id="btn-paste" disabled class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-xs font-semibold transition-colors py-1.5 px-3.5 rounded-full flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border border-transparent dark:border-gray-600 shadow-sm select-none">
+                                <i class="fas fa-paste"></i> Colar <span class="text-[10px] opacity-60">(Ctrl+V)</span>
+                            </button>
+                            <button id="btn-clear" class="bg-red-50 dark:bg-red-900/20 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold transition-colors py-1.5 px-3.5 rounded-full flex items-center gap-2 select-none">
+                                <i class="fas fa-trash"></i> Limpar Tudo
+                            </button>
+                        </div>
                     </div>
-                    <button id="btn-play" disabled class="bg-brand-mint hover:brightness-95 text-brand-charcoal px-8 py-3 rounded-full font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-2">
-                        <i class="fas fa-play"></i> <span>Tocar</span>
-                    </button>
-                    <button id="btn-stop" disabled class="bg-red-400 hover:bg-red-500 text-white px-5 py-3 rounded-full font-bold transition-all disabled:opacity-50 flex items-center justify-center shadow-sm">
-                        <i class="fas fa-stop"></i>
-                    </button>
-                    <audio id="main-player" class="hidden"></audio>
-                </div>
-            </div>
 
+                    <div id="sequence-container" class="flex-grow bg-brand-ghost dark:bg-gray-900/50 rounded-xl p-3 min-h-[160px] grid grid-cols-8 gap-x-2 gap-y-2 content-start border border-brand-lavmist dark:border-gray-700">
+                        <div class="col-span-8 text-center text-gray-500 mt-8 font-medium" id="empty-state">Sua música está vazia. Comece a montar no painel acima.</div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-1 pt-3 border-t border-gray-100 dark:border-gray-700">
+                        <div class="text-[11px] text-gray-500 dark:text-gray-400 select-none">
+                            * Clique duplo num compasso para dividi-lo ao meio (2 acordes). Clique simples para selecionar o compasso e digitar o acorde.
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-brand-ghost dark:bg-gray-700/50 p-1 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0 select-none">
+                            <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Total de Compassos</span>
+                            <div class="flex items-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-600 overflow-hidden">
+                                <button id="btn-dec-measures" class="px-2 py-0.5 text-gray-500 dark:text-gray-400 hover:bg-brand-lavmist dark:hover:bg-gray-700 transition-colors focus:outline-none"><i class="fas fa-minus text-[10px]"></i></button>
+                                <input type="number" id="measures-count" value="32" min="1" max="128" class="w-10 text-center bg-transparent text-xs font-bold focus:outline-none text-brand-charcoal dark:text-white" readonly>
+                                <button id="btn-inc-measures" class="px-2 py-0.5 text-gray-500 dark:text-gray-400 hover:bg-brand-lavmist dark:hover:bg-gray-700 transition-colors focus:outline-none"><i class="fas fa-plus text-[10px]"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
         </div>
     </div>
 
@@ -312,9 +322,9 @@
         </div>
     </div>
 
-    <footer class="bg-brand-charcoal dark:bg-gray-900 mt-auto py-8 transition-colors duration-200 border-t border-white/10 dark:border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 text-center flex flex-col gap-3">
-            <p class="text-sm font-medium text-white dark:text-gray-300">Desenvolvido pelo professor <strong class="text-brand-mint font-semibold">Glauber Santiago</strong> — DAC/UFSCar</p>
+    <footer class="bg-brand-charcoal dark:bg-gray-900 mt-auto py-4 transition-colors duration-200 border-t border-white/10 dark:border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 text-center flex flex-col gap-2">
+            <p class="text-xs sm:text-sm font-medium text-white dark:text-gray-300">Desenvolvido pelo professor <strong class="text-brand-mint font-semibold">Glauber Santiago</strong> — DAC/UFSCar</p>
             <p class="text-xs text-brand-lavmist dark:text-gray-400 flex flex-wrap items-center justify-center gap-3">
                 <a href="https://servidores.ufscar.br/glauber/" target="_blank" class="hover:text-white transition-colors">servidores.ufscar.br/glauber/</a>
                 <span class="opacity-30">•</span>
@@ -406,6 +416,8 @@
         let selectedRoot = CONFIG.ROOT_GROUPS[0][0]; 
         let needsConsolidation = true; 
         let editingChordId = null; 
+        let activeLiveGainNode = null;
+        let activeLiveOscillators = [];
 
         let isRoutingSetup = false;
         let mediaElementSource = null;
@@ -423,6 +435,31 @@
         const bpmInput = document.getElementById('bpm-input');
         const reverbSlider = document.getElementById('reverb-slider');
         const btnDownloadAudio = document.getElementById('btn-dl-audio-modal');
+        function getSequenceIndex(measureIdx, subIdx) {
+            let currentBeat = 0;
+            for (let i = 0; i < sequence.length; i++) {
+                const m = Math.floor(currentBeat / 4);
+                const beatInMeasure = currentBeat % 4;
+                const s = beatInMeasure === 0 ? 0 : 1;
+                if (m === measureIdx && s === subIdx) {
+                    return i;
+                }
+                currentBeat += sequence[i].beats;
+            }
+            return -1;
+        }
+
+        function getMeasureAndSubIndex(i) {
+            let currentBeat = 0;
+            for (let j = 0; j < i; j++) {
+                currentBeat += sequence[j].beats;
+            }
+            const measureIdx = Math.floor(currentBeat / 4);
+            const beatInMeasure = currentBeat % 4;
+            const subIdx = beatInMeasure === 0 ? 0 : 1;
+            return { measureIdx, subIdx };
+        }
+
         function getMeasuresFromSequence() {
             let measures = [];
             let currentMeasureChords = [];
@@ -533,18 +570,7 @@
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
-            let currentBeat = 0;
-            let targetIdx = -1;
-            for (let i = 0; i < sequence.length; i++) {
-                const mIdx = Math.floor(currentBeat / 4);
-                const beatNumber = (currentBeat % 4) + 1;
-                const sIdx = beatNumber === 1 ? 0 : 1;
-                if (mIdx === measureIdx && sIdx === subIdx) {
-                    targetIdx = i;
-                    break;
-                }
-                currentBeat += sequence[i].beats;
-            }
+            const targetIdx = getSequenceIndex(measureIdx, subIdx);
             
             if (targetIdx !== -1) {
                 // Preserve beats and ID
@@ -557,6 +583,354 @@
             statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
             
             renderSequence();
+        }
+
+        function updateSelectionButtons() {
+            const btnCopy = document.getElementById('btn-copy');
+            const btnPaste = document.getElementById('btn-paste');
+            if (btnCopy) {
+                btnCopy.disabled = selectedMeasures.length === 0;
+            }
+            if (btnPaste) {
+                btnPaste.disabled = !(copiedMeasures.length > 0 && selectedMeasures.length === 1);
+            }
+        }
+
+        function copySelectedMeasures() {
+            if (selectedMeasures.length === 0) return;
+            
+            const sortedMeasures = [...selectedMeasures].sort((a, b) => a - b);
+            copiedMeasures = [];
+            
+            sortedMeasures.forEach(mIdx => {
+                let currentBeat = 0;
+                let measureChords = [];
+                for (let i = 0; i < sequence.length; i++) {
+                    const m = Math.floor(currentBeat / 4);
+                    if (m === mIdx) {
+                        measureChords.push({
+                            name: sequence[i].name,
+                            file: sequence[i].file,
+                            beats: sequence[i].beats
+                        });
+                    }
+                    currentBeat += sequence[i].beats;
+                }
+                copiedMeasures.push(measureChords);
+            });
+            
+            updateSelectionButtons();
+            statusText.innerHTML = `${copiedMeasures.length} compasso(s) copiado(s). Selecione 1 compasso de destino e cole.`;
+            statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+        }
+
+        function pasteCopiedMeasures() {
+            if (copiedMeasures.length === 0 || selectedMeasures.length !== 1) return;
+            
+            const destMeasureIdx = selectedMeasures[0];
+            let measures = getMeasuresFromSequence();
+            
+            for (let offset = 0; offset < copiedMeasures.length; offset++) {
+                const targetMIdx = destMeasureIdx + offset;
+                if (targetMIdx >= measures.length) break;
+                
+                measures[targetMIdx] = copiedMeasures[offset].map(chord => ({
+                    id: Math.random(),
+                    name: chord.name,
+                    file: chord.file,
+                    beats: chord.beats
+                }));
+            }
+            
+            sequence = [];
+            measures.forEach(m => {
+                m.forEach(chord => {
+                    sequence.push(chord);
+                });
+            });
+            
+            needsConsolidation = true;
+            currentWavBlob = null;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            btnPlay.disabled = false;
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
+            
+            statusText.innerHTML = "Compassos colados com sucesso. Clique em Tocar para processar.";
+            statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
+            
+            renderSequence();
+        }
+
+        function setMeasuresCount(newCount) {
+            const input = document.getElementById('measures-count');
+            if (!input) return;
+            const oldCount = parseInt(input.value) || 32;
+            if (newCount < 1 || newCount > 128 || newCount === oldCount) return;
+            
+            input.value = newCount;
+            
+            if (newCount > oldCount) {
+                const diff = newCount - oldCount;
+                for (let i = 0; i < diff; i++) {
+                    sequence.push({
+                        id: Math.random(),
+                        name: "",
+                        file: "",
+                        beats: 4
+                    });
+                }
+            } else {
+                let beatsToRemove = (oldCount - newCount) * 4;
+                while (beatsToRemove > 0 && sequence.length > 0) {
+                    const lastChord = sequence[sequence.length - 1];
+                    beatsToRemove -= lastChord.beats;
+                    sequence.pop();
+                }
+            }
+            
+            needsConsolidation = true;
+            currentWavBlob = null;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            
+            selectedMeasures = selectedMeasures.filter(m => m < newCount);
+            if (editMeasureIdx !== null && editMeasureIdx >= newCount) {
+                editMeasureIdx = null;
+                editSubIdx = null;
+                chordInputBuffer = "";
+            }
+            
+            updateSelectionButtons();
+            renderSequence();
+        }
+
+        function rootToPrefix(root) {
+            for (let group of CONFIG.ROOT_GROUPS) {
+                for (let item of group) {
+                    if (item.display === root) {
+                        return item.filePrefix;
+                    }
+                }
+            }
+            return "c";
+        }
+
+        function parseChordBuffer(buffer) {
+            if (!buffer) return { root: "", suffix: "" };
+            const match = buffer.match(/^([A-G][#b]?)(.*)$/);
+            if (match) {
+                return { root: match[1], suffix: match[2] };
+            }
+            return { root: "", suffix: "" };
+        }
+
+        function selectRootByName(rootName) {
+            for (let group of CONFIG.ROOT_GROUPS) {
+                for (let root of group) {
+                    if (root.display === rootName) {
+                        selectedRoot = root;
+                        updateRootButtonsUI();
+                        return;
+                    }
+                }
+            }
+        }
+
+        function updateQualityPaletteFilter() {
+            const { suffix } = parseChordBuffer(chordInputBuffer);
+            const buttons = document.querySelectorAll('#quality-palette button');
+            
+            buttons.forEach(btn => {
+                const label = btn.innerText;
+                const matches = label.startsWith(suffix);
+                if (matches) {
+                    btn.classList.remove('opacity-20', 'pointer-events-none');
+                } else {
+                    btn.classList.add('opacity-20', 'pointer-events-none');
+                }
+            });
+        }
+
+        function confirmBestGuess() {
+            const { root, suffix } = parseChordBuffer(chordInputBuffer);
+            if (!root) return;
+            
+            const matches = CONFIG.QUALITIES.filter(q => q.label.startsWith(suffix));
+            if (matches.length === 0) return;
+            
+            let chosenQuality = matches.find(q => q.label === suffix);
+            if (!chosenQuality) {
+                chosenQuality = matches[0];
+            }
+            
+            const chordName = root + chosenQuality.label;
+            const fileName = `swing130_${rootToPrefix(root)}${chosenQuality.fileSuffix}`;
+            
+            setChordAtSlot(editMeasureIdx, editSubIdx, { name: chordName, file: fileName });
+            advanceSelection();
+        }
+
+        function checkAutoInsert() {
+            const { root, suffix } = parseChordBuffer(chordInputBuffer);
+            if (!root) return;
+            
+            selectRootByName(root);
+            
+            const matches = CONFIG.QUALITIES.filter(q => q.label.startsWith(suffix));
+            
+            if (matches.length === 1) {
+                const chosenQuality = matches[0];
+                const chordName = root + chosenQuality.label;
+                const fileName = `swing130_${rootToPrefix(root)}${chosenQuality.fileSuffix}`;
+                
+                setChordAtSlot(editMeasureIdx, editSubIdx, { name: chordName, file: fileName });
+                advanceSelection();
+            } else if (matches.length === 0) {
+                chordInputBuffer = chordInputBuffer.slice(0, -1);
+                updateQualityPaletteFilter();
+                renderSequence();
+            } else {
+                updateQualityPaletteFilter();
+                renderSequence();
+            }
+        }
+
+        function advanceSelection() {
+            chordInputBuffer = "";
+            updateQualityPaletteFilter();
+            
+            if (editMeasureIdx === null) return;
+            
+            const measures = getMeasuresFromSequence();
+            const currentMeasureChords = measures[editMeasureIdx];
+            
+            if (currentMeasureChords && currentMeasureChords.length > 1 && editSubIdx === 0) {
+                editSubIdx = 1;
+            } else {
+                const totalMeasures = measures.length;
+                if (editMeasureIdx + 1 < totalMeasures) {
+                    editMeasureIdx++;
+                    editSubIdx = 0;
+                } else {
+                    editMeasureIdx = null;
+                    editSubIdx = null;
+                }
+            }
+            
+            if (editMeasureIdx !== null) {
+                selectedMeasures = [editMeasureIdx];
+                lastSelectedMeasureIdx = editMeasureIdx;
+            } else {
+                selectedMeasures = [];
+                lastSelectedMeasureIdx = null;
+            }
+            
+            updateSelectionButtons();
+            renderSequence();
+        }
+
+        function playLiveSynth(rootName, qualityLabel = null) {
+            const ctx = getAudioContext();
+            const now = ctx.currentTime;
+
+            // Stop any currently playing live preview notes
+            if (activeLiveGainNode) {
+                try {
+                    activeLiveGainNode.gain.cancelScheduledValues(now);
+                    activeLiveGainNode.gain.setValueAtTime(activeLiveGainNode.gain.value, now);
+                    activeLiveGainNode.gain.linearRampToValueAtTime(0, now + 0.05);
+                    
+                    const oscsToStop = activeLiveOscillators;
+                    setTimeout(() => {
+                        oscsToStop.forEach(osc => {
+                            try { osc.stop(); } catch(e) {}
+                        });
+                    }, 50);
+                } catch (e) {
+                    console.error(e);
+                }
+                activeLiveOscillators = [];
+                activeLiveGainNode = null;
+            }
+
+            const noteOffsets = {
+                'C': 0, 'C#': 1, 'Db': 1, 'D': 2, 'D#': 3, 'Eb': 3,
+                'E': 4, 'F': 5, 'F#': 6, 'Gb': 6, 'G': 7, 'G#': 8, 'Ab': 8,
+                'A': 9, 'A#': 10, 'Bb': 10, 'B': 11
+            };
+
+            const rootOffset = noteOffsets[rootName];
+            if (rootOffset === undefined) return;
+
+            const rootMidi = 60 + rootOffset; // Mid-range C4 = 60
+            
+            const midiNotes = [];
+            // Add bass note (one octave below)
+            midiNotes.push(rootMidi - 12);
+            // Add root note
+            midiNotes.push(rootMidi);
+
+            if (qualityLabel) {
+                const qualityOffsets = {
+                    'maj7': [4, 7, 11],
+                    '9': [4, 7, 10, 14],
+                    '7b9': [4, 7, 10, 13],
+                    'm7': [3, 7, 10],
+                    'm7b5': [3, 6, 10],
+                    'dim7': [3, 6, 9]
+                };
+                const offsets = qualityOffsets[qualityLabel];
+                if (offsets) {
+                    offsets.forEach(offset => {
+                        midiNotes.push(rootMidi + offset);
+                    });
+                }
+            }
+
+            const masterGain = ctx.createGain();
+            const peakVolume = qualityLabel ? 0.2 : 0.15;
+            
+            // Piano-like envelope: fast attack, exponential decay
+            masterGain.gain.setValueAtTime(0, now);
+            masterGain.gain.linearRampToValueAtTime(peakVolume, now + 0.005); // 5ms attack to avoid pops but feel instant
+            masterGain.gain.exponentialRampToValueAtTime(0.001, now + 1.5); // Smooth 1.5s decay
+            
+            masterGain.connect(ctx.destination);
+            activeLiveGainNode = masterGain;
+
+            midiNotes.forEach(midi => {
+                const freq = 440 * Math.pow(2, (midi - 69) / 12);
+
+                // Fundamental sine wave (body of the note)
+                const osc1 = ctx.createOscillator();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(freq, now);
+
+                const g1 = ctx.createGain();
+                g1.gain.setValueAtTime(0.8, now);
+                osc1.connect(g1);
+                g1.connect(masterGain);
+
+                osc1.start(now);
+                osc1.stop(now + 1.5);
+                activeLiveOscillators.push(osc1);
+
+                // Second harmonic (one octave up) for string/tine resonance
+                const osc2 = ctx.createOscillator();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(freq * 2, now);
+
+                const g2 = ctx.createGain();
+                g2.gain.setValueAtTime(0.24, now); // ~30% volume of fundamental
+                osc2.connect(g2);
+                g2.connect(masterGain);
+
+                osc2.start(now);
+                osc2.stop(now + 1.5);
+                activeLiveOscillators.push(osc2);
+            });
         }
 
         function initUI() {
@@ -575,16 +949,22 @@
             const rootPalette = document.getElementById('root-palette');
             CONFIG.ROOT_GROUPS.forEach((group) => {
                 const col = document.createElement('div');
-                col.className = "flex flex-col gap-2 flex-none min-w-[4rem] snap-center justify-center";
+                col.className = "flex flex-col gap-1 flex-none min-w-[2.5rem] snap-center justify-center";
                 
                 group.forEach((root) => {
                     const btn = document.createElement('button');
-                    btn.className = "root-btn flex-1 px-1 py-2 sm:py-3 rounded-xl font-medium transition-all text-center border-2 text-sm sm:text-base";
+                    btn.className = "root-btn w-full h-8 flex items-center justify-center rounded-lg font-medium transition-all text-center border-2 text-xs sm:text-sm shrink-0";
                     btn.innerText = root.display;
                     btn.dataset.display = root.display; 
                     btn.onclick = () => {
                         selectedRoot = root;
                         updateRootButtonsUI();
+                        playLiveSynth(root.display);
+                        if (editMeasureIdx !== null && editSubIdx !== null) {
+                            const { suffix } = parseChordBuffer(chordInputBuffer);
+                            chordInputBuffer = root.display + suffix;
+                            checkAutoInsert();
+                        }
                     };
                     col.appendChild(btn);
                 });
@@ -595,7 +975,7 @@
             const qualityPalette = document.getElementById('quality-palette');
             CONFIG.QUALITIES.forEach(quality => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white dark:bg-gray-700 border-2 border-brand-lavmist dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple text-brand-charcoal dark:text-gray-200 font-bold py-3 rounded-full shadow-sm transition-all text-sm";
+                btn.className = "bg-white dark:bg-gray-700 border-2 border-brand-lavmist dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple text-brand-charcoal dark:text-gray-200 font-bold py-1.5 rounded-lg shadow-sm transition-all text-xs";
                 btn.innerText = quality.label;
                 btn.onclick = () => {
                     const root = selectedRoot;
@@ -603,6 +983,7 @@
                     const fileName = `swing130_${root.filePrefix}${quality.fileSuffix}`;
                     const beats = parseInt(document.querySelector('input[name="chord-duration"]:checked').value);
                     addOrReplaceChord({ name: chordName, file: fileName, beats: beats });
+                    playLiveSynth(root.display, quality.label);
                 };
                 qualityPalette.appendChild(btn);
             });
@@ -610,6 +991,110 @@
             btnPlay.onclick = togglePlay;
             btnStop.onclick = stopAudio;
             btnClear.onclick = clearSequence;
+
+            // Bind selection copy/paste & measure count buttons
+            document.getElementById('btn-copy').onclick = copySelectedMeasures;
+            document.getElementById('btn-paste').onclick = pasteCopiedMeasures;
+
+            document.getElementById('btn-dec-measures').onclick = () => {
+                const input = document.getElementById('measures-count');
+                const current = parseInt(input.value) || 32;
+                setMeasuresCount(current - 1);
+            };
+            document.getElementById('btn-inc-measures').onclick = () => {
+                const input = document.getElementById('measures-count');
+                const current = parseInt(input.value) || 32;
+                setMeasuresCount(current + 1);
+            };
+
+            // Keyboard direct input listener
+            document.addEventListener('keydown', (e) => {
+                if (document.activeElement && (
+                    document.activeElement.tagName === 'INPUT' || 
+                    document.activeElement.tagName === 'TEXTAREA' || 
+                    document.activeElement.isContentEditable
+                )) {
+                    return;
+                }
+                
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+                    e.preventDefault();
+                    copySelectedMeasures();
+                    return;
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+                    e.preventDefault();
+                    pasteCopiedMeasures();
+                    return;
+                }
+                
+                if (editMeasureIdx === null || editSubIdx === null) {
+                    return;
+                }
+                
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    chordInputBuffer = "";
+                    editMeasureIdx = null;
+                    editSubIdx = null;
+                    selectedMeasures = [];
+                    lastSelectedMeasureIdx = null;
+                    updateQualityPaletteFilter();
+                    updateSelectionButtons();
+                    renderSequence();
+                    return;
+                }
+                
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    if (chordInputBuffer.length > 0) {
+                        chordInputBuffer = chordInputBuffer.slice(0, -1);
+                        updateQualityPaletteFilter();
+                        renderSequence();
+                    }
+                    return;
+                }
+                
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    if (chordInputBuffer.length > 0) {
+                        confirmBestGuess();
+                    } else {
+                        advanceSelection();
+                    }
+                    return;
+                }
+                
+                if (e.key.length === 1) {
+                    const char = e.key;
+                    
+                    if (chordInputBuffer.length === 0) {
+                        if (/^[a-gA-G]$/.test(char)) {
+                            e.preventDefault();
+                            chordInputBuffer = char.toUpperCase();
+                            checkAutoInsert();
+                        }
+                    } else {
+                        if (/^[a-zA-Z0-9#]$/.test(char)) {
+                            e.preventDefault();
+                            
+                            if (chordInputBuffer.length === 1) {
+                                if (char.toLowerCase() === 's' || char === '#') {
+                                    chordInputBuffer += '#';
+                                } else if (char.toLowerCase() === 'b') {
+                                    chordInputBuffer += 'b';
+                                } else {
+                                    chordInputBuffer += char.toLowerCase();
+                                }
+                            } else {
+                                chordInputBuffer += char.toLowerCase();
+                            }
+                            
+                            checkAutoInsert();
+                        }
+                    }
+                }
+            });
         }
 
         function updateRootButtonsUI() {
@@ -631,26 +1116,19 @@
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
             btnPlay.disabled = false;
-            
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
-            if (editingChordId) {
-                const index = sequence.findIndex(c => c.id === editingChordId);
-                if (index !== -1) {
-                    chordData.beats = sequence[index].beats;
-                    sequence[index] = { ...chordData, id: editingChordId };
-                }
-                editingChordId = null; 
-                statusText.innerHTML = "Acorde substituído. Clique em Tocar para processar e ouvir.";
+            if (editMeasureIdx !== null && editSubIdx !== null) {
+                setChordAtSlot(editMeasureIdx, editSubIdx, chordData);
+                advanceSelection();
             } else {
-                const id = Date.now() + Math.random();
-                sequence.push({ ...chordData, id: id });
-                statusText.innerHTML = "Sequência alterada. Clique em Tocar para processar e ouvir.";
+                let firstEmptyIndex = sequence.findIndex(c => c.name === "");
+                if (firstEmptyIndex !== -1) {
+                    const { measureIdx, subIdx } = getMeasureAndSubIndex(firstEmptyIndex);
+                    setChordAtSlot(measureIdx, subIdx, chordData);
+                }
             }
-            
-            statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
-            renderSequence();
         }
 
         function enforceGridRules() {
@@ -666,36 +1144,40 @@
         function updateDurationUI() {
             const radio4T = document.querySelector('input[name="chord-duration"][value="4"]');
             const radio2T = document.querySelector('input[name="chord-duration"][value="2"]');
+            if (!radio4T || !radio2T) return;
             const label4T = radio4T.nextElementSibling;
             const label2T = radio2T.nextElementSibling;
 
-            if (editingChordId) {
-                const chord = sequence.find(c => c.id === editingChordId);
+            const editSeqIdx = (editMeasureIdx !== null && editSubIdx !== null) ? getSequenceIndex(editMeasureIdx, editSubIdx) : -1;
+
+            if (editSeqIdx !== -1) {
+                const chord = sequence[editSeqIdx];
                 if (chord) {
                     if (chord.beats === 4) { radio4T.checked = true; } else { radio2T.checked = true; }
                     radio4T.disabled = true; radio2T.disabled = true;
                     label4T.classList.add('opacity-50'); label2T.classList.add('opacity-50');
                 }
             } else {
-                let totalBeats = sequence.reduce((acc, c) => acc + c.beats, 0);
-                if (totalBeats % 4 !== 0) {
-                    radio2T.checked = true;
-                    radio4T.disabled = true;
-                    radio2T.disabled = false;
-                    label4T.classList.add('opacity-50');
-                    label2T.classList.remove('opacity-50');
-                } else {
-                    radio4T.disabled = false;
-                    radio2T.disabled = false;
-                    label4T.classList.remove('opacity-50');
-                    label4T.classList.remove('opacity-50');
-                }
+                radio4T.disabled = false;
+                radio2T.disabled = false;
+                label4T.classList.remove('opacity-50');
+                label2T.classList.remove('opacity-50');
             }
         }
 
         function removeChord(id) {
-            if (editingChordId === id) editingChordId = null; 
-            sequence = sequence.filter(c => c.id !== id);
+            const index = sequence.findIndex(c => c.id === id);
+            if (index !== -1) {
+                sequence[index].name = "";
+                sequence[index].file = "";
+            }
+            
+            const { measureIdx, subIdx } = getMeasureAndSubIndex(index);
+            if (editMeasureIdx === measureIdx && editSubIdx === subIdx) {
+                chordInputBuffer = "";
+                updateQualityPaletteFilter();
+            }
+            
             needsConsolidation = true;
             currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
@@ -704,24 +1186,24 @@
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
-            if (sequence.length > 0) {
-                btnPlay.disabled = false;
-                statusText.innerHTML = "Sequência alterada. Clique em Tocar para processar e ouvir.";
-                statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
-            } else {
-                btnPlay.disabled = true;
-                statusText.innerHTML = "Pronto para montar.";
-                statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
-            }
+            statusText.innerHTML = "Acorde removido. Clique em Tocar para processar.";
+            statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
+            
             renderSequence();
         }
 
         function clearSequence() {
-            sequence = [];
+            const count = parseInt(document.getElementById('measures-count').value) || 32;
+            resetToEmptyMeasures(count);
             consolidatedBuffer = null;
             needsConsolidation = true;
             currentWavBlob = null;
             editingChordId = null;
+            editMeasureIdx = null;
+            editSubIdx = null;
+            chordInputBuffer = "";
+            selectedMeasures = [];
+            lastSelectedMeasureIdx = null;
             btnPlay.disabled = true;
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             mainPlayer.src = "";
@@ -732,6 +1214,7 @@
             statusText.innerHTML = "Pronto para montar.";
             statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
             stopAudio();
+            updateSelectionButtons();
             renderSequence();
         }
 
@@ -755,57 +1238,123 @@
             let currentBeat = 0; 
 
             sequence.forEach((chord, index) => {
-                const el = document.createElement('div');
-                const gridSpanClass = chord.beats === 4 ? 'col-span-2' : 'col-span-1';
-                let styleClass = chord.beats === 2 
-                    ? 'bg-brand-lavmist/40 dark:bg-gray-800 border-dashed border-brand-purple/50 dark:border-gray-600 text-sm' 
-                    : 'bg-white dark:bg-gray-700 border-solid border-brand-lavmist dark:border-gray-600 text-lg';
+                const mIdx = Math.floor(currentBeat / 4);
+                const beatNumber = (currentBeat % 4) + 1;
+                const sIdx = beatNumber === 1 ? 0 : 1;
                 
-                if (editingChordId === chord.id) {
-                    styleClass += ' ring-4 ring-brand-purple border-transparent bg-brand-lavmist dark:bg-gray-600 scale-105';
+                const isSelected = selectedMeasures.includes(mIdx);
+                const isEditing = (editMeasureIdx === mIdx && editSubIdx === sIdx);
+                
+                const gridSpanClass = chord.beats === 4 ? 'col-span-2' : 'col-span-1';
+                
+                let styleClass = "";
+                if (isEditing) {
+                    styleClass = 'ring-4 ring-brand-purple border-transparent bg-brand-lavmist dark:bg-gray-600 scale-105 z-10';
+                } else if (isSelected) {
+                    styleClass = 'bg-purple-100 dark:bg-purple-900/40 border-brand-purple text-brand-charcoal dark:text-white';
                 } else {
-                    styleClass += ' hover:border-brand-purple'; 
+                    styleClass = chord.beats === 2 
+                        ? 'bg-brand-lavmist/40 dark:bg-gray-800 border-dashed border-brand-purple/50 dark:border-gray-600 text-xs sm:text-sm hover:border-brand-purple' 
+                        : 'bg-white dark:bg-gray-700 border-solid border-brand-lavmist dark:border-gray-600 text-base sm:text-lg hover:border-brand-purple';
                 }
                 
-                el.className = `chord-block relative border-2 rounded-2xl h-16 flex items-center justify-center font-bold cursor-pointer group text-brand-charcoal dark:text-white ${gridSpanClass} ${styleClass}`;
+                const el = document.createElement('div');
+                el.className = `chord-block relative border-2 rounded-lg h-12 flex items-center justify-center font-bold cursor-pointer group text-brand-charcoal dark:text-white select-none ${gridSpanClass} ${styleClass}`;
                 el.id = `seq-${index}`;
-                el.innerText = chord.name;
                 
-                const measureNumber = Math.floor(currentBeat / 4) + 1;
-                const beatNumber = (currentBeat % 4) + 1; 
+                if (isEditing && chordInputBuffer) {
+                    el.innerHTML = '';
+                    const bufferSpan = document.createElement('span');
+                    bufferSpan.innerText = chordInputBuffer;
+                    const cursorSpan = document.createElement('span');
+                    cursorSpan.className = "animate-pulse font-light ml-0.5 text-brand-purple";
+                    cursorSpan.innerText = "|";
+                    el.appendChild(bufferSpan);
+                    el.appendChild(cursorSpan);
+                } else {
+                    el.innerText = chord.name;
+                }
                 
+                const measureNumber = mIdx + 1;
                 let displayMeasure = measureNumber;
                 if (chord.beats < 4 || beatNumber !== 1) {
                     displayMeasure = `${measureNumber}.${beatNumber}`;
                 }
 
                 const measureLabel = document.createElement('div');
-                measureLabel.className = "absolute top-1.5 left-2 text-[10px] text-gray-500 dark:text-gray-400 font-bold opacity-80";
+                measureLabel.className = "absolute top-0.5 left-1.5 text-[9px] text-gray-500 dark:text-gray-400 font-bold opacity-85";
                 measureLabel.innerText = displayMeasure;
                 el.appendChild(measureLabel);
 
                 currentBeat += chord.beats;
 
-                el.onclick = () => {
-                    if (editingChordId === chord.id) {
-                        editingChordId = null; 
-                        statusText.innerHTML = "Pronto para montar.";
-                        statusText.className = "text-sm font-medium text-gray-600 dark:text-gray-300 w-full sm:w-auto text-center sm:text-left";
+                el.onclick = (e) => {
+                    const isCtrl = e.ctrlKey || e.metaKey;
+                    const isShift = e.shiftKey;
+                    
+                    if (isShift) {
+                        e.preventDefault();
+                        if (lastSelectedMeasureIdx !== null) {
+                            const start = Math.min(lastSelectedMeasureIdx, mIdx);
+                            const end = Math.max(lastSelectedMeasureIdx, mIdx);
+                            selectedMeasures = [];
+                            for (let m = start; m <= end; m++) {
+                                selectedMeasures.push(m);
+                            }
+                            editMeasureIdx = null;
+                            editSubIdx = null;
+                            chordInputBuffer = "";
+                        } else {
+                            selectedMeasures = [mIdx];
+                            lastSelectedMeasureIdx = mIdx;
+                            editMeasureIdx = mIdx;
+                            editSubIdx = sIdx;
+                            chordInputBuffer = "";
+                        }
+                    } else if (isCtrl) {
+                        e.preventDefault();
+                        const foundIndex = selectedMeasures.indexOf(mIdx);
+                        if (foundIndex !== -1) {
+                            selectedMeasures.splice(foundIndex, 1);
+                        } else {
+                            selectedMeasures.push(mIdx);
+                        }
+                        lastSelectedMeasureIdx = mIdx;
+                        editMeasureIdx = null;
+                        editSubIdx = null;
+                        chordInputBuffer = "";
                     } else {
-                        editingChordId = chord.id; 
-                        statusText.innerHTML = `Acorde <strong class="text-brand-purple">${chord.name}</strong> selecionado. Escolha um novo no painel para substituir.`;
-                        statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+                        selectedMeasures = [mIdx];
+                        lastSelectedMeasureIdx = mIdx;
+                        
+                        if (editMeasureIdx === mIdx && editSubIdx === sIdx) {
+                            editMeasureIdx = null;
+                            editSubIdx = null;
+                            chordInputBuffer = "";
+                        } else {
+                            editMeasureIdx = mIdx;
+                            editSubIdx = sIdx;
+                            chordInputBuffer = "";
+                        }
                     }
+                    
+                    updateSelectionButtons();
+                    updateQualityPaletteFilter();
                     renderSequence();
                 };
 
+                el.ondblclick = (e) => {
+                    e.stopPropagation();
+                    toggleMeasureSplit(index);
+                };
+
                 const durationLabel = document.createElement('div');
-                durationLabel.className = "absolute bottom-1 right-2 text-[9px] text-gray-400 dark:text-gray-500 font-normal uppercase";
+                durationLabel.className = "absolute bottom-0.5 right-1.5 text-[8px] text-gray-400 dark:text-gray-500 font-normal uppercase";
                 durationLabel.innerText = chord.beats === 4 ? "4T" : "2T";
                 el.appendChild(durationLabel);
 
                 const delBtn = document.createElement('div');
-                delBtn.className = "absolute -top-2 -right-2 bg-red-400 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition shadow-md z-10";
+                delBtn.className = "absolute -top-1.5 -right-1.5 bg-red-400 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition shadow-md z-10";
                 delBtn.innerHTML = '<i class="fas fa-times"></i>';
                 delBtn.onclick = (e) => {
                     e.stopPropagation();
@@ -831,6 +1380,14 @@
 
         async function fetchAudioBuffer(chord) {
             const ctx = getAudioContext();
+            
+            if (chord.name === "") {
+                if (audioCache.has("")) return audioCache.get("");
+                const silentBuffer = ctx.createBuffer(1, ctx.sampleRate * NATIVE_MEASURE_DURATION, ctx.sampleRate);
+                audioCache.set("", silentBuffer);
+                return silentBuffer;
+            }
+
             const cacheKey = chord.name;
             if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
 
@@ -1339,7 +1896,8 @@
 
                     // Desenha as cifras de dentro do compasso
                     measure.forEach(chord => {
-                        chordsHtml += `<div style="flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: #1e293b; padding: 0 5px;">${chord.name}</div>`;
+                        const displayName = chord.name === "" ? "-" : chord.name;
+                        chordsHtml += `<div style="flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: #1e293b; padding: 0 5px;">${displayName}</div>`;
                     });
                     
                     chordsHtml += `</div>`;
@@ -1433,6 +1991,7 @@
             ctx.fillStyle = '#64748b';
             ctx.fillText(`Autor: ${author}`, padding, padding + 45);
 
+            let currentBeat = 0;
             sequence.forEach((item, i) => {
                 const x = padding + (i % cols) * mWidth;
                 const y = padding + 70 + Math.floor(i / cols) * mHeight;
@@ -1443,15 +2002,26 @@
                 ctx.fillStyle = item.beats === 4 ? '#B57EDC' : '#70E0A6';
                 ctx.fillRect(x + mWidth - 7, y, 3, mHeight - 4);
 
+                const mIdx = Math.floor(currentBeat / 4);
+                const beatNumber = (currentBeat % 4) + 1;
+                const measureNumber = mIdx + 1;
+                let displayMeasure = String(measureNumber);
+                if (item.beats < 4 || beatNumber !== 1) {
+                    displayMeasure = `${measureNumber}.${beatNumber}`;
+                }
+
                 ctx.fillStyle = '#94a3b8';
                 ctx.font = 'bold 16px monospace';
-                ctx.fillText(String(i + 1), x + 3, y + 15);
+                ctx.fillText(displayMeasure, x + 3, y + 15);
 
+                const displayName = item.name === "" ? "-" : item.name;
                 ctx.fillStyle = '#1e293b';
                 ctx.font = 'bold 13px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(item.name, x + (mWidth / 2) - 3, y + (mHeight / 2) + 4);
+                ctx.fillText(displayName, x + (mWidth / 2) - 3, y + (mHeight / 2) + 4);
                 ctx.textAlign = 'start';
+
+                currentBeat += item.beats;
             });
         }
 
@@ -1468,8 +2038,18 @@
         function exportTableText() {
             const title = workTitleInput.value || 'Trabalho Sem Título';
             let text = `// TRABALHO: ${title}\n| Compasso | Acorde |\n|-----------|---------|\n`;
+            let currentBeat = 0;
             sequence.forEach((item, index) => {
-                text += `| ${index + 1} | ${item.name} |\n`;
+                const mIdx = Math.floor(currentBeat / 4);
+                const beatNumber = (currentBeat % 4) + 1;
+                const measureNumber = mIdx + 1;
+                let displayMeasure = String(measureNumber);
+                if (item.beats < 4 || beatNumber !== 1) {
+                    displayMeasure = `${measureNumber}.${beatNumber}`;
+                }
+                const displayName = item.name === "" ? "-" : item.name;
+                text += `| ${displayMeasure} | ${displayName} |\n`;
+                currentBeat += item.beats;
             });
             return text;
         }
@@ -1484,39 +2064,50 @@
             const author = authorNameInput.value || 'Aluno';
             let xml = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">\n<score-partwise version="3.1">\n  <work><work-title>${title}</work-title></work>\n  <identification><creator type="composer">${author}</creator></identification>\n  <part-list><score-part id="P1"><part-name>Piano</part-name></score-part></part-list>\n  <part id="P1">\n`;
 
-            sequence.forEach((item, i) => {
-                const match = item.name.match(/^([A-G][#b]?)(.*)$/);
-                if (!match) return;
+            const measures = getMeasuresFromSequence();
 
-                const rootStr = match[1];
-                const type = match[2];
-
-                const step = rootStr.charAt(0).toUpperCase();
-                const alter = rootStr.includes('#') ? '1' : rootStr.includes('b') ? '-1' : '0';
-
-                let kind = 'major';
-                let kindText = type;
-
-                if (type === 'maj7') kind = 'major-seventh';
-                else if (type === '9') kind = 'dominant-ninth';
-                else if (type === '7b9') {
-                    kind = 'dominant';
-                    kindText = '7(b9)';
-                } else if (type === 'm7b5') {
-                    kind = 'half-diminished';
-                    kindText = 'm7(b5)';
-                } else if (type === 'm7') {
-                    kind = 'minor-seventh';
-                } else if (type === 'dim7') {
-                    kind = 'diminished-seventh';
-                }
-
+            measures.forEach((measureChords, i) => {
                 xml += `    <measure number="${i + 1}">\n`;
                 if (i === 0) {
                     xml += `      <attributes><divisions>1</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>\n`;
                 }
 
-                xml += `      <harmony><root><root-step>${step}</root-step>${alter !== '0' ? `<root-alter>${alter}</root-alter>` : ''}</root><kind text="${kindText}">${kind}</kind></harmony>\n      <note><rest/><duration>4</duration><type>whole</type></note>\n    </measure>\n`;
+                measureChords.forEach(chord => {
+                    const match = chord.name ? chord.name.match(/^([A-G][#b]?)(.*)$/) : null;
+                    
+                    if (match) {
+                        const rootStr = match[1];
+                        const type = match[2];
+
+                        const step = rootStr.charAt(0).toUpperCase();
+                        const alter = rootStr.includes('#') ? '1' : rootStr.includes('b') ? '-1' : '0';
+
+                        let kind = 'major';
+                        let kindText = type;
+
+                        if (type === 'maj7') kind = 'major-seventh';
+                        else if (type === '9') kind = 'dominant-ninth';
+                        else if (type === '7b9') {
+                            kind = 'dominant';
+                            kindText = '7(b9)';
+                        } else if (type === 'm7b5') {
+                            kind = 'half-diminished';
+                            kindText = 'm7(b5)';
+                        } else if (type === 'm7') {
+                            kind = 'minor-seventh';
+                        } else if (type === 'dim7') {
+                            kind = 'diminished-seventh';
+                        }
+
+                        xml += `      <harmony><root><root-step>${step}</root-step>${alter !== '0' ? `<root-alter>${alter}</root-alter>` : ''}</root><kind text="${kindText}">${kind}</kind></harmony>\n`;
+                    }
+
+                    const duration = chord.beats;
+                    const noteType = chord.beats === 4 ? 'whole' : 'half';
+                    xml += `      <note><rest/><duration>${duration}</duration><type>${noteType}</type></note>\n`;
+                });
+
+                xml += `    </measure>\n`;
             });
 
             xml += `  </part>\n</score-partwise>`;
@@ -1531,9 +2122,15 @@
         function exportBIABText() {
             const title = workTitleInput.value || 'Trabalho Sem Título';
             let biab = `// TRABALHO: ${title}\n[Song]\n[Chords]\n|:a) `;
-            sequence.forEach(item => {
-                biab += item.name.replace(/\(|\)/g, '') + '| ';
+            
+            const measures = getMeasuresFromSequence();
+            measures.forEach(measureChords => {
+                const chordNames = measureChords.map(chord => {
+                    return chord.name === "" ? "." : chord.name.replace(/\(|\)/g, '');
+                });
+                biab += chordNames.join(',') + '| ';
             });
+            
             return biab.trim() + '\n[ChordsEnd]\n[SongEnd]';
         }
 
