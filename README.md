@@ -4,6 +4,9 @@ O **BIAS (Band-in-a-Site)** é uma aplicação web interativa de página única 
 
 Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de servidores ou bancos de dados adicionais.
 
+<img width="1898" height="842" alt="image" src="https://github.com/user-attachments/assets/1331b438-0f50-4bf2-a7b3-f11d656c9fb5" />
+
+
 ---
 
 ## 🚀 Principais Funcionalidades
