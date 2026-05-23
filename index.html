@@ -539,6 +539,78 @@
             });
         }
 
+        // UNDO / REDO HISTORY SYSTEM
+        let history = [];
+        let historyIndex = -1;
+
+        function saveHistory() {
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            const stateCopy = sequence.map(chord => ({
+                id: chord.id,
+                name: chord.name,
+                file: chord.file,
+                beats: chord.beats
+            }));
+            history.push(stateCopy);
+            historyIndex = history.length - 1;
+            if (history.length > 50) {
+                history.shift();
+                historyIndex--;
+            }
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                restoreState(history[historyIndex]);
+                statusText.innerHTML = "<i class='fas fa-undo'></i> Desfazer (Undo) realizado.";
+                statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+            } else {
+                statusText.innerHTML = "Nada mais para desfazer.";
+                statusText.className = "text-sm font-medium text-gray-500 w-full sm:w-auto text-center sm:text-left";
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                restoreState(history[historyIndex]);
+                statusText.innerHTML = "<i class='fas fa-redo'></i> Refazer (Redo) realizado.";
+                statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+            } else {
+                statusText.innerHTML = "Nada mais para refazer.";
+                statusText.className = "text-sm font-medium text-gray-500 w-full sm:w-auto text-center sm:text-left";
+            }
+        }
+
+        function restoreState(state) {
+            sequence = state.map(chord => ({
+                id: chord.id,
+                name: chord.name,
+                file: chord.file,
+                beats: chord.beats
+            }));
+            needsConsolidation = true;
+            currentWavBlob = null;
+            if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+            mainPlayer.src = "";
+            btnPlay.disabled = sequence.length === 0;
+            btnDownloadAudio.removeAttribute('href');
+            btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
+            
+            const measuresCountInput = document.getElementById('measures-count');
+            if (measuresCountInput) {
+                let totalBeats = sequence.reduce((acc, c) => acc + c.beats, 0);
+                measuresCountInput.value = Math.ceil(totalBeats / 4);
+            }
+            renderSequence();
+        }
+
+        // Inicializar com o primeiro estado histórico
+        saveHistory();
+
         let audioCache = new Map();      
         let consolidatedBuffer = null;   
         let currentWavBlob = null;       
@@ -691,6 +763,7 @@
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
             renderSequence();
+            saveHistory();
         }
 
         function setChordAtSlot(measureIdx, subIdx, chordData) {
@@ -715,6 +788,7 @@
             statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
             
             renderSequence();
+            saveHistory();
         }
 
         function updateSelectionButtons() {
@@ -793,6 +867,7 @@
             statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
             
             renderSequence();
+            saveHistory();
         }
 
         function setMeasuresCount(newCount) {
@@ -836,6 +911,7 @@
             
             updateSelectionButtons();
             renderSequence();
+            saveHistory();
         }
 
         function rootToPrefix(root) {
@@ -1134,6 +1210,16 @@
                     pasteCopiedMeasures();
                     return;
                 }
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                    e.preventDefault();
+                    undo();
+                    return;
+                }
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+                    e.preventDefault();
+                    redo();
+                    return;
+                }
                 
                 if (editMeasureIdx === null || editSubIdx === null) {
                     return;
@@ -1355,6 +1441,7 @@
             statusText.className = "text-sm font-medium text-orange-500 w-full sm:w-auto text-center sm:text-left";
             
             renderSequence();
+            saveHistory();
         }
 
         function clearSequence() {
@@ -1381,6 +1468,7 @@
             stopAudio();
             updateSelectionButtons();
             renderSequence();
+            saveHistory();
         }
 
         function renderSequence() {
@@ -1989,6 +2077,7 @@
                 
                 statusText.innerHTML = "Projeto carregado com sucesso. <span class='text-brand-purple'>Clique em Tocar.</span>";
                 renderSequence();
+                saveHistory();
                 
                 exportModal.classList.add('hidden');
                 exportModal.classList.remove('flex');
