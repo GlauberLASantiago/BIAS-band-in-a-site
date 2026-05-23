@@ -68,6 +68,99 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .export-tab { transition: all 0.2s; }
         .export-tab.active { background-color: #B57EDC; color: white; font-weight: bold; }
+
+        /* INTERACTIVE PIANO KEYBOARD */
+        :root {
+            --primary: #B57EDC;
+        }
+
+        .piano-container {
+            position: relative;
+            display: flex;
+            height: 120px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            background: #cbd5e1;
+            overflow: hidden;
+            user-select: none;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        .dark .piano-container {
+            border-color: #374151;
+            background: #374151;
+        }
+
+        .key-white {
+            flex: 1;
+            background: #fff;
+            border-right: 1px solid #cbd5e1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 10px;
+            font-weight: 700;
+            color: #334155;
+            cursor: pointer;
+            z-index: 1;
+            transition: background 0.1s, color 0.1s, box-shadow 0.1s;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 11px;
+        }
+        .dark .key-white {
+            background: #1f2937;
+            border-right: 1px solid #374151;
+            color: #e5e7eb;
+        }
+
+        .key-white:last-child {
+            border-right: none;
+        }
+
+        .key-white.active {
+            background: #f3e8ff;
+            color: var(--primary);
+            box-shadow: inset 0 -6px 0 var(--primary);
+        }
+        .dark .key-white.active {
+            background: #3b0764;
+            color: #e9d5ff;
+            box-shadow: inset 0 -6px 0 var(--primary);
+        }
+
+        .key-black {
+            position: absolute;
+            top: 0;
+            width: 10%; 
+            height: 60%;
+            margin-left: -5%;
+            background: #111827;
+            color: #fff;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 6px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2;
+            border-radius: 0 0 4px 4px;
+            border: 1px solid #030712;
+            border-top: none;
+            transition: background 0.1s, color 0.1s, box-shadow 0.1s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .dark .key-black {
+            background: #030712;
+            border-color: #000;
+        }
+
+        .key-black.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: #7c3aed;
+            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body class="bg-brand-lavmist dark:bg-gray-900 min-h-screen text-brand-charcoal dark:text-gray-200 font-sans flex flex-col transition-colors duration-200">
@@ -94,7 +187,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-[max-content_1fr] gap-4 items-start">
             
             <!-- LATERAL ESQUERDA: Montagem de Acordes -->
-            <aside class="lg:sticky lg:top-4 flex flex-col gap-4 w-full">
+            <aside class="lg:sticky lg:top-4 flex flex-col gap-4 w-full lg:w-[320px]">
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-4 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
                     <div>
                         <h2 class="text-lg font-bold text-brand-charcoal dark:text-white"><i class="fas fa-plus-circle mr-1.5 text-brand-purple"></i>Montar Acorde</h2>
@@ -107,8 +200,57 @@
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Fundamental</label>
-                        <div id="root-palette" class="flex overflow-x-auto lg:overflow-x-visible hide-scrollbar gap-2 pb-4 lg:pb-0 snap-x lg:snap-none"></div>
+                        <div class="piano-container" id="piano">
+                            <!-- Teclas Brancas (14.285% cada) -->
+                            <div class="key-white" onclick="setFromBtn('C')" data-root="C">C</div>
+                            <div class="key-white" onclick="setFromBtn('D')" data-root="D">D</div>
+                            <div class="key-white" onclick="setFromBtn('E')" data-root="E">E</div>
+                            <div class="key-white" onclick="setFromBtn('F')" data-root="F">F</div>
+                            <div class="key-white" onclick="setFromBtn('G')" data-root="G">G</div>
+                            <div class="key-white" onclick="setFromBtn('A')" data-root="A">A</div>
+                            <div class="key-white" onclick="setFromBtn('B')" data-root="B">B</div>
+                            
+                            <!-- Teclas Pretas (Posicionadas nas divisas) -->
+                            <div class="key-black" style="left: 14.285%;" onclick="handleBlackKey('C#', 'Db')" data-sharp="C#" data-flat="Db">Db</div>
+                            <div class="key-black" style="left: 28.571%;" onclick="handleBlackKey('D#', 'Eb')" data-sharp="D#" data-flat="Eb">Eb</div>
+                            <div class="key-black" style="left: 57.142%;" onclick="handleBlackKey('F#', 'Gb')" data-sharp="F#" data-flat="Gb">Gb</div>
+                            <div class="key-black" style="left: 71.428%;" onclick="handleBlackKey('G#', 'Ab')" data-sharp="G#" data-flat="Ab">Ab</div>
+                            <div class="key-black" style="left: 85.714%;" onclick="handleBlackKey('A#', 'Bb')" data-sharp="A#" data-flat="Bb">Bb</div>
+                        </div>
                     </div>
+                </div>
+
+                <!-- GUIA DO USUÁRIO -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-3 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
+                    <h3 class="text-xs font-bold text-brand-charcoal dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fas fa-book-open text-brand-purple"></i> Guia de Uso do App
+                    </h3>
+                    <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">1.</span>
+                            <span><strong>Montar Cifras:</strong> Toque na nota fundamental no piano virtual e escolha a extensão (maj7, 9, etc.) para montar o acorde.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">2.</span>
+                            <span><strong>Substituir:</strong> Clique em um acorde na sequência (ficará com borda roxa) e selecione outro na paleta para substituí-lo. Aperte <code>Esc</code> para cancelar a seleção.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">3.</span>
+                            <span><strong>Dividir / Unir:</strong> Dê um duplo clique em qualquer acorde para dividi-lo em dois (2 tempos cada) ou unir de volta em um (4 tempos).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">4.</span>
+                            <span><strong>Digitar Acordes:</strong> Selecione um compasso e use o teclado físico do PC (ex: digite <code>C</code>, depois <code>m7</code> e pressione <code>Enter</code>).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">5.</span>
+                            <span><strong>Copiar e Colar:</strong> Selecione compassos e use <code>Ctrl+C</code> e <code>Ctrl+V</code> para replicá-los rapidamente.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">6.</span>
+                            <span><strong>Remover:</strong> Passe o mouse sobre o acorde e clique no <code>x</code> vermelho no canto para apagá-lo.</span>
+                        </li>
+                    </ul>
                 </div>
             </aside>
 
@@ -151,17 +293,6 @@
                         <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                             <div>
                                 <h2 class="text-lg font-bold text-brand-charcoal dark:text-white"><i class="fas fa-music mr-1.5 text-brand-purple"></i>Sua Sequência</h2>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Clique num acorde para substituí-lo, ou no "x" para apagar.</p>
-                            </div>
-                            <div class="flex items-center gap-1.5 bg-brand-ghost dark:bg-gray-700/50 p-1 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0">
-                                <label class="cursor-pointer group mb-0">
-                                    <input type="radio" name="chord-duration" value="4" checked class="peer hidden">
-                                    <div class="px-3 py-1.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-xs text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Inteiro (4T)</div>
-                                </label>
-                                <label class="cursor-pointer group mb-0">
-                                    <input type="radio" name="chord-duration" value="2" class="peer hidden">
-                                    <div class="px-3 py-1.5 rounded-full bg-transparent text-gray-500 dark:text-gray-400 font-medium text-xs text-center peer-checked:bg-white dark:peer-checked:bg-gray-800 peer-checked:text-brand-purple peer-checked:shadow-sm transition-all whitespace-nowrap">Metade (2T)</div>
-                                </label>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 shrink-0 flex-wrap">
@@ -182,9 +313,7 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-1 pt-3 border-t border-gray-100 dark:border-gray-700">
-                        <div class="text-[11px] text-gray-500 dark:text-gray-400 select-none">
-                            * Clique duplo num compasso para dividi-lo ao meio (2 acordes). Clique simples para selecionar o compasso e digitar o acorde.
-                        </div>
+                        <div></div>
                         <div class="flex items-center gap-1.5 bg-brand-ghost dark:bg-gray-700/50 p-1 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0 select-none">
                             <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Total de Compassos</span>
                             <div class="flex items-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-600 overflow-hidden">
@@ -946,30 +1075,6 @@
 
             reverbSlider.addEventListener('input', updateReverbMix);
 
-            const rootPalette = document.getElementById('root-palette');
-            CONFIG.ROOT_GROUPS.forEach((group) => {
-                const col = document.createElement('div');
-                col.className = "flex flex-col gap-1 flex-none min-w-[2.5rem] snap-center justify-center";
-                
-                group.forEach((root) => {
-                    const btn = document.createElement('button');
-                    btn.className = "root-btn w-full h-8 flex items-center justify-center rounded-lg font-medium transition-all text-center border-2 text-xs sm:text-sm shrink-0";
-                    btn.innerText = root.display;
-                    btn.dataset.display = root.display; 
-                    btn.onclick = () => {
-                        selectedRoot = root;
-                        updateRootButtonsUI();
-                        playLiveSynth(root.display);
-                        if (editMeasureIdx !== null && editSubIdx !== null) {
-                            const { suffix } = parseChordBuffer(chordInputBuffer);
-                            chordInputBuffer = root.display + suffix;
-                            checkAutoInsert();
-                        }
-                    };
-                    col.appendChild(btn);
-                });
-                rootPalette.appendChild(col);
-            });
             updateRootButtonsUI(); 
 
             const qualityPalette = document.getElementById('quality-palette');
@@ -981,8 +1086,7 @@
                     const root = selectedRoot;
                     const chordName = root.display + quality.label;
                     const fileName = `swing130_${root.filePrefix}${quality.fileSuffix}`;
-                    const beats = parseInt(document.querySelector('input[name="chord-duration"]:checked').value);
-                    addOrReplaceChord({ name: chordName, file: fileName, beats: beats });
+                    addOrReplaceChord({ name: chordName, file: fileName });
                     playLiveSynth(root.display, quality.label);
                 };
                 qualityPalette.appendChild(btn);
@@ -1095,17 +1199,68 @@
                     }
                 }
             });
+            renderSequence();
+        }
+
+        let preferFlats = true;
+
+        function setFromBtn(rootName) {
+            let foundRoot = null;
+            for (let group of CONFIG.ROOT_GROUPS) {
+                for (let root of group) {
+                    if (root.display === rootName) {
+                        foundRoot = root;
+                        break;
+                    }
+                }
+                if (foundRoot) break;
+            }
+            
+            if (foundRoot) {
+                selectedRoot = foundRoot;
+                playLiveSynth(selectedRoot.display);
+                if (editMeasureIdx !== null && editSubIdx !== null) {
+                    const { suffix } = parseChordBuffer(chordInputBuffer);
+                    chordInputBuffer = selectedRoot.display + suffix;
+                    checkAutoInsert();
+                }
+            }
+            updateRootButtonsUI();
+        }
+
+        function handleBlackKey(sharp, flat) {
+            const currentRootName = selectedRoot.display;
+            if (currentRootName === sharp || currentRootName === flat) {
+                preferFlats = !preferFlats;
+                setFromBtn(preferFlats ? flat : sharp);
+            } else {
+                setFromBtn(preferFlats ? flat : sharp);
+            }
         }
 
         function updateRootButtonsUI() {
-            const buttons = document.querySelectorAll('.root-btn');
-            buttons.forEach((btn) => {
-                if (btn.dataset.display === selectedRoot.display) {
-                    btn.classList.add('bg-brand-purple', 'text-white', 'border-brand-purple');
-                    btn.classList.remove('bg-white', 'text-brand-charcoal', 'border-brand-lavmist', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:border-gray-600');
+            const currentRootName = selectedRoot.display;
+            
+            if (currentRootName.endsWith('#')) {
+                preferFlats = false;
+            } else if (currentRootName.endsWith('b')) {
+                preferFlats = true;
+            }
+            
+            document.querySelectorAll('.key-white').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-root') === currentRootName);
+            });
+            
+            document.querySelectorAll('.key-black').forEach(btn => {
+                let sharp = btn.getAttribute('data-sharp');
+                let flat = btn.getAttribute('data-flat');
+                
+                if (currentRootName === sharp || currentRootName === flat) {
+                    btn.classList.add('active');
+                    btn.innerText = currentRootName;
                 } else {
-                    btn.classList.remove('bg-brand-purple', 'text-white', 'border-brand-purple');
-                    btn.classList.add('bg-white', 'text-brand-charcoal', 'border-brand-lavmist', 'dark:bg-gray-700', 'dark:text-gray-200', 'dark:border-gray-600', 'hover:border-brand-purple');
+                    btn.classList.remove('active');
+                    btn.innerText = preferFlats ? flat : sharp; 
                 }
             });
         }
@@ -1139,30 +1294,6 @@
                 }
                 currentMeasureBeat = (currentMeasureBeat + chord.beats) % 4;
             });
-        }
-
-        function updateDurationUI() {
-            const radio4T = document.querySelector('input[name="chord-duration"][value="4"]');
-            const radio2T = document.querySelector('input[name="chord-duration"][value="2"]');
-            if (!radio4T || !radio2T) return;
-            const label4T = radio4T.nextElementSibling;
-            const label2T = radio2T.nextElementSibling;
-
-            const editSeqIdx = (editMeasureIdx !== null && editSubIdx !== null) ? getSequenceIndex(editMeasureIdx, editSubIdx) : -1;
-
-            if (editSeqIdx !== -1) {
-                const chord = sequence[editSeqIdx];
-                if (chord) {
-                    if (chord.beats === 4) { radio4T.checked = true; } else { radio2T.checked = true; }
-                    radio4T.disabled = true; radio2T.disabled = true;
-                    label4T.classList.add('opacity-50'); label2T.classList.add('opacity-50');
-                }
-            } else {
-                radio4T.disabled = false;
-                radio2T.disabled = false;
-                label4T.classList.remove('opacity-50');
-                label2T.classList.remove('opacity-50');
-            }
         }
 
         function removeChord(id) {
@@ -1228,7 +1359,6 @@
             if (sequence.length === 0) {
                 emptyState.style.display = 'block';
                 btnPlay.disabled = true;
-                updateDurationUI(); 
                 return;
             }
 
@@ -1348,11 +1478,6 @@
                     toggleMeasureSplit(index);
                 };
 
-                const durationLabel = document.createElement('div');
-                durationLabel.className = "absolute bottom-0.5 right-1.5 text-[8px] text-gray-400 dark:text-gray-500 font-normal uppercase";
-                durationLabel.innerText = chord.beats === 4 ? "4T" : "2T";
-                el.appendChild(durationLabel);
-
                 const delBtn = document.createElement('div');
                 delBtn.className = "absolute -top-1.5 -right-1.5 bg-red-400 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition shadow-md z-10";
                 delBtn.innerHTML = '<i class="fas fa-times"></i>';
@@ -1364,8 +1489,6 @@
                 el.appendChild(delBtn);
                 sequenceContainer.appendChild(el);
             });
-
-            updateDurationUI(); 
         }
 
         function getAudioContext() {
