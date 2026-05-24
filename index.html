@@ -161,6 +161,128 @@
             border-color: #7c3aed;
             box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
         }
+
+        /* COLLAPSIBLE USER GUIDE */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        summary {
+            list-style: none;
+        }
+
+        /* INTERACTIVE GUITAR FRETBOARD */
+        .fretboard-container {
+            display: flex;
+            flex-direction: column;
+            background: #27272a;
+            border-radius: 8px;
+            padding: 8px 4px;
+            border: 2px solid #e4e4e7;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .dark .fretboard-container {
+            background: #18181b;
+            border-color: #3f3f46;
+        }
+
+        .fretboard-string-row {
+            position: relative;
+            display: grid;
+            grid-template-columns: 0.8fr 1fr 1fr 1fr 1fr;
+            height: 32px;
+            align-items: center;
+        }
+
+        .fretboard-string-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: var(--string-thickness, 2px);
+            background: #a1a1aa;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            z-index: 1;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .string-thick-1::before { --string-thickness: 1px; }
+        .string-thick-2::before { --string-thickness: 1.25px; }
+        .string-thick-3::before { --string-thickness: 1.5px; }
+        .string-thick-4::before { --string-thickness: 1.75px; }
+        .string-thick-5::before { --string-thickness: 2.25px; }
+        .string-thick-6::before { --string-thickness: 2.75px; }
+
+        .fret-cell {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            border-right: 2px solid #d4d4d8;
+        }
+        .dark .fret-cell {
+            border-right-color: #52525b;
+        }
+
+        .fret-cell:last-child {
+            border-right: none;
+        }
+
+        .fret-cell-0 {
+            border-right: 4px solid #a1a1aa;
+            background: rgba(0,0,0,0.15);
+        }
+        .dark .fret-cell-0 {
+            border-right-color: #71717a;
+            background: rgba(0,0,0,0.25);
+        }
+
+        .fret-note-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #d4d4d8;
+            color: #27272a;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+        .dark .fret-note-btn {
+            background: #27272a;
+            border-color: #52525b;
+            color: #f4f4f5;
+        }
+
+        .fret-note-btn:hover {
+            transform: scale(1.2);
+            border-color: #B57EDC;
+            box-shadow: 0 2px 6px rgba(181, 126, 220, 0.4);
+        }
+
+        .fret-note-btn.active {
+            background: #B57EDC !important;
+            border-color: #B57EDC !important;
+            color: #fff !important;
+            box-shadow: 0 0 8px rgba(181, 126, 220, 0.7);
+            transform: scale(1.15);
+        }
+        .dark .fret-note-btn.active {
+            background: #B57EDC !important;
+            border-color: #B57EDC !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body class="bg-brand-lavmist dark:bg-gray-900 min-h-screen text-brand-charcoal dark:text-gray-200 font-sans flex flex-col transition-colors duration-200">
@@ -197,7 +319,7 @@
                         <div id="quality-palette" class="grid grid-cols-3 lg:grid-cols-6 gap-1.5"></div>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Fundamental</label>
+                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Teclado (Piano)</label>
                         <div class="piano-container" id="piano">
                             <!-- Teclas Brancas (14.285% cada) -->
                             <div class="key-white" onclick="setFromBtn('C')" data-root="C">C</div>
@@ -216,40 +338,153 @@
                             <div class="key-black" style="left: 85.714%;" onclick="handleBlackKey('A#', 'Bb')" data-sharp="A#" data-flat="Bb">Bb</div>
                         </div>
                     </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Braço (Violão)</label>
+                        <div class="fretboard-container" id="fretboard">
+                            <!-- Marcadores de casas -->
+                            <div class="grid grid-cols-[0.8fr_1fr_1fr_1fr_1fr] text-center text-[9px] font-extrabold text-gray-400 dark:text-zinc-500 mb-1 px-1 select-none">
+                                <div>Solto</div>
+                                <div>1</div>
+                                <div>2</div>
+                                <div>3</div>
+                                <div>4</div>
+                            </div>
+                            
+                            <!-- String 1 (E high) -->
+                            <div class="fretboard-string-row string-thick-1">
+                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                            </div>
+                            
+                            <!-- String 2 (B) -->
+                            <div class="fretboard-string-row string-thick-2">
+                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C', 'C')" data-sharp="C" data-flat="C">dó</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C#', 'Db')" data-sharp="C#" data-flat="Db">réb</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D', 'D')" data-sharp="D" data-flat="D">ré</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D#', 'Eb')" data-sharp="D#" data-flat="Eb">mib</button></div>
+                            </div>
+                            
+                            <!-- String 3 (G) -->
+                            <div class="fretboard-string-row string-thick-3">
+                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A', 'A')" data-sharp="A" data-flat="A">lá</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A#', 'Bb')" data-sharp="A#" data-flat="Bb">sib</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
+                            </div>
+                            
+                            <!-- String 4 (D) -->
+                            <div class="fretboard-string-row string-thick-4">
+                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('D', 'D')" data-sharp="D" data-flat="D">ré</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D#', 'Eb')" data-sharp="D#" data-flat="Eb">mib</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
+                            </div>
+                            
+                            <!-- String 5 (A) -->
+                            <div class="fretboard-string-row string-thick-5">
+                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('A', 'A')" data-sharp="A" data-flat="A">lá</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A#', 'Bb')" data-sharp="A#" data-flat="Bb">sib</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C', 'C')" data-sharp="C" data-flat="C">dó</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C#', 'Db')" data-sharp="C#" data-flat="Db">réb</button></div>
+                            </div>
+                            
+                            <!-- String 6 (E low) -->
+                            <div class="fretboard-string-row string-thick-6">
+                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
+                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- GUIA DO USUÁRIO -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 flex flex-col gap-3 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200">
-                    <h3 class="text-xs font-bold text-brand-charcoal dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fas fa-book-open text-brand-purple"></i> Guia de Uso do App
-                    </h3>
-                    <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0">
+                <details class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200 group" id="user-guide-details">
+                    <summary class="text-xs font-bold text-brand-charcoal dark:text-white uppercase tracking-wider flex items-center justify-between gap-1.5 cursor-pointer list-none select-none outline-none">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fas fa-book-open text-brand-purple"></i> Guia de Uso do App
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform duration-200"></i>
+                    </summary>
+                    <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
                         <li class="flex items-start gap-2">
                             <span class="text-brand-purple font-bold">1.</span>
-                            <span><strong>Montar Cifras:</strong> Toque na nota fundamental no piano virtual e escolha a extensão (maj7, 9, etc.) para montar o acorde.</span>
+                            <span><strong>Montar Cifras:</strong> Selecione a fundamental no piano virtual ou no braço do violão (toque no mesmo botão de alteração para alternar sustenido/bemol) e a qualidade (maj7, 9, etc.) para criar o acorde no slot ativo.</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-brand-purple font-bold">2.</span>
-                            <span><strong>Substituir:</strong> Clique em um acorde na sequência (ficará com borda roxa) e selecione outro na paleta para substituí-lo. Aperte <code>Esc</code> para cancelar a seleção.</span>
+                            <span><strong>Substituir & Foco:</strong> Clique em um acorde na sequência (borda roxa) para focar. O piano e o violão mudarão para a fundamental dele. Selecione outra qualidade para trocar. Aperte <code>Esc</code> para tirar o foco.</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-brand-purple font-bold">3.</span>
-                            <span><strong>Dividir / Unir:</strong> Dê um duplo clique em qualquer acorde para dividi-lo em dois (2 tempos cada) ou unir de volta em um (4 tempos).</span>
+                            <span><strong>Visor de Notas:</strong> O visor na parte inferior exibe as notas do acorde em foco com enarmonia teórica exata (ex: <code>mi#</code> no C#9). Passe o mouse e <strong>clique nas notas</strong> para ouvi-las individualmente em escala ascendente.</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-brand-purple font-bold">4.</span>
-                            <span><strong>Digitar Acordes:</strong> Selecione um compasso e use o teclado físico do PC (ex: digite <code>C</code>, depois <code>m7</code> e pressione <code>Enter</code>).</span>
+                            <span><strong>Controles de Play:</strong> Use <strong>Tocar do Início</strong> para iniciar a música do primeiro compasso ou <strong>Tocar do Selecionado</strong> para reproduzir a partir do acorde em foco atual.</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-brand-purple font-bold">5.</span>
-                            <span><strong>Copiar e Colar:</strong> Selecione compassos e use <code>Ctrl+C</code> e <code>Ctrl+V</code> para replicá-los rapidamente.</span>
+                            <span><strong>Dividir / Unir:</strong> Dê duplo clique em um slot para dividir o compasso (2 tempos) ou unir novamente (4 tempos).</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-brand-purple font-bold">6.</span>
-                            <span><strong>Remover:</strong> Passe o mouse sobre o acorde e clique no <code>x</code> vermelho no canto para apagá-lo.</span>
+                            <span><strong>Teclado & Desfazer/Refazer:</strong> Digite cifras no slot selecionado (ex: digite <code>C</code>, depois <code>m7</code> e <code>Enter</code>). Use <code>Ctrl+Z</code> (Desfazer) e <code>Ctrl+Y</code> (Refazer) para editar.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">7.</span>
+                            <span><strong>Copiar, Colar & Apagar:</strong> Selecione compassos e use <code>Ctrl+C</code> / <code>Ctrl+V</code>. Passe o mouse sobre o slot e clique no <code>x</code> vermelho no canto para apagá-lo.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">8.</span>
+                            <span><strong>Cadência Automática:</strong> Ao inserir um acorde dominante (`9` ou `7b9`), se o próximo slot de compasso estiver vazio, o sistema pré-selecionará automaticamente no piano e no violão a nota fundamental correspondente a uma quarta justa acima (por exemplo, de G para C), facilitando a montagem rápida de cadências harmônicas.</span>
                         </li>
                     </ul>
-                </div>
+                    
+                    <h4 class="text-[10px] font-bold text-brand-purple dark:text-brand-mint uppercase tracking-wider mt-4 mb-2 border-t border-gray-100 dark:border-gray-700 pt-3 flex items-center gap-1">
+                        <i class="fas fa-file-export text-xs"></i> Explicação dos Formatos de Exportação
+                    </h4>
+                    <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0">
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>Projeto (.txt):</strong> Salva localmente sua sequência harmônica em formato JSON simplificado (apenas cifras e tempos). Use o botão "Abrir Projeto" para carregar este arquivo e continuar a editar de onde parou.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>Moodle (HTML):</strong> Gera o código HTML pronto para tarefas ou fóruns do Moodle. Ele incorpora a trilha de áudio embutida (em Base64, sem precisar hospedar o áudio) e desenha uma grade de partitura elegante com cifras e compassos numerados. Possui a opção **MP3 (Mais Leve)** para carregamentos rápidos e **WAV (Alta Qualidade)**.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>Áudio (.wav):</strong> Exporta e baixa o áudio completo consolidado do acompanhamento da sequência em formato WAV estéreo de alta definição. *Disponível após tocar a música pelo menos uma vez.*</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>Imagem (.png):</strong> Baixa uma folha de partitura visual com cifras centralizadas, numeração de compassos (com frações como `1.3` nos splits), título, autor, data e horário exato de geração do arquivo no canto.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>Tabela (MD):</strong> Fornece o código de uma tabela em formato Markdown para colar em relatórios, arquivos readmes, ou documentos compatíveis com formatação de tabela simples.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>MusicXML:</strong> Exporta em formato de notação musical `.xml` padrão da indústria, ideal para abrir e diagramar a grade harmônica em programas como MuseScore, Sibelius ou Finale.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-brand-purple font-bold">•</span>
+                            <span><strong>BIAB:</strong> Exporta uma string de texto limpa contendo as cifras e tempos no formato legível de importação rápida do software Band-in-a-Box.</span>
+                        </li>
+                    </ul>
+                </details>
             </aside>
 
             <!-- LADO DIREITO: Controles e Sequência -->
@@ -258,7 +493,7 @@
                 <!-- CONTROLES: Fixos (sticky) acima da sequência -->
                 <div class="sticky top-4 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl p-2.5 sm:p-3 rounded-xl flex flex-col lg:flex-row items-center justify-between gap-3 shadow border border-gray-200 dark:border-gray-700 z-40">
                     <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-                        <div id="status-text" class="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 text-center sm:text-left min-w-[150px]">Pronto para montar.</div>
+                        <div id="status-text" class="hidden"></div>
 
                         <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-xs font-semibold transition-colors py-1.5 px-3.5 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
                             <i class="fas fa-file-export"></i> Dados & Exportação
@@ -275,8 +510,11 @@
                             <label for="bpm-input" class="text-[10px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-tachometer-alt text-brand-purple mr-1"></i> BPM</label>
                             <input type="number" id="bpm-input" value="130" min="60" max="240" class="w-12 bg-transparent text-center focus:outline-none font-bold text-brand-charcoal dark:text-white text-base">
                         </div>
-                        <button id="btn-play" disabled class="bg-brand-mint hover:brightness-95 text-brand-charcoal px-6 py-2 rounded-full font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-2">
-                            <i class="fas fa-play"></i> <span>Tocar</span>
+                        <button id="btn-play-start" disabled class="bg-brand-mint hover:brightness-95 text-brand-charcoal px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-1.5 whitespace-nowrap">
+                            <i class="fas fa-play"></i> <span>Tocar do Início</span>
+                        </button>
+                        <button id="btn-play-selected" disabled class="bg-brand-purple hover:brightness-105 text-white px-4 py-2 rounded-full font-bold text-xs sm:text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm flex items-center justify-center gap-1.5 whitespace-nowrap">
+                            <i class="fas fa-step-forward"></i> <span>Tocar do Selecionado</span>
                         </button>
                         <button id="btn-stop" disabled class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center shadow-sm">
                             <i class="fas fa-stop"></i>
@@ -316,7 +554,11 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-1 pt-3 border-t border-gray-100 dark:border-gray-700">
-                        <div></div>
+                        <!-- Visor de Notas -->
+                        <div id="notes-viewer" class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 px-3.5 py-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 text-xs font-medium text-gray-500 dark:text-gray-400 select-none">
+                            <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mr-1">Notas (desconsiderando tonalidade):</span>
+                            <span id="notes-display" class="font-bold text-brand-purple dark:text-brand-mint text-sm tracking-wide">—</span>
+                        </div>
                         <div class="flex items-center gap-1.5 bg-brand-ghost dark:bg-gray-700/50 p-1 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0 select-none">
                             <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Total de Compassos</span>
                             <div class="flex items-center bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-600 overflow-hidden">
@@ -358,18 +600,18 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-2xl border border-gray-100 dark:border-gray-700">
                         <div>
-                            <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Título do Trabalho</label>
-                            <input type="text" id="work-title" placeholder="Trabalho Sem Título" class="w-full bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white rounded-lg p-3 mt-1 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-brand-purple outline-none transition-shadow font-semibold">
+                            <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Título da Sequência</label>
+                            <input type="text" id="work-title" placeholder="Sequência Sem Título" class="w-full bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white rounded-lg p-3 mt-1 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-brand-purple outline-none transition-shadow font-semibold">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">Nome do Autor</label>
+                            <label class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold">por</label>
                             <input type="text" id="author-name" placeholder="Anônimo" class="w-full bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white rounded-lg p-3 mt-1 border border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-brand-purple outline-none transition-shadow font-semibold">
                         </div>
                     </div>
                     <hr class="border-gray-100 dark:border-gray-700">
                     
                     <div id="view-data" class="export-view flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Salve a estrutura do seu trabalho num ficheiro local para continuar a editar mais tarde.</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Salve a estrutura da sua sequência num ficheiro local para continuar a editar mais tarde.</p>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-download mr-2"></i> Salvar Projeto (.txt)</button>
                             <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.txt)</button>
@@ -424,7 +666,7 @@
                             <button id="btn-dl-img" class="bg-brand-purple text-white py-2 px-6 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0">Baixar (.png)</button>
                         </div>
                         <div class="flex-grow overflow-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 rounded-2xl flex items-center justify-center">
-                            <canvas id="export-canvas" class="shadow-md bg-white rounded"></canvas>
+                            <canvas id="export-canvas" class="shadow-md bg-white rounded max-w-full max-h-full object-contain block"></canvas>
                         </div>
                     </div>
                     
@@ -596,7 +838,8 @@
             currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
-            btnPlay.disabled = sequence.length === 0;
+            btnPlayStart.disabled = sequence.length === 0;
+            btnPlaySelected.disabled = sequence.length === 0;
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
@@ -622,6 +865,7 @@
         let editingChordId = null; 
         let activeLiveGainNode = null;
         let activeLiveOscillators = [];
+        let activeLiveNoteGainNodes = [];
 
         let isRoutingSetup = false;
         let mediaElementSource = null;
@@ -631,7 +875,8 @@
 
         const sequenceContainer = document.getElementById('sequence-container');
         const emptyState = document.getElementById('empty-state');
-        const btnPlay = document.getElementById('btn-play');
+        const btnPlayStart = document.getElementById('btn-play-start');
+        const btnPlaySelected = document.getElementById('btn-play-selected');
         const btnStop = document.getElementById('btn-stop');
         const btnClear = document.getElementById('btn-clear');
         const statusText = document.getElementById('status-text');
@@ -771,7 +1016,8 @@
             currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
-            btnPlay.disabled = false;
+            btnPlayStart.disabled = false;
+            btnPlaySelected.disabled = false;
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
@@ -859,7 +1105,8 @@
             currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
-            btnPlay.disabled = false;
+            btnPlayStart.disabled = false;
+            btnPlaySelected.disabled = false;
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
@@ -925,6 +1172,29 @@
             return "c";
         }
 
+        function getChordFileName(chordName) {
+            if (!chordName) return "";
+            const { root, suffix } = parseChordBuffer(chordName);
+            if (!root) return "";
+            const prefix = rootToPrefix(root);
+            const quality = CONFIG.QUALITIES.find(q => q.label === suffix);
+            const fileSuffix = quality ? quality.fileSuffix : "maj7";
+            return `swing130_${prefix}${fileSuffix}`;
+        }
+
+        function getPerfectFourthAbove(rootName) {
+            const perfectFourths = {
+                "C": "F", "C#": "F#", "Db": "Gb",
+                "D": "G", "D#": "G#", "Eb": "Ab",
+                "E": "A", "F": "Bb", "F#": "B",
+                "Gb": "B",
+                "G": "C", "G#": "C#", "Ab": "Db",
+                "A": "D", "A#": "D#", "Bb": "Eb",
+                "B": "E"
+            };
+            return perfectFourths[rootName] || null;
+        }
+
         function parseChordBuffer(buffer) {
             if (!buffer) return { root: "", suffix: "" };
             const match = buffer.match(/^([A-G][#b]?)(.*)$/);
@@ -932,6 +1202,210 @@
                 return { root: match[1], suffix: match[2] };
             }
             return { root: "", suffix: "" };
+        }
+
+        const CHORD_NOTES_PT = {
+            // C
+            "Cmaj7": ["dó", "mi", "sol", "si"],
+            "C9": ["dó", "mi", "sol", "sib", "ré"],
+            "C7b9": ["dó", "mi", "sol", "sib", "réb"],
+            "Cm7": ["dó", "mib", "sol", "sib"],
+            "Cm7b5": ["dó", "mib", "solb", "sib"],
+            "Cdim7": ["dó", "mib", "solb", "sibb"],
+
+            // C#
+            "C#maj7": ["dó#", "mi#", "sol#", "si#"],
+            "C#9": ["dó#", "mi#", "sol#", "si", "ré#"],
+            "C#7b9": ["dó#", "mi#", "sol#", "si", "ré"],
+            "C#m7": ["dó#", "mi", "sol#", "si"],
+            "C#m7b5": ["dó#", "mi", "sol", "si"],
+            "C#dim7": ["dó#", "mi", "sol", "sib"],
+
+            // Db
+            "Dbmaj7": ["réb", "fá", "láb", "dó"],
+            "Db9": ["réb", "fá", "láb", "dób", "mib"],
+            "Db7b9": ["réb", "fá", "láb", "dób", "mibb"],
+            "Dbm7": ["réb", "fáb", "láb", "dób"],
+            "Dbm7b5": ["réb", "fáb", "lább", "dób"],
+            "Dbdim7": ["réb", "fáb", "lább", "dóbb"],
+
+            // D
+            "Dmaj7": ["ré", "fá#", "lá", "dó#"],
+            "D9": ["ré", "fá#", "lá", "dó", "mi"],
+            "D7b9": ["ré", "fá#", "lá", "dó", "mib"],
+            "Dm7": ["ré", "fá", "lá", "dó"],
+            "Dm7b5": ["ré", "fá", "láb", "dó"],
+            "Ddim7": ["ré", "fá", "láb", "dób"],
+
+            // D#
+            "D#maj7": ["ré#", "fá##", "lá#", "dó##"],
+            "D#9": ["ré#", "fá##", "lá#", "dó#", "mi#"],
+            "D#7b9": ["ré#", "fá##", "lá#", "dó#", "mi"],
+            "D#m7": ["ré#", "fá#", "lá#", "dó#"],
+            "D#m7b5": ["ré#", "fá#", "lá", "dó#"],
+            "D#dim7": ["ré#", "fá#", "lá", "dó"],
+
+            // Eb
+            "Ebmaj7": ["mib", "sol", "sib", "ré"],
+            "Eb9": ["mib", "sol", "sib", "réb", "fá"],
+            "Eb7b9": ["mib", "sol", "sib", "réb", "fáb"],
+            "Ebm7": ["mib", "solb", "sib", "réb"],
+            "Ebm7b5": ["mib", "solb", "sibb", "réb"],
+            "Ebdim7": ["mib", "solb", "sibb", "rébb"],
+
+            // E
+            "Emaj7": ["mi", "sol#", "si", "ré#"],
+            "E9": ["mi", "sol#", "si", "ré", "fá#"],
+            "E7b9": ["mi", "sol#", "si", "ré", "fá"],
+            "Em7": ["mi", "sol", "si", "ré"],
+            "Em7b5": ["mi", "sol", "sib", "ré"],
+            "Edim7": ["mi", "sol", "sib", "réb"],
+
+            // F
+            "Fmaj7": ["fá", "lá", "dó", "mi"],
+            "F9": ["fá", "lá", "dó", "mib", "sol"],
+            "F7b9": ["fá", "lá", "dó", "mib", "solb"],
+            "Fm7": ["fá", "láb", "dó", "mib"],
+            "Fm7b5": ["fá", "láb", "dób", "mib"],
+            "Fdim7": ["fá", "láb", "dób", "mibb"],
+
+            // F#
+            "F#maj7": ["fá#", "lá#", "dó#", "mi#"],
+            "F#9": ["fá#", "lá#", "dó#", "mi", "sol#"],
+            "F#7b9": ["fá#", "lá#", "dó#", "mi", "sol"],
+            "F#m7": ["fá#", "lá", "dó#", "mi"],
+            "F#m7b5": ["fá#", "lá", "dó", "mi"],
+            "F#dim7": ["fá#", "lá", "dó", "mib"],
+
+            // Gb
+            "Gbmaj7": ["solb", "sib", "réb", "fá"],
+            "Gb9": ["solb", "sib", "réb", "fáb", "láb"],
+            "Gb7b9": ["solb", "sib", "réb", "fáb", "lább"],
+            "Gbm7": ["solb", "sibb", "réb", "fáb"],
+            "Gbm7b5": ["solb", "sibb", "rébb", "fáb"],
+            "Gbdim7": ["solb", "sibb", "rébb", "fább"],
+
+            // G
+            "Gmaj7": ["sol", "si", "ré", "fá#"],
+            "G9": ["sol", "si", "ré", "fá", "lá"],
+            "G7b9": ["sol", "si", "ré", "fá", "láb"],
+            "Gm7": ["sol", "sib", "ré", "fá"],
+            "Gm7b5": ["sol", "sib", "réb", "fá"],
+            "Gdim7": ["sol", "sib", "réb", "fáb"],
+
+            // G#
+            "G#maj7": ["sol#", "si#", "ré#", "fá##"],
+            "G#9": ["sol#", "si#", "ré#", "fá#", "lá#"],
+            "G#7b9": ["sol#", "si#", "ré#", "fá#", "lá"],
+            "G#m7": ["sol#", "si", "ré#", "fá#"],
+            "G#m7b5": ["sol#", "si", "ré", "fá#"],
+            "G#dim7": ["sol#", "si", "ré", "fá"],
+
+            // Ab
+            "Abmaj7": ["láb", "dó", "mib", "sol"],
+            "Ab9": ["láb", "dó", "mib", "solb", "sib"],
+            "Ab7b9": ["láb", "dó", "mib", "solb", "sibb"],
+            "Abm7": ["láb", "dób", "mib", "solb"],
+            "Abm7b5": ["láb", "dób", "mibb", "solb"],
+            "Abdim7": ["láb", "dób", "mibb", "solbb"],
+
+            // A
+            "Amaj7": ["lá", "dó#", "mi", "sol#"],
+            "A9": ["lá", "dó#", "mi", "sol", "si"],
+            "A7b9": ["lá", "dó#", "mi", "sol", "sib"],
+            "Am7": ["lá", "dó", "mi", "sol"],
+            "Am7b5": ["lá", "dó", "mib", "sol"],
+            "Adim7": ["lá", "dó", "mib", "solb"],
+
+            // A#
+            "A#maj7": ["lá#", "dó##", "mi#", "sol##"],
+            "A#9": ["lá#", "dó##", "mi#", "sol#", "si#"],
+            "A#7b9": ["lá#", "dó##", "mi#", "sol#", "si"],
+            "A#m7": ["lá#", "dó#", "mi#", "sol#"],
+            "A#m7b5": ["lá#", "dó#", "mi", "sol#"],
+            "A#dim7": ["lá#", "dó#", "mi", "sol"],
+
+            // Bb
+            "Bbmaj7": ["sib", "ré", "fá", "lá"],
+            "Bb9": ["sib", "ré", "fá", "láb", "dó"],
+            "Bb7b9": ["sib", "ré", "fá", "láb", "dób"],
+            "Bbm7": ["sib", "réb", "fá", "láb"],
+            "Bbm7b5": ["sib", "réb", "fáb", "láb"],
+            "Bbdim7": ["sib", "réb", "fáb", "lább"],
+
+            // B
+            "Bmaj7": ["si", "ré#", "fá#", "lá#"],
+            "B9": ["si", "ré#", "fá#", "lá", "dó#"],
+            "B7b9": ["si", "ré#", "fá#", "lá", "dó"],
+            "Bm7": ["si", "ré", "fá#", "lá"],
+            "Bm7b5": ["si", "ré", "fá", "lá"],
+            "Bdim7": ["si", "ré", "fá", "láb"]
+        };
+
+        function getChordNotesPT(chordName) {
+            if (!chordName) return [];
+            
+            if (CHORD_NOTES_PT[chordName]) {
+                return CHORD_NOTES_PT[chordName];
+            }
+            
+            if (chordName.endsWith('m')) {
+                const root = chordName.slice(0, -1);
+                const minorTriads = {
+                    "C": ["dó", "mib", "sol"],
+                    "C#": ["dó#", "mi", "sol#"],
+                    "Db": ["réb", "fáb", "láb"],
+                    "D": ["ré", "fá", "lá"],
+                    "D#": ["ré#", "fá#", "lá#"],
+                    "Eb": ["mib", "solb", "sib"],
+                    "E": ["mi", "sol", "si"],
+                    "F": ["fá", "láb", "dó"],
+                    "F#": ["fá#", "lá", "dó#"],
+                    "Gb": ["solb", "sibb", "réb"],
+                    "G": ["sol", "sib", "ré"],
+                    "G#": ["sol#", "si", "ré#"],
+                    "Ab": ["láb", "dób", "mib"],
+                    "A": ["lá", "dó", "mi"],
+                    "A#": ["lá#", "dó#", "mi#"],
+                    "Bb": ["sib", "réb", "fá"],
+                    "B": ["si", "ré", "fá#"]
+                };
+                if (minorTriads[root]) return minorTriads[root];
+            }
+            
+            const majorTriads = {
+                "C": ["dó", "mi", "sol"],
+                "C#": ["dó#", "mi#", "sol#"],
+                "Db": ["réb", "fá", "láb"],
+                "D": ["ré", "fá#", "lá"],
+                "D#": ["ré#", "fá##", "lá#"],
+                "Eb": ["mib", "sol", "sib"],
+                "E": ["mi", "sol#", "si"],
+                "F": ["fá", "lá", "dó"],
+                "F#": ["fá#", "lá#", "dó#"],
+                "Gb": ["solb", "sib", "réb"],
+                "G": ["sol", "si", "ré"],
+                "G#": ["sol#", "si#", "ré#"],
+                "Ab": ["láb", "dó", "mib"],
+                "A": ["lá", "dó#", "mi"],
+                "A#": ["lá#", "dó##", "mi#"],
+                "Bb": ["sib", "ré", "fá"],
+                "B": ["si", "ré#", "fá#"]
+            };
+            if (majorTriads[chordName]) return majorTriads[chordName];
+            
+            const parsed = parseChordBuffer(chordName);
+            if (parsed.root) {
+                const rootsPT = {
+                    "C": "dó", "C#": "dó#", "Db": "réb", "D": "ré", "D#": "ré#", "Eb": "mib", 
+                    "E": "mi", "F": "fá", "F#": "fá#", "Gb": "solb", "G": "sol", "G#": "sol#", 
+                    "Ab": "láb", "A": "lá", "A#": "lá#", "Bb": "sib", "B": "si"
+                };
+                const ptRoot = rootsPT[parsed.root] || parsed.root.toLowerCase();
+                return [ptRoot];
+            }
+            
+            return [];
         }
 
         function selectRootByName(rootName) {
@@ -1014,6 +1488,12 @@
             const measures = getMeasuresFromSequence();
             const currentMeasureChords = measures[editMeasureIdx];
             
+            const targetIdx = getSequenceIndex(editMeasureIdx, editSubIdx);
+            let prevChordName = "";
+            if (targetIdx !== -1) {
+                prevChordName = sequence[targetIdx].name;
+            }
+
             if (currentMeasureChords && currentMeasureChords.length > 1 && editSubIdx === 0) {
                 editSubIdx = 1;
             } else {
@@ -1033,6 +1513,22 @@
             } else {
                 selectedMeasures = [];
                 lastSelectedMeasureIdx = null;
+            }
+            
+            // Lógica de pré-seleção de fundamental (quarta justa acima para acordes dominantes 9 ou 7b9)
+            if (prevChordName) {
+                const { root, suffix } = parseChordBuffer(prevChordName);
+                if (suffix === "9" || suffix === "7b9") {
+                    if (editMeasureIdx !== null && editSubIdx !== null) {
+                        const newTargetIdx = getSequenceIndex(editMeasureIdx, editSubIdx);
+                        if (newTargetIdx !== -1 && sequence[newTargetIdx].name === "") {
+                            const nextRootName = getPerfectFourthAbove(root);
+                            if (nextRootName) {
+                                selectRootByName(nextRootName);
+                            }
+                        }
+                    }
+                }
             }
             
             updateSelectionButtons();
@@ -1141,6 +1637,52 @@
             });
         }
 
+        function playSingleNoteMidi(midi) {
+            const ctx = getAudioContext();
+            const now = ctx.currentTime;
+
+            // Stop previously playing single notes
+            activeLiveNoteGainNodes.forEach(g => {
+                try {
+                    g.gain.cancelScheduledValues(now);
+                    g.gain.setValueAtTime(g.gain.value, now);
+                    g.gain.linearRampToValueAtTime(0, now + 0.05);
+                } catch (e) {}
+            });
+            activeLiveNoteGainNodes = [];
+
+            if (midi === undefined || midi === null) return;
+
+            const freq = 440 * Math.pow(2, (midi - 69) / 12);
+            
+            const masterGain = ctx.createGain();
+            masterGain.gain.setValueAtTime(0, now);
+            masterGain.gain.linearRampToValueAtTime(0.2, now + 0.005);
+            masterGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+            masterGain.connect(ctx.destination);
+            activeLiveNoteGainNodes.push(masterGain);
+
+            const osc1 = ctx.createOscillator();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(freq, now);
+            const g1 = ctx.createGain();
+            g1.gain.setValueAtTime(0.8, now);
+            osc1.connect(g1);
+            g1.connect(masterGain);
+            osc1.start(now);
+            osc1.stop(now + 1.2);
+
+            const osc2 = ctx.createOscillator();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(freq * 2, now);
+            const g2 = ctx.createGain();
+            g2.gain.setValueAtTime(0.15, now);
+            osc2.connect(g2);
+            g2.connect(masterGain);
+            osc2.start(now);
+            osc2.stop(now + 1.2);
+        }
+
         function initUI() {
             bpmInput.addEventListener('input', () => {
                 const newBpm = parseFloat(bpmInput.value);
@@ -1171,7 +1713,8 @@
                 qualityPalette.appendChild(btn);
             });
 
-            btnPlay.onclick = togglePlay;
+            btnPlayStart.onclick = togglePlayStart;
+            btnPlaySelected.onclick = togglePlaySelected;
             btnStop.onclick = stopAudio;
             btnClear.onclick = clearSequence;
 
@@ -1324,6 +1867,12 @@
 
         let preferFlats = true;
 
+        const NOTE_TO_PT = {
+            "C": "dó", "C#": "dó#", "Db": "réb", "D": "ré", "D#": "ré#", "Eb": "mib",
+            "E": "mi", "F": "fá", "F#": "fá#", "Gb": "solb", "G": "sol", "G#": "sol#",
+            "Ab": "láb", "A": "lá", "A#": "lá#", "Bb": "sib", "B": "si"
+        };
+
         function setFromBtn(rootName) {
             let foundRoot = null;
             for (let group of CONFIG.ROOT_GROUPS) {
@@ -1358,6 +1907,14 @@
             }
         }
 
+        function handleGuitarFretClick(sharp, flat) {
+            if (sharp === flat) {
+                setFromBtn(sharp);
+            } else {
+                handleBlackKey(sharp, flat);
+            }
+        }
+
         function updateRootButtonsUI() {
             const currentRootName = selectedRoot.display;
             
@@ -1383,6 +1940,20 @@
                     btn.innerText = preferFlats ? flat : sharp; 
                 }
             });
+
+            // Sincroniza e atualiza os botões/notas do violão
+            document.querySelectorAll('.fret-note-btn').forEach(btn => {
+                const sharp = btn.getAttribute('data-sharp');
+                const flat = btn.getAttribute('data-flat');
+                
+                if (currentRootName === sharp || currentRootName === flat) {
+                    btn.classList.add('active');
+                    btn.innerText = NOTE_TO_PT[currentRootName];
+                } else {
+                    btn.classList.remove('active');
+                    btn.innerText = preferFlats ? NOTE_TO_PT[flat] : NOTE_TO_PT[sharp];
+                }
+            });
         }
 
         function addOrReplaceChord(chordData) {
@@ -1390,7 +1961,8 @@
             currentWavBlob = null;
             if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
             mainPlayer.src = "";
-            btnPlay.disabled = false;
+            btnPlayStart.disabled = false;
+            btnPlaySelected.disabled = false;
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
@@ -1456,7 +2028,8 @@
             chordInputBuffer = "";
             selectedMeasures = [];
             lastSelectedMeasureIdx = null;
-            btnPlay.disabled = true;
+            btnPlayStart.disabled = true;
+            btnPlaySelected.disabled = true;
             if (objectUrl) URL.revokeObjectURL(objectUrl);
             mainPlayer.src = "";
             
@@ -1474,18 +2047,100 @@
         function renderSequence() {
             enforceGridRules(); 
 
+            // Atualizar o visor de notas do acorde em foco
+            const notesDisplay = document.getElementById('notes-display');
+            if (notesDisplay) {
+                let focusedChordName = "";
+                if (editMeasureIdx !== null && editSubIdx !== null) {
+                    const targetIdx = getSequenceIndex(editMeasureIdx, editSubIdx);
+                    if (targetIdx !== -1) {
+                        focusedChordName = chordInputBuffer || sequence[targetIdx].name;
+                    }
+                }
+                
+                if (focusedChordName) {
+                    const notes = getChordNotesPT(focusedChordName);
+                    if (notes && notes.length > 0) {
+                        notesDisplay.innerHTML = '';
+                        
+                        const noteOffsets = {
+                            "dó": 0, "dó#": 1, "dó##": 2, "dób": 11, "dóbb": 10,
+                            "ré": 2, "ré#": 3, "réb": 1, "rébb": 0,
+                            "mi": 4, "mi#": 5, "mib": 3, "mibb": 2,
+                            "fá": 5, "fá#": 6, "fá##": 7, "fáb": 4, "fább": 3,
+                            "sol": 7, "sol#": 8, "sol##": 9, "solb": 6, "solbb": 5,
+                            "lá": 9, "lá#": 10, "láb": 8, "lább": 7,
+                            "si": 11, "si#": 0, "sib": 10, "sibb": 9
+                        };
+                        
+                        const parsed = parseChordBuffer(focusedChordName);
+                        const engToPtRoot = {
+                            "C": "dó", "C#": "dó#", "Db": "réb", "D": "ré", "D#": "ré#", "Eb": "mib",
+                            "E": "mi", "F": "fá", "F#": "fá#", "Gb": "solb", "G": "sol", "G#": "sol#",
+                            "Ab": "láb", "A": "lá", "A#": "lá#", "Bb": "sib", "B": "si"
+                        };
+                        const rootPtName = engToPtRoot[parsed.root] || "dó";
+                        const rootOffset = noteOffsets[rootPtName] || 0;
+                        
+                        // Start the first note (root) in tenor range (MIDI 48 to 59)
+                        let lastMidi = 48 + rootOffset;
+                        const midiList = [];
+                        
+                        notes.forEach((noteName, idx) => {
+                            const cleanName = noteName.trim().toLowerCase();
+                            const offset = noteOffsets[cleanName] !== undefined ? noteOffsets[cleanName] : 0;
+                            
+                            // Estimate MIDI in the octave of lastMidi
+                            let noteMidi = Math.floor(lastMidi / 12) * 12 + offset;
+                            
+                            if (idx > 0) {
+                                // Ensure strict ascending relative to the previous note
+                                while (noteMidi <= lastMidi) {
+                                    noteMidi += 12;
+                                }
+                            }
+                            
+                            midiList.push(noteMidi);
+                            lastMidi = noteMidi;
+                        });
+
+                        notes.forEach((note, idx) => {
+                            const span = document.createElement('span');
+                            span.className = "cursor-pointer hover:text-brand-purple dark:hover:text-brand-mint hover:underline transition-colors";
+                            span.innerText = note;
+                            span.onclick = (e) => {
+                                e.stopPropagation();
+                                playSingleNoteMidi(midiList[idx]);
+                            };
+                            notesDisplay.appendChild(span);
+                            
+                            if (idx < notes.length - 1) {
+                                const separator = document.createTextNode(', ');
+                                notesDisplay.appendChild(separator);
+                            }
+                        });
+                    } else {
+                        notesDisplay.innerText = "—";
+                    }
+                } else {
+                    notesDisplay.innerText = "—";
+                }
+            }
+
             Array.from(sequenceContainer.children).forEach(child => {
                 if (child.id !== 'empty-state') child.remove();
             });
 
             if (sequence.length === 0) {
                 emptyState.style.display = 'block';
-                btnPlay.disabled = true;
+                btnPlayStart.disabled = true;
+                btnPlaySelected.disabled = true;
                 return;
             }
 
             emptyState.style.display = 'none';
-            btnPlay.disabled = false;
+            btnPlayStart.disabled = false;
+            btnPlaySelected.disabled = false;
 
             let currentBeat = 0; 
 
@@ -1794,23 +2449,58 @@
             wetGainNode.gain.value = Math.sin(mappedValue * 0.5 * Math.PI);
         }
 
-        async function togglePlay() {
+        async function togglePlayStart() {
             if (isPlaying) { 
                 stopAudio(); 
             } else { 
                 if (needsConsolidation) {
-                    btnPlay.innerHTML = '<span class="loading-spinner"></span> <span class="hidden sm:inline">Processando...</span>';
-                    btnPlay.classList.add('opacity-80');
-                    btnPlay.disabled = true;
+                    btnPlayStart.innerHTML = '<span class="loading-spinner"></span> <span class="hidden sm:inline">Processando...</span>';
+                    btnPlayStart.classList.add('opacity-80');
+                    btnPlayStart.disabled = true;
+                    btnPlaySelected.disabled = true;
                     const success = await handleConsolidate();
                     if (!success) {
-                        btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
-                        btnPlay.classList.remove('opacity-80');
-                        btnPlay.disabled = false;
+                        btnPlayStart.innerHTML = '<i class="fas fa-play"></i> <span>Tocar do Início</span>';
+                        btnPlayStart.classList.remove('opacity-80');
+                        btnPlayStart.disabled = false;
+                        btnPlaySelected.disabled = false;
                         return;
                     }
                     needsConsolidation = false;
                 }
+                mainPlayer.currentTime = 0;
+                playAudio(); 
+            }
+        }
+
+        async function togglePlaySelected() {
+            if (isPlaying) { 
+                stopAudio(); 
+            } else { 
+                if (needsConsolidation) {
+                    btnPlaySelected.innerHTML = '<span class="loading-spinner"></span> <span class="hidden sm:inline">Processando...</span>';
+                    btnPlaySelected.classList.add('opacity-80');
+                    btnPlayStart.disabled = true;
+                    btnPlaySelected.disabled = true;
+                    const success = await handleConsolidate();
+                    if (!success) {
+                        btnPlaySelected.innerHTML = '<i class="fas fa-step-forward"></i> <span>Tocar do Selecionado</span>';
+                        btnPlaySelected.classList.remove('opacity-80');
+                        btnPlayStart.disabled = false;
+                        btnPlaySelected.disabled = false;
+                        return;
+                    }
+                    needsConsolidation = false;
+                }
+                
+                let startTime = 0;
+                if (editMeasureIdx !== null && editSubIdx !== null) {
+                    const selIdx = getSequenceIndex(editMeasureIdx, editSubIdx);
+                    if (selIdx !== -1 && sequence[selIdx] && typeof sequence[selIdx].startTime === 'number') {
+                        startTime = sequence[selIdx].startTime;
+                    }
+                }
+                mainPlayer.currentTime = startTime;
                 playAudio(); 
             }
         }
@@ -1826,10 +2516,21 @@
             mainPlayer.onended = () => { if(isPlaying) stopAudio(); };
             mainPlayer.play();
             isPlaying = true;
-            btnPlay.disabled = false;
-            btnPlay.innerHTML = '<i class="fas fa-pause"></i> Pausar';
-            btnPlay.classList.replace('bg-brand-mint', 'bg-yellow-400');
-            btnPlay.classList.remove('opacity-80');
+            btnPlayStart.disabled = false;
+            btnPlaySelected.disabled = false;
+            
+            if (mainPlayer.currentTime > 0.01) {
+                btnPlaySelected.innerHTML = '<i class="fas fa-pause"></i> <span>Pausar</span>';
+                btnPlaySelected.classList.remove('bg-brand-purple');
+                btnPlaySelected.classList.add('bg-yellow-500');
+            } else {
+                btnPlayStart.innerHTML = '<i class="fas fa-pause"></i> <span>Pausar</span>';
+                btnPlayStart.classList.remove('bg-brand-mint');
+                btnPlayStart.classList.add('bg-yellow-400');
+            }
+            
+            btnPlayStart.classList.remove('opacity-80');
+            btnPlaySelected.classList.remove('opacity-80');
             btnStop.disabled = false;
             requestAnimationFrame(syncVisuals);
         }
@@ -1839,11 +2540,23 @@
             mainPlayer.currentTime = 0;
             isPlaying = false;
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            btnPlay.disabled = false;
-            btnPlay.innerHTML = '<i class="fas fa-play"></i> Tocar';
-            btnPlay.classList.replace('bg-yellow-400', 'bg-brand-mint');
+            btnPlayStart.disabled = false;
+            btnPlaySelected.disabled = false;
+            
+            btnPlayStart.innerHTML = '<i class="fas fa-play"></i> <span>Tocar do Início</span>';
+            btnPlayStart.classList.remove('bg-yellow-400');
+            btnPlayStart.classList.add('bg-brand-mint');
+            
+            btnPlaySelected.innerHTML = '<i class="fas fa-step-forward"></i> <span>Tocar do Selecionado</span>';
+            btnPlaySelected.classList.remove('bg-yellow-500');
+            btnPlaySelected.classList.add('bg-brand-purple');
+            
             btnStop.disabled = true;
             clearHighlights();
+            
+            // Limpa o texto de status do player
+            statusText.innerHTML = "";
+            statusText.classList.add('hidden');
         }
 
         function clearHighlights() { document.querySelectorAll('.chord-block').forEach(b => b.classList.remove('active')); }
@@ -2042,7 +2755,6 @@
                     },
                     dados_harmonicos: sequence.map(item => ({
                         label: item.name,
-                        arquivo: item.file,
                         beats: item.beats
                     }))
                 }
@@ -2075,12 +2787,16 @@
                 if (mainWorkTitle) mainWorkTitle.value = workTitleInput.value || "Sua Sequência";
                 if (mainAuthorName) mainAuthorName.value = authorNameInput.value;
 
-                sequence = acordes.map(item => ({
-                    id: Date.now() + Math.random(),
-                    name: item.label || item.name,
-                    file: item.arquivo || item.file,
-                    beats: item.beats || 4
-                }));
+                sequence = acordes.map(item => {
+                    const chordName = item.label || item.name || "";
+                    const fileName = item.arquivo || item.file || getChordFileName(chordName);
+                    return {
+                        id: Date.now() + Math.random(),
+                        name: chordName,
+                        file: fileName,
+                        beats: item.beats || 4
+                    };
+                });
                 
                 needsConsolidation = true;
                 currentWavBlob = null;
@@ -2244,7 +2960,7 @@
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            const title = workTitleInput.value || 'Trabalho Sem Título';
+            const title = workTitleInput.value || 'Sequência Sem Título';
             const author = authorNameInput.value || 'Anônimo';
 
             ctx.fillStyle = '#B57EDC'; 
@@ -2253,7 +2969,22 @@
 
             ctx.font = '12px sans-serif';
             ctx.fillStyle = '#64748b';
-            ctx.fillText(`Autor: ${author}`, padding, padding + 45);
+            ctx.fillText(`por: ${author}`, padding, padding + 45);
+
+            // Adicionar data e horário da geração no canto superior direito
+            const nowTime = new Date();
+            const day = String(nowTime.getDate()).padStart(2, '0');
+            const month = String(nowTime.getMonth() + 1).padStart(2, '0');
+            const year = nowTime.getFullYear();
+            const hours = String(nowTime.getHours()).padStart(2, '0');
+            const minutes = String(nowTime.getMinutes()).padStart(2, '0');
+            const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+
+            ctx.font = '11px sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.textAlign = 'end';
+            ctx.fillText(`Gerado em: ${formattedDateTime}`, canvas.width - padding, padding + 45);
+            ctx.textAlign = 'start'; // Restaurar alinhamento padrão
 
             let currentBeat = 0;
             sequence.forEach((item, i) => {
@@ -2300,8 +3031,8 @@
 
         // --- 3. TABELA (Markdown) ---
         function exportTableText() {
-            const title = workTitleInput.value || 'Trabalho Sem Título';
-            let text = `// TRABALHO: ${title}\n| Compasso | Acorde |\n|-----------|---------|\n`;
+            const title = workTitleInput.value || 'Sequência Sem Título';
+            let text = `// SEQUÊNCIA: ${title}\n| Compasso | Acorde |\n|-----------|---------|\n`;
             let currentBeat = 0;
             sequence.forEach((item, index) => {
                 const mIdx = Math.floor(currentBeat / 4);
@@ -2384,8 +3115,8 @@
 
         // --- 5. BIAB ---
         function exportBIABText() {
-            const title = workTitleInput.value || 'Trabalho Sem Título';
-            let biab = `// TRABALHO: ${title}\n[Song]\n[Chords]\n|:a) `;
+            const title = workTitleInput.value || 'Sequência Sem Título';
+            let biab = `// SEQUÊNCIA: ${title}\n[Song]\n[Chords]\n|:a) `;
             
             const measures = getMeasuresFromSequence();
             measures.forEach(measureChords => {

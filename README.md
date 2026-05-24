@@ -9,13 +9,16 @@ Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de s
 ## 🚀 Principais Funcionalidades
 
 ### 🎼 Edição e Escrita de Acordes
-* **Teclado de Piano Virtual Interativo**: Integrado diretamente no app para seleção rápida da fundamental. Conta com comportamento enarmônico inteligente nas teclas pretas (clicar duas vezes na mesma tecla alterna o estado entre sustenido e bemol, atualizando toda a interface de forma contextualizada).
+* **Teclado de Piano Virtual Interativo**: Integrado diretamente no app para seleção rápida da fundamental. Conta com comportamento enarmônico inteligente nas teclas pretas (clicar duas vezes na mesma tecla alterna o estado entre sustenido e bemol, atualizando toda a interface de forma enarmônica exata).
+* **Braço de Violão Virtual Interativo**: Posicionado logo abaixo do piano, oferece um braço de violão simplificado com as casas de 0 a 4 e afinação padrão (Mi, Lá, Ré, Sol, Si, Mi). Os nomes das notas são escritos em português (`dó` a `si`) com enarmonia dinâmica e sincronização bidirecional em tempo real com o piano: selecionar uma fundamental destaca a nota na mesma hora nos dois instrumentos.
+* **Cadência Automática (Quarta Justa Acima)**: Quando o acorde selecionado for de qualidade dominante (`9` ou `7b9`), caso o próximo bloco na grade esteja vazio, o sistema automaticamente pré-seleciona a fundamental uma quarta justa acima (resolução típica no círculo de quartas, ex: de G para C), acelerando a escrita de progressões harmônicas.
 * **Grade de Compassos Flexível**: Inicializa por padrão com 32 compassos (grade de 4 em 4) de 4 tempos (4T). Permite ajustar dinamicamente o tamanho total da música de 1 a 128 compassos.
 * **Divisão e Fusão Dinâmica (Split & Merge)**: Dando um **duplo clique** em qualquer bloco de acorde de 4 tempos, ele se divide ao meio em dois slots de 2 tempos (2T). Um novo duplo clique une-os de volta, preservando a harmonia.
 * **Reconhecimento de Digitação Direta**: Basta clicar em um slot e digitar as cifras no teclado físico (ex: digitar `C`, `Eb`, `F#m7`). O sistema possui um buffer inteligente de entrada com cursor ativo e autocompleta automaticamente assim que a qualidade do acorde é reconhecida, avançando para o próximo compasso.
 
 ### 📋 Usabilidade, Histórico e Área de Transferência
-* **Sincronização de Foco Automática**: Ao selecionar um acorde já montado na sequência, a fundamental selecionada no teclado de piano virtual é atualizada automaticamente para a mesma do acorde em foco, permitindo alterar a qualidade do acorde com facilidade (ex: transformar `G9` em `Gm7` clicando apenas na qualidade).
+* **Sincronização de Foco Automática**: Ao selecionar um acorde já montado na sequência, a fundamental selecionada no teclado de piano virtual e no braço de violão é atualizada automaticamente para a mesma do acorde em foco, permitindo alterar a qualidade do acorde com facilidade (ex: transformar `G9` em `Gm7` clicando apenas na qualidade).
+* **Guia de Uso do App Recolhível**: Posicionado no painel lateral, o guia de instruções de uso fica organizado dentro de um botão sanfona (collapsible details) para economizar espaço de tela útil.
 * **Histórico de Alterações (Undo/Redo)**: Atalhos universais integrados para desfazer (`Ctrl+Z`) e refazer (`Ctrl+Y`) ações de inserção, alteração, remoção e colagem de acordes, oferecendo controle total de edição.
 * **Seleção Múltipla com Mouse**:
   * **Clique Simples**: Seleciona e ativa um slot para edição harmônica.
@@ -33,13 +36,13 @@ Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de s
 
 
 ### 💾 Exportações Avançadas
-O menu **Dados & Exportação** oferece múltiplos formatos profissionais:
-1. **Projeto (.txt)**: Salva todo o progresso localmente em formato JSON para importação futura.
+O menu **Dados & Exportação** oferece múltiplos formatos profissionais estruturados sob a identificação unificada do **Título da Sequência** e autor (**por**):
+1. **Projeto (.txt)**: Salva todo o progresso localmente em formato JSON de tamanho otimizado (eliminando o campo redundante `arquivo` dos slots e armazenando apenas `label` e `beats`, sendo os arquivos de áudio resolvidos dinamicamente no carregamento).
 2. **Código para Moodle (HTML)**: Gera o código HTML completo embutindo o áudio em formato Base64 para ser colado em ambientes virtuais de aprendizagem, com uma visualização de partitura elegante que inclui barras de compasso e cifras.
    * *Opção MP3 (Mais Leve)*: Utiliza o encoder LameJS para comprimir o áudio e otimizar o carregamento no Moodle.
    * *Opção WAV (Alta Qualidade)*: Exporta áudio não comprimido.
 3. **Áudio Independente (.wav)**: Baixe o arquivo de áudio renderizado da sua trilha para uso em outros reprodutores.
-4. **Exportação de Imagem (.png)**: Gera uma folha de partitura visual estruturada, contendo a numeração dos compassos (incluindo subdivisões de splits, ex: `1.3`) e cifras centralizadas.
+4. **Exportação de Imagem (.png)**: Gera uma folha de partitura visual estruturada, contendo a numeração dos compassos (incluindo subdivisões de splits, ex: `1.3`) e cifras centralizadas, com a inclusão automática da data e horário de geração do arquivo no canto superior direito para fins de registro.
 5. **Tabela Markdown (.md)**: Transforma a harmonia em formato tabular compatível com GitHub e editores de markdown.
 6. **MusicXML 3.1**: Exporta as cifras e pausas estruturadas, permitindo a importação direta no MuseScore, Sibelius, Finale e outras ferramentas de notação.
 7. **Band-in-a-Box (BIAB)**: Gera a string de cifras estruturada com separadores de compasso e tempos no formato interpretado pelo software Band-in-a-Box.
