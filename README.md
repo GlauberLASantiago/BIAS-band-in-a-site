@@ -4,19 +4,19 @@ O **BIAS (Band-in-a-Site)** é uma aplicação web interativa de página única 
 
 Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de servidores ou bancos de dados adicionais.
 
-<img width="1898" height="842" alt="image" src="https://github.com/user-attachments/assets/1331b438-0f50-4bf2-a7b3-f11d656c9fb5" />
-
-
 ---
 
 ## 🚀 Principais Funcionalidades
 
 ### 🎼 Edição e Escrita de Acordes
+* **Teclado de Piano Virtual Interativo**: Integrado diretamente no app para seleção rápida da fundamental. Conta com comportamento enarmônico inteligente nas teclas pretas (clicar duas vezes na mesma tecla alterna o estado entre sustenido e bemol, atualizando toda a interface de forma contextualizada).
 * **Grade de Compassos Flexível**: Inicializa por padrão com 32 compassos (grade de 4 em 4) de 4 tempos (4T). Permite ajustar dinamicamente o tamanho total da música de 1 a 128 compassos.
 * **Divisão e Fusão Dinâmica (Split & Merge)**: Dando um **duplo clique** em qualquer bloco de acorde de 4 tempos, ele se divide ao meio em dois slots de 2 tempos (2T). Um novo duplo clique une-os de volta, preservando a harmonia.
 * **Reconhecimento de Digitação Direta**: Basta clicar em um slot e digitar as cifras no teclado físico (ex: digitar `C`, `Eb`, `F#m7`). O sistema possui um buffer inteligente de entrada com cursor ativo e autocompleta automaticamente assim que a qualidade do acorde é reconhecida, avançando para o próximo compasso.
 
-### 📋 Usabilidade e Área de Transferência
+### 📋 Usabilidade, Histórico e Área de Transferência
+* **Sincronização de Foco Automática**: Ao selecionar um acorde já montado na sequência, a fundamental selecionada no teclado de piano virtual é atualizada automaticamente para a mesma do acorde em foco, permitindo alterar a qualidade do acorde com facilidade (ex: transformar `G9` em `Gm7` clicando apenas na qualidade).
+* **Histórico de Alterações (Undo/Redo)**: Atalhos universais integrados para desfazer (`Ctrl+Z`) e refazer (`Ctrl+Y`) ações de inserção, alteração, remoção e colagem de acordes, oferecendo controle total de edição.
 * **Seleção Múltipla com Mouse**:
   * **Clique Simples**: Seleciona e ativa um slot para edição harmônica.
   * **Shift + Clique**: Seleciona um intervalo contínuo de compassos.
@@ -24,8 +24,13 @@ Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de s
 * **Copiar & Colar Integrado**: Suporta comandos do teclado (`Ctrl+C` e `Ctrl+V`) ou botões na interface para duplicar compassos selecionados e colá-los a partir de um slot de destino.
 
 ### 🔊 Visualização de Som e Acompanhamento
+* **Visor de Notas Interativo (Teoria Musical)**: Exibe as notas do acorde em foco em português no rodapé. Utiliza enarmonia teórica exata de graus musicais (ex: `mi#` no C#9, `sibb` no Cdim7, `fáb` no Dbm7). As notas individuais são **clicáveis e audíveis**, reproduzindo tons sintetizados em escala estritamente ascendente (do grave para o agudo).
+* **Controles de Reprodução Direcionados**:
+  * **Tocar do Início**: Executa a partitura de áudio completa desde o compasso 1.
+  * **Tocar do Selecionado**: Inicia a reprodução a partir do compasso/acorde atualmente focado na sequência.
 * **Sintetizador de Preview de Piano**: Ao clicar em uma nota fundamental ou em um tipo de qualidade (sétimas, nonas, etc.), o sistema sintetiza na hora um preview de áudio suave utilizando a **Web Audio API** com ondas senoidais (`sine`) puras e harmônicos integrados para emular a ressonância de cordas de piano, associados a um envelope percussivo de decaimento natural.
 * **Reprodutor e Consolidador**: Permite tocar a sequência completa utilizando áudios reais de acompanhamento em ritmo de *Swing* (130 BPM nativos) com controle de pitch adaptativo (BPM de 60 a 240) e efeito de **Reverb espacial** dinâmico.
+
 
 ### 💾 Exportações Avançadas
 O menu **Dados & Exportação** oferece múltiplos formatos profissionais:
