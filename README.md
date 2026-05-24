@@ -6,6 +6,9 @@ Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de s
 
 ---
 
+<img width="1886" height="789" alt="image" src="https://github.com/user-attachments/assets/bceabfff-15a0-4ae1-8b2c-0b2256e4a970" />
+
+
 ## 🚀 Principais Funcionalidades
 
 ### 🎼 Edição e Escrita de Acordes
