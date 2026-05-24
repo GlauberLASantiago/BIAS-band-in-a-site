@@ -1562,6 +1562,12 @@
                             editMeasureIdx = mIdx;
                             editSubIdx = sIdx;
                             chordInputBuffer = "";
+                            if (chord && chord.name) {
+                                const parsed = parseChordBuffer(chord.name);
+                                if (parsed && parsed.root) {
+                                    selectRootByName(parsed.root);
+                                }
+                            }
                         }
                     } else if (isCtrl) {
                         e.preventDefault();
@@ -1587,6 +1593,12 @@
                             editMeasureIdx = mIdx;
                             editSubIdx = sIdx;
                             chordInputBuffer = "";
+                            if (chord && chord.name) {
+                                const parsed = parseChordBuffer(chord.name);
+                                if (parsed && parsed.root) {
+                                    selectRootByName(parsed.root);
+                                }
+                            }
                         }
                     }
                     
