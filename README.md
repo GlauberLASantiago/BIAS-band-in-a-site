@@ -6,9 +6,6 @@ Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de s
 
 ---
 
-<img width="1886" height="789" alt="image" src="https://github.com/user-attachments/assets/bceabfff-15a0-4ae1-8b2c-0b2256e4a970" />
-
-
 ## 🚀 Principais Funcionalidades
 
 ### 🎼 Edição e Escrita de Acordes
@@ -40,11 +37,11 @@ Tudo é executado diretamente no navegador (Client-Side), sem a necessidade de s
 
 ### 💾 Exportações Avançadas
 O menu **Dados & Exportação** oferece múltiplos formatos profissionais estruturados sob a identificação unificada do **Título da Sequência** e autor (**por**):
-1. **Projeto (.txt)**: Salva todo o progresso localmente em formato JSON de tamanho otimizado (eliminando o campo redundante `arquivo` dos slots e armazenando apenas `label` e `beats`, sendo os arquivos de áudio resolvidos dinamicamente no carregamento).
-2. **Código para Moodle (HTML)**: Gera o código HTML completo embutindo o áudio em formato Base64 para ser colado em ambientes virtuais de aprendizagem, com uma visualização de partitura elegante que inclui barras de compasso e cifras.
-   * *Opção MP3 (Mais Leve)*: Utiliza o encoder LameJS para comprimir o áudio e otimizar o carregamento no Moodle.
-   * *Opção WAV (Alta Qualidade)*: Exporta áudio não comprimido.
-3. **Áudio Independente (.wav)**: Baixe o arquivo de áudio renderizado da sua trilha para uso em outros reprodutores.
+1. **Projeto (.bias)**: Salva todo o progresso localmente em formato JSON de tamanho otimizado (eliminando o campo redundante `arquivo` dos slots e armazenando apenas `label` e `beats`, sendo os arquivos de áudio resolvidos dinamicamente no carregamento).
+2. **Código para Moodle (HTML)**: Gera o código HTML completo para tarefas ou fóruns do Moodle com uma grade de partitura elegante que inclui barras de compasso e cifras.
+   * *Opção MP3 Embutido (Base64)*: Incorpora o áudio comprimido em formato Base64 diretamente no HTML usando LameJS.
+   * *Opção Online (Sem Base64)*: Gera um código extremamente leve que utiliza a Web Audio API para carregar os áudios dinamicamente da web.
+3. **Áudio Independente (.mp3)**: Baixe o arquivo de áudio comprimido MP3 da sua trilha.
 4. **Exportação de Imagem (.png)**: Gera uma folha de partitura visual estruturada, contendo a numeração dos compassos (incluindo subdivisões de splits, ex: `1.3`) e cifras centralizadas, com a inclusão automática da data e horário de geração do arquivo no canto superior direito para fins de registro.
 5. **Tabela Markdown (.md)**: Transforma a harmonia em formato tabular compatível com GitHub e editores de markdown.
 6. **MusicXML 3.1**: Exporta as cifras e pausas estruturadas, permitindo a importação direta no MuseScore, Sibelius, Finale e outras ferramentas de notação.

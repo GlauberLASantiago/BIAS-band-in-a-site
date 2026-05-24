@@ -318,173 +318,105 @@
                         <!-- Grid colunas modificado para 3 no sidebar no mobile e 6 no desktop -->
                         <div id="quality-palette" class="grid grid-cols-3 lg:grid-cols-6 gap-1.5"></div>
                     </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Teclado (Piano)</label>
-                        <div class="piano-container" id="piano">
-                            <!-- Teclas Brancas (14.285% cada) -->
-                            <div class="key-white" onclick="setFromBtn('C')" data-root="C">C</div>
-                            <div class="key-white" onclick="setFromBtn('D')" data-root="D">D</div>
-                            <div class="key-white" onclick="setFromBtn('E')" data-root="E">E</div>
-                            <div class="key-white" onclick="setFromBtn('F')" data-root="F">F</div>
-                            <div class="key-white" onclick="setFromBtn('G')" data-root="G">G</div>
-                            <div class="key-white" onclick="setFromBtn('A')" data-root="A">A</div>
-                            <div class="key-white" onclick="setFromBtn('B')" data-root="B">B</div>
-                            
-                            <!-- Teclas Pretas (Posicionadas nas divisas) -->
-                            <div class="key-black" style="left: 14.285%;" onclick="handleBlackKey('C#', 'Db')" data-sharp="C#" data-flat="Db">Db</div>
-                            <div class="key-black" style="left: 28.571%;" onclick="handleBlackKey('D#', 'Eb')" data-sharp="D#" data-flat="Eb">Eb</div>
-                            <div class="key-black" style="left: 57.142%;" onclick="handleBlackKey('F#', 'Gb')" data-sharp="F#" data-flat="Gb">Gb</div>
-                            <div class="key-black" style="left: 71.428%;" onclick="handleBlackKey('G#', 'Ab')" data-sharp="G#" data-flat="Ab">Ab</div>
-                            <div class="key-black" style="left: 85.714%;" onclick="handleBlackKey('A#', 'Bb')" data-sharp="A#" data-flat="Bb">Bb</div>
+                    <div class="flex flex-col gap-3">
+                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Fundamental</label>
+                        
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Piano</label>
+                            <div class="piano-container" id="piano">
+                                <!-- Teclas Brancas (14.285% cada) -->
+                                <div class="key-white" onclick="setFromBtn('C')" data-root="C">C</div>
+                                <div class="key-white" onclick="setFromBtn('D')" data-root="D">D</div>
+                                <div class="key-white" onclick="setFromBtn('E')" data-root="E">E</div>
+                                <div class="key-white" onclick="setFromBtn('F')" data-root="F">F</div>
+                                <div class="key-white" onclick="setFromBtn('G')" data-root="G">G</div>
+                                <div class="key-white" onclick="setFromBtn('A')" data-root="A">A</div>
+                                <div class="key-white" onclick="setFromBtn('B')" data-root="B">B</div>
+                                
+                                <!-- Teclas Pretas (Posicionadas nas divisas) -->
+                                <div class="key-black" style="left: 14.285%;" onclick="handleBlackKey('C#', 'Db')" data-sharp="C#" data-flat="Db">Db</div>
+                                <div class="key-black" style="left: 28.571%;" onclick="handleBlackKey('D#', 'Eb')" data-sharp="D#" data-flat="Eb">Eb</div>
+                                <div class="key-black" style="left: 57.142%;" onclick="handleBlackKey('F#', 'Gb')" data-sharp="F#" data-flat="Gb">Gb</div>
+                                <div class="key-black" style="left: 71.428%;" onclick="handleBlackKey('G#', 'Ab')" data-sharp="G#" data-flat="Ab">Ab</div>
+                                <div class="key-black" style="left: 85.714%;" onclick="handleBlackKey('A#', 'Bb')" data-sharp="A#" data-flat="Bb">Bb</div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Braço (Violão)</label>
-                        <div class="fretboard-container" id="fretboard">
-                            <!-- Marcadores de casas -->
-                            <div class="grid grid-cols-[0.8fr_1fr_1fr_1fr_1fr] text-center text-[9px] font-extrabold text-gray-400 dark:text-zinc-500 mb-1 px-1 select-none">
-                                <div>Solto</div>
-                                <div>1</div>
-                                <div>2</div>
-                                <div>3</div>
-                                <div>4</div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Violão</label>
+                            <div class="fretboard-container" id="fretboard">
+                                <!-- Marcadores de casas -->
+                                <div class="grid grid-cols-[0.8fr_1fr_1fr_1fr_1fr] text-center text-[9px] font-extrabold text-gray-400 dark:text-zinc-500 mb-1 px-1 select-none">
+                                    <div>Solto</div>
+                                    <div>1</div>
+                                    <div>2</div>
+                                    <div>3</div>
+                                    <div>4</div>
+                                </div>
+                                
+                                <!-- String 1 (E high) -->
+                                <div class="fretboard-string-row string-thick-1">
+                                    <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                                </div>
+                                
+                                <!-- String 2 (B) -->
+                                <div class="fretboard-string-row string-thick-2">
+                                    <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C', 'C')" data-sharp="C" data-flat="C">dó</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C#', 'Db')" data-sharp="C#" data-flat="Db">réb</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D', 'D')" data-sharp="D" data-flat="D">ré</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D#', 'Eb')" data-sharp="D#" data-flat="Eb">mib</button></div>
+                                </div>
+                                
+                                <!-- String 3 (G) -->
+                                <div class="fretboard-string-row string-thick-3">
+                                    <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A', 'A')" data-sharp="A" data-flat="A">lá</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A#', 'Bb')" data-sharp="A#" data-flat="Bb">sib</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
+                                </div>
+                                
+                                <!-- String 4 (D) -->
+                                <div class="fretboard-string-row string-thick-4">
+                                    <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('D', 'D')" data-sharp="D" data-flat="D">ré</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D#', 'Eb')" data-sharp="D#" data-flat="Eb">mib</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
+                                </div>
+                                
+                                <!-- String 5 (A) -->
+                                <div class="fretboard-string-row string-thick-5">
+                                    <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('A', 'A')" data-sharp="A" data-flat="A">lá</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A#', 'Bb')" data-sharp="A#" data-flat="Bb">sib</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C', 'C')" data-sharp="C" data-flat="C">dó</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C#', 'Db')" data-sharp="C#" data-flat="Db">réb</button></div>
+                                </div>
+                                
+                                <!-- String 6 (E low) -->
+                                <div class="fretboard-string-row string-thick-6">
+                                    <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
+                                    <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                                </div>
                             </div>
-                            
-                            <!-- String 1 (E high) -->
-                            <div class="fretboard-string-row string-thick-1">
-                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
-                            </div>
-                            
-                            <!-- String 2 (B) -->
-                            <div class="fretboard-string-row string-thick-2">
-                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C', 'C')" data-sharp="C" data-flat="C">dó</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C#', 'Db')" data-sharp="C#" data-flat="Db">réb</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D', 'D')" data-sharp="D" data-flat="D">ré</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D#', 'Eb')" data-sharp="D#" data-flat="Eb">mib</button></div>
-                            </div>
-                            
-                            <!-- String 3 (G) -->
-                            <div class="fretboard-string-row string-thick-3">
-                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A', 'A')" data-sharp="A" data-flat="A">lá</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A#', 'Bb')" data-sharp="A#" data-flat="Bb">sib</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
-                            </div>
-                            
-                            <!-- String 4 (D) -->
-                            <div class="fretboard-string-row string-thick-4">
-                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('D', 'D')" data-sharp="D" data-flat="D">ré</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('D#', 'Eb')" data-sharp="D#" data-flat="Eb">mib</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
-                            </div>
-                            
-                            <!-- String 5 (A) -->
-                            <div class="fretboard-string-row string-thick-5">
-                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('A', 'A')" data-sharp="A" data-flat="A">lá</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('A#', 'Bb')" data-sharp="A#" data-flat="Bb">sib</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('B', 'B')" data-sharp="B" data-flat="B">si</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C', 'C')" data-sharp="C" data-flat="C">dó</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('C#', 'Db')" data-sharp="C#" data-flat="Db">réb</button></div>
-                            </div>
-                            
-                            <!-- String 6 (E low) -->
-                            <div class="fretboard-string-row string-thick-6">
-                                <div class="fret-cell fret-cell-0"><button class="fret-note-btn" onclick="handleGuitarFretClick('E', 'E')" data-sharp="E" data-flat="E">mi</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F', 'F')" data-sharp="F" data-flat="F">fá</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('F#', 'Gb')" data-sharp="F#" data-flat="Gb">solb</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G', 'G')" data-sharp="G" data-flat="G">sol</button></div>
-                                <div class="fret-cell"><button class="fret-note-btn" onclick="handleGuitarFretClick('G#', 'Ab')" data-sharp="G#" data-flat="Ab">láb</button></div>
+                            <!-- Link para o PDF de Teoria -->
+                            <div class="mt-2.5 text-center">
+                                <a href="https://raw.githubusercontent.com/GlauberLASantiago/BIAS-band-in-a-site/main/Teoria%20sobre%20acordes.pdf" target="_blank" class="inline-flex items-center gap-1.5 text-[11px] text-brand-purple dark:text-brand-mint font-bold hover:underline hover:brightness-95 transition-all">
+                                    <i class="fas fa-file-pdf"></i> Teoria sobre acordes do campo harmônico maior
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- GUIA DO USUÁRIO -->
-                <details class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200 group" id="user-guide-details">
-                    <summary class="text-xs font-bold text-brand-charcoal dark:text-white uppercase tracking-wider flex items-center justify-between gap-1.5 cursor-pointer list-none select-none outline-none">
-                        <span class="flex items-center gap-1.5">
-                            <i class="fas fa-book-open text-brand-purple"></i> Guia de Uso do App
-                        </span>
-                        <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform duration-200"></i>
-                    </summary>
-                    <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">1.</span>
-                            <span><strong>Montar Cifras:</strong> Selecione a fundamental no piano virtual ou no braço do violão (toque no mesmo botão de alteração para alternar sustenido/bemol) e a qualidade (maj7, 9, etc.) para criar o acorde no slot ativo.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">2.</span>
-                            <span><strong>Substituir & Foco:</strong> Clique em um acorde na sequência (borda roxa) para focar. O piano e o violão mudarão para a fundamental dele. Selecione outra qualidade para trocar. Aperte <code>Esc</code> para tirar o foco.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">3.</span>
-                            <span><strong>Visor de Notas:</strong> O visor na parte inferior exibe as notas do acorde em foco com enarmonia teórica exata (ex: <code>mi#</code> no C#9). Passe o mouse e <strong>clique nas notas</strong> para ouvi-las individualmente em escala ascendente.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">4.</span>
-                            <span><strong>Controles de Play:</strong> Use <strong>Tocar do Início</strong> para iniciar a música do primeiro compasso ou <strong>Tocar do Selecionado</strong> para reproduzir a partir do acorde em foco atual.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">5.</span>
-                            <span><strong>Dividir / Unir:</strong> Dê duplo clique em um slot para dividir o compasso (2 tempos) ou unir novamente (4 tempos).</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">6.</span>
-                            <span><strong>Teclado & Desfazer/Refazer:</strong> Digite cifras no slot selecionado (ex: digite <code>C</code>, depois <code>m7</code> e <code>Enter</code>). Use <code>Ctrl+Z</code> (Desfazer) e <code>Ctrl+Y</code> (Refazer) para editar.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">7.</span>
-                            <span><strong>Copiar, Colar & Apagar:</strong> Selecione compassos e use <code>Ctrl+C</code> / <code>Ctrl+V</code>. Passe o mouse sobre o slot e clique no <code>x</code> vermelho no canto para apagá-lo.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">8.</span>
-                            <span><strong>Cadência Automática:</strong> Ao inserir um acorde dominante (`9` ou `7b9`), se o próximo slot de compasso estiver vazio, o sistema pré-selecionará automaticamente no piano e no violão a nota fundamental correspondente a uma quarta justa acima (por exemplo, de G para C), facilitando a montagem rápida de cadências harmônicas.</span>
-                        </li>
-                    </ul>
-                    
-                    <h4 class="text-[10px] font-bold text-brand-purple dark:text-brand-mint uppercase tracking-wider mt-4 mb-2 border-t border-gray-100 dark:border-gray-700 pt-3 flex items-center gap-1">
-                        <i class="fas fa-file-export text-xs"></i> Explicação dos Formatos de Exportação
-                    </h4>
-                    <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0">
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>Projeto (.txt):</strong> Salva localmente sua sequência harmônica em formato JSON simplificado (apenas cifras e tempos). Use o botão "Abrir Projeto" para carregar este arquivo e continuar a editar de onde parou.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>Moodle (HTML):</strong> Gera o código HTML pronto para tarefas ou fóruns do Moodle. Ele incorpora a trilha de áudio embutida (em Base64, sem precisar hospedar o áudio) e desenha uma grade de partitura elegante com cifras e compassos numerados. Possui a opção **MP3 (Mais Leve)** para carregamentos rápidos e **WAV (Alta Qualidade)**.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>Áudio (.wav):</strong> Exporta e baixa o áudio completo consolidado do acompanhamento da sequência em formato WAV estéreo de alta definição. *Disponível após tocar a música pelo menos uma vez.*</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>Imagem (.png):</strong> Baixa uma folha de partitura visual com cifras centralizadas, numeração de compassos (com frações como `1.3` nos splits), título, autor, data e horário exato de geração do arquivo no canto.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>Tabela (MD):</strong> Fornece o código de uma tabela em formato Markdown para colar em relatórios, arquivos readmes, ou documentos compatíveis com formatação de tabela simples.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>MusicXML:</strong> Exporta em formato de notação musical `.xml` padrão da indústria, ideal para abrir e diagramar a grade harmônica em programas como MuseScore, Sibelius ou Finale.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-brand-purple font-bold">•</span>
-                            <span><strong>BIAB:</strong> Exporta uma string de texto limpa contendo as cifras e tempos no formato legível de importação rápida do software Band-in-a-Box.</span>
-                        </li>
-                    </ul>
-                </details>
             </aside>
 
             <!-- LADO DIREITO: Controles e Sequência -->
@@ -553,11 +485,14 @@
                         <div class="col-span-8 text-center text-gray-500 mt-8 font-medium" id="empty-state">Sua música está vazia. Comece a montar no painel acima.</div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-1 pt-3 border-t border-gray-100 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-1 pt-3 border-t border-gray-100 dark:border-gray-700 w-full">
                         <!-- Visor de Notas -->
-                        <div id="notes-viewer" class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700/50 px-3.5 py-1.5 rounded-full border border-brand-lavmist dark:border-gray-600 text-xs font-medium text-gray-500 dark:text-gray-400 select-none">
-                            <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mr-1">Notas (desconsiderando tonalidade):</span>
-                            <span id="notes-display" class="font-bold text-brand-purple dark:text-brand-mint text-sm tracking-wide">—</span>
+                        <div id="notes-viewer" class="flex flex-col items-start gap-1 bg-brand-ghost dark:bg-gray-700/50 px-4 py-2.5 rounded-xl border border-brand-lavmist dark:border-gray-600 text-xs font-medium text-gray-500 dark:text-gray-400 select-none w-full">
+                            <div class="flex flex-wrap items-center gap-1">
+                                <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mr-1">Notas (com enarmonia desconsiderando a tonalidade):</span>
+                                <span id="notes-display" class="font-bold text-brand-purple dark:text-brand-mint text-sm tracking-wide">—</span>
+                            </div>
+                            <div id="extra-notes-container" class="hidden text-[10px] mt-0.5 w-full"></div>
                         </div>
                         <div class="flex items-center gap-1.5 bg-brand-ghost dark:bg-gray-700/50 p-1 rounded-full border border-brand-lavmist dark:border-gray-600 shrink-0 select-none">
                             <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest pl-2">Total de Compassos</span>
@@ -572,6 +507,84 @@
 
             </main>
         </div>
+
+        <!-- GUIA DE USO DO APP -->
+        <details class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-transparent dark:border-gray-700 transition-colors duration-200 group mt-4 w-full" id="user-guide-details">
+            <summary class="text-xs font-bold text-brand-charcoal dark:text-white uppercase tracking-wider flex items-center justify-between gap-1.5 cursor-pointer list-none select-none outline-none">
+                <span class="flex items-center gap-1.5">
+                    <i class="fas fa-book-open text-brand-purple"></i> Guia de Uso do App
+                </span>
+                <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform duration-200"></i>
+            </summary>
+            <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">1.</span>
+                    <span><strong>Montar Cifras:</strong> Selecione a fundamental no piano virtual ou no braço do violão (toque no mesmo botão de alteração para alternar sustenido/bemol) e a qualidade (maj7, 9, etc.) para criar o acorde no slot ativo.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">2.</span>
+                    <span><strong>Substituir & Foco:</strong> Clique em um acorde na sequência (borda roxa) para focar. O piano e o violão mudarão para a fundamental dele. Selecione outra qualidade para trocar. Aperte <code>Esc</code> para tirar o foco.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">3.</span>
+                    <span><strong>Visor de Notas:</strong> O visor na parte inferior exibe as notas do acorde em foco com enarmonia teórica exata (ex: <code>mi#</code> no C#9). Passe o mouse e <strong>clique nas notas</strong> para ouvi-las individualmente em escala ascendente.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">4.</span>
+                    <span><strong>Controles de Play:</strong> Use <strong>Tocar do Início</strong> para iniciar a música do primeiro compasso ou <strong>Tocar do Selecionado</strong> para reproduzir a partir do acorde em foco atual.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">5.</span>
+                    <span><strong>Dividir / Unir:</strong> Dê duplo clique em um slot para dividir o compasso (2 tempos) ou unir novamente (4 tempos).</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">6.</span>
+                    <span><strong>Teclado & Desfazer/Refazer:</strong> Digite cifras no slot selecionado (ex: digite <code>C</code>, depois <code>m7</code> e <code>Enter</code>). Use <code>Ctrl+Z</code> (Desfazer) e <code>Ctrl+Y</code> (Refazer) para editar.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">7.</span>
+                    <span><strong>Copiar, Colar & Apagar:</strong> Selecione compassos e use <code>Ctrl+C</code> / <code>Ctrl+V</code>. Passe o mouse sobre o slot e clique no <code>x</code> vermelho no canto para apagá-lo.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">8.</span>
+                    <span><strong>Cadência Automática:</strong> Ao inserir um acorde dominante (`9` ou `7b9`), se o próximo slot de compasso estiver vazio, o sistema pré-selecionará automaticamente no piano e no violão a nota fundamental correspondente a uma quarta justa acima (por exemplo, de G para C), facilitando a montagem rápida de cadências harmônicas.</span>
+                </li>
+            </ul>
+            
+            <h4 class="text-[10px] font-bold text-brand-purple dark:text-brand-mint uppercase tracking-wider mt-4 mb-2 border-t border-gray-100 dark:border-gray-700 pt-3 flex items-center gap-1">
+                <i class="fas fa-file-export text-xs"></i> Explicação dos Formatos de Exportação
+            </h4>
+            <ul class="text-[11px] text-gray-600 dark:text-gray-400 flex flex-col gap-2.5 list-none pl-0">
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>Projeto (.bias):</strong> Salva localmente sua sequência harmônica em formato JSON simplificado (apenas cifras e tempos). Use o botão "Abrir Projeto" para carregar este arquivo e continuar a editar de onde parou.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>Moodle (HTML):</strong> Gera o código HTML pronto para tarefas ou fóruns do Moodle com uma grade de partitura elegante contendo cifras e compassos numerados. Possui as opções **MP3 Embutido (Base64)** para áudio integrado no próprio código e **Online (Sem Base64)** para um player dinâmico extremamente leve que carrega os áudios diretamente da web.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>Áudio (.mp3):</strong> Exporta e baixa o áudio completo consolidado do acompanhamento da sequência em formato MP3 estéreo comprimido de alta qualidade. *Disponível após tocar a música pelo menos uma vez.*</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>Imagem (.png):</strong> Baixa uma folha de partitura visual com cifras centralizadas, numeração de compassos (com frações como `1.3` nos splits), título, autor, data e horário exato de geração do arquivo no canto.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>Tabela (MD):</strong> Fornece o código de uma tabela em formato Markdown para colar em relatórios, arquivos readmes, ou documentos compatíveis com formatação de tabela simples.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>MusicXML:</strong> Exporta em formato de notação musical `.xml` padrão da indústria, ideal para abrir e diagramar a grade harmônica em programas como MuseScore, Sibelius ou Finale.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-brand-purple font-bold">•</span>
+                    <span><strong>BIAB:</strong> Exporta uma string de texto limpa contendo as cifras e tempos no formato legível de importação rápida do software Band-in-a-Box.</span>
+                </li>
+            </ul>
+        </details>
     </div>
 
     <div id="export-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
@@ -585,11 +598,10 @@
             </div>
             
             <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
-                
-                <div class="w-full md:w-56 bg-brand-ghost dark:bg-gray-900/50 p-4 flex flex-row md:flex-col gap-2 overflow-x-auto hide-scrollbar border-r border-gray-100 dark:border-gray-700">
-                    <button class="export-tab active text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="data"><i class="fas fa-file-code w-5 text-center mr-1"></i> Projeto (.txt)</button>
+                <div class="w-full md:w-56 bg-brand-ghost dark:bg-gray-900/50 p-4 flex flex-row md:flex-col gap-2 overflow-x-auto hide-scrollbar border-r border-gray-100 dark:border-gray-700 shrink-0">
+                    <button class="export-tab active text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="data"><i class="fas fa-file-code w-5 text-center mr-1"></i> Projeto (.bias)</button>
                     <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="moodle"><i class="fas fa-graduation-cap w-5 text-center mr-1"></i> Moodle (HTML)</button>
-                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="audio"><i class="fas fa-file-audio w-5 text-center mr-1"></i> Áudio (.wav)</button>
+                    <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="audio"><i class="fas fa-file-audio w-5 text-center mr-1"></i> Áudio (.mp3)</button>
                     <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="img"><i class="fas fa-image w-5 text-center mr-1"></i> Imagem (.png)</button>
                     <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="tab"><i class="fas fa-table w-5 text-center mr-1"></i> Tabela (MD)</button>
                     <button class="export-tab text-left px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-brand-lavmist dark:hover:bg-gray-700" data-type="mus"><i class="fas fa-music w-5 text-center mr-1"></i> MusicXML</button>
@@ -611,31 +623,31 @@
                     <hr class="border-gray-100 dark:border-gray-700">
                     
                     <div id="view-data" class="export-view flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Salve a estrutura da sua sequência num ficheiro local para continuar a editar mais tarde.</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Salve a estrutura da sua sequência num arquivo local para continuar a editar mais tarde.</p>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-download mr-2"></i> Salvar Projeto (.txt)</button>
-                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.txt)</button>
-                            <input type="file" id="file-import-input" accept=".txt" class="hidden">
+                            <button id="btn-save-project" class="flex-1 bg-brand-charcoal dark:bg-gray-700 text-white hover:bg-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-download mr-2"></i> Salvar Projeto (.bias)</button>
+                            <button id="btn-open-project" class="flex-1 bg-white dark:bg-gray-800 text-brand-charcoal dark:text-white border-2 border-gray-200 dark:border-gray-600 hover:border-brand-purple py-3 px-6 rounded-full font-bold transition-colors shadow-sm"><i class="fas fa-folder-open mr-2"></i> Abrir Projeto (.bias)</button>
+                            <input type="file" id="file-import-input" accept=".bias" class="hidden">
                         </div>
                     </div>
-
+ 
                     <div id="view-moodle" class="export-view hidden flex flex-col gap-6 h-full">
                         <div class="flex justify-between items-center flex-wrap gap-4">
                             <div class="flex flex-col gap-1 w-full sm:w-2/3">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    Gera o código para o Moodle. O formato visual agora acompanha uma grade de partitura (barras de compasso), numerando apenas o início de cada medida.
+                                    Gera o código para o Moodle. O formato visual acompanha uma grade de partitura (barras de compasso), numerando apenas o início de cada medida.
                                 </p>
-                                <p class="text-xs text-brand-purple font-semibold">
-                                    Dica: Use "Mais Leve (MP3)" se o Moodle reclamar do tamanho do código.
+                                <p class="text-xs text-brand-purple font-semibold" id="moodle-tip">
+                                    Dica: Use "Online (Sem Base64)" para gerar um código extremamente leve que carrega os áudios dinamicamente da web.
                                 </p>
                             </div>
                             
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 flex-wrap">
                                 <button id="btn-gen-moodle-mp3" class="bg-brand-mint text-brand-charcoal py-2 px-4 rounded-full font-bold transition-colors shadow-sm hover:brightness-95 shrink-0 text-sm">
-                                    <i class="fas fa-compress-arrows-alt mr-1"></i> Mais Leve (MP3)
+                                    <i class="fas fa-compress-arrows-alt mr-1"></i> MP3 Embutido (Base64)
                                 </button>
-                                <button id="btn-gen-moodle-wav" class="bg-brand-purple text-white py-2 px-4 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0 text-sm">
-                                    <i class="fas fa-gem mr-1"></i> Alta Qualidade (WAV)
+                                <button id="btn-gen-moodle-online" class="bg-brand-purple text-white py-2 px-4 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 shrink-0 text-sm">
+                                    <i class="fas fa-link mr-1"></i> Online (Sem Base64)
                                 </button>
                             </div>
                         </div>
@@ -649,15 +661,15 @@
                             </button>
                         </div>
                     </div>
-
+ 
                     <div id="view-audio" class="export-view hidden flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Exporte a sua trilha sonora já processada e em alta qualidade (WAV).</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Exporte a sua trilha sonora já processada e comprimida em formato MP3.</p>
                         <div class="bg-brand-ghost dark:bg-gray-700/30 p-4 rounded-xl border border-brand-lavmist dark:border-gray-600">
                             <p class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-info-circle text-brand-purple mr-1"></i> <strong>Aviso:</strong> Só ficará disponível após clicar em "Tocar" na tela principal.</p>
                         </div>
-                        <a id="btn-dl-audio-modal" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 pointer-events-none opacity-50 flex items-center justify-center gap-2 cursor-pointer">
-                            <i class="fas fa-file-audio"></i> Baixar Áudio (.wav)
-                        </a>
+                        <button id="btn-dl-audio-modal" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110 pointer-events-none opacity-50 flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fas fa-file-audio"></i> Baixar Áudio (.mp3)
+                        </button>
                     </div>
                     
                     <div id="view-img" class="export-view hidden flex flex-col gap-6 h-full">
@@ -679,7 +691,7 @@
                     </div>
 
                     <div id="view-mus" class="export-view hidden flex flex-col gap-6">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Exporte a grelha de acordes nativa em formato MusicXML 3.1.</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Exporte a grade de acordes nativa em formato MusicXML 3.1.</p>
                         <button id="btn-dl-mus" class="w-full sm:w-auto self-start bg-brand-purple text-white py-3 px-8 rounded-full font-bold transition-colors shadow-sm hover:brightness-110"><i class="fas fa-file-code mr-2"></i> Baixar MusicXML</button>
                     </div>
 
@@ -1689,9 +1701,7 @@
                 if (newBpm && newBpm > 0 && isPlaying) {
                     mainPlayer.playbackRate = newBpm / CONFIG.NATIVE_BPM;
                 }
-                if (objectUrl) {
-                    btnDownloadAudio.download = `BandInABox_${newBpm}BPM.wav`;
-                }
+
             });
 
             reverbSlider.addEventListener('input', updateReverbMix);
@@ -2049,6 +2059,7 @@
 
             // Atualizar o visor de notas do acorde em foco
             const notesDisplay = document.getElementById('notes-display');
+            const extraContainer = document.getElementById('extra-notes-container');
             if (notesDisplay) {
                 let focusedChordName = "";
                 if (editMeasureIdx !== null && editSubIdx !== null) {
@@ -2119,11 +2130,142 @@
                                 notesDisplay.appendChild(separator);
                             }
                         });
+
+                        // --- Extra enharmonic details for dim7 and V9 ---
+                        if (extraContainer) {
+                            const dim7Map = {
+                                "C": { target: "F#", notes: ["dó", "mib", "fá#", "lá"] },
+                                "C#": { target: "G", notes: ["dó#", "mi", "sol", "sib"] },
+                                "Db": { target: "G", notes: ["réb", "fáb", "sol", "sib"] },
+                                "D": { target: "G#", notes: ["ré", "fá", "sol#", "si"] },
+                                "D#": { target: "A", notes: ["ré#", "fá#", "lá", "dó"] },
+                                "Eb": { target: "A", notes: ["mib", "solb", "lá", "dó"] },
+                                "E": { target: "A#", notes: ["mi", "sol", "lá#", "dó#"] },
+                                "F": { target: "B", notes: ["fá", "láb", "si", "ré"] },
+                                "F#": { target: "C", notes: ["fá#", "lá", "dó", "mib"] },
+                                "Gb": { target: "C", notes: ["solb", "sibb", "dó", "mib"] },
+                                "G": { target: "C#", notes: ["sol", "sib", "dó#", "mi"] },
+                                "G#": { target: "D", notes: ["sol#", "si", "ré", "fá"] },
+                                "Ab": { target: "D", notes: ["láb", "dób", "ré", "fá"] },
+                                "A": { target: "D#", notes: ["lá", "dó", "ré#", "fá#"] },
+                                "A#": { target: "E", notes: ["lá#", "dó#", "mi", "sol"] },
+                                "Bb": { target: "E", notes: ["sib", "réb", "mi", "sol"] },
+                                "B": { target: "F", notes: ["si", "ré", "fá", "sol#"] }
+                            };
+
+                            const v9Map = {
+                                "C": { notes: ["dó", "mi", "sol", "lá#", "ré"] },
+                                "C#": { notes: ["dó#", "mi#", "sol#", "lá##", "ré#"] },
+                                "Db": { notes: ["réb", "fá", "láb", "si", "mib"] },
+                                "D": { notes: ["ré", "fá#", "lá", "si#", "mi"] },
+                                "D#": { notes: ["ré#", "fá##", "lá#", "si##", "mi#"] },
+                                "Eb": { notes: ["mib", "sol", "sib", "dó#", "fá"] },
+                                "E": { notes: ["mi", "sol#", "si", "dó##", "fá#"] },
+                                "F": { notes: ["fá", "lá", "dó", "ré#", "sol"] },
+                                "F#": { notes: ["fá#", "lá#", "dó#", "ré##", "sol#"] },
+                                "Gb": { notes: ["solb", "sib", "réb", "mi", "láb"] },
+                                "G": { notes: ["sol", "si", "ré", "mi#", "lá"] },
+                                "G#": { notes: ["sol#", "si#", "ré#", "mi##", "lá#"] },
+                                "Ab": { notes: ["láb", "dó", "mib", "fá#", "sib"] },
+                                "A": { notes: ["lá", "dó#", "mi", "fá##", "si"] },
+                                "A#": { notes: ["lá#", "dó##", "mi#", "sol#", "si#"] },
+                                "Bb": { notes: ["sib", "ré", "fá", "sol#", "dó"] },
+                                "B": { notes: ["si", "ré#", "fá#", "sol##", "dó#"] }
+                            };
+
+                            const calculateMidiForNotes = (notesList, rootEng) => {
+                                const rootPtName = engToPtRoot[rootEng] || "dó";
+                                const rootOffset = noteOffsets[rootPtName] || 0;
+                                let lastMidi = 48 + rootOffset;
+                                const midiList = [];
+                                notesList.forEach((noteName, idx) => {
+                                    const cleanName = noteName.trim().toLowerCase();
+                                    const offset = noteOffsets[cleanName] !== undefined ? noteOffsets[cleanName] : 0;
+                                    let noteMidi = Math.floor(lastMidi / 12) * 12 + offset;
+                                    if (idx > 0) {
+                                        while (noteMidi <= lastMidi) {
+                                            noteMidi += 12;
+                                        }
+                                    }
+                                    midiList.push(noteMidi);
+                                    lastMidi = noteMidi;
+                                });
+                                return midiList;
+                            };
+
+                            if (parsed.suffix === "dim7" && dim7Map[parsed.root]) {
+                                const info = dim7Map[parsed.root];
+                                const extraNotes = info.notes;
+                                
+                                // Check if notes are identical to the normally displayed ones
+                                const notesAreIdentical = notes.length === extraNotes.length && notes.every((note, idx) => note.trim().toLowerCase() === extraNotes[idx].trim().toLowerCase());
+                                
+                                if (notesAreIdentical) {
+                                    extraContainer.classList.add('hidden');
+                                } else {
+                                    extraContainer.classList.remove('hidden');
+                                    extraContainer.innerHTML = '';
+                                    
+                                    const label = document.createElement('span');
+                                    label.className = "text-gray-400 dark:text-gray-500 mr-1";
+                                    label.innerText = `Notas considerando que está invertido e que é ${info.target} dim7: `;
+                                    extraContainer.appendChild(label);
+                                    
+                                    const extraMidiList = calculateMidiForNotes(extraNotes, parsed.root);
+                                    
+                                    extraNotes.forEach((note, idx) => {
+                                        const span = document.createElement('span');
+                                        span.className = "cursor-pointer hover:text-brand-purple dark:hover:text-brand-mint hover:underline transition-colors font-bold text-brand-purple dark:text-brand-mint";
+                                        span.innerText = note;
+                                        span.onclick = (e) => {
+                                            e.stopPropagation();
+                                            playSingleNoteMidi(extraMidiList[idx]);
+                                        };
+                                        extraContainer.appendChild(span);
+                                        
+                                        if (idx < extraNotes.length - 1) {
+                                            extraContainer.appendChild(document.createTextNode(', '));
+                                        }
+                                    });
+                                }
+                            } else if (parsed.suffix === "9" && v9Map[parsed.root]) {
+                                extraContainer.classList.remove('hidden');
+                                extraContainer.innerHTML = '';
+                                
+                                const info = v9Map[parsed.root];
+                                const label = document.createElement('span');
+                                label.className = "text-gray-400 dark:text-gray-500 mr-1";
+                                label.innerText = `Notas considerando que o acorde na verdade é um V(#6) e não um V7, como no subV7: `;
+                                extraContainer.appendChild(label);
+                                
+                                const extraNotes = info.notes;
+                                const extraMidiList = calculateMidiForNotes(extraNotes, parsed.root);
+                                
+                                extraNotes.forEach((note, idx) => {
+                                    const span = document.createElement('span');
+                                    span.className = "cursor-pointer hover:text-brand-purple dark:hover:text-brand-mint hover:underline transition-colors font-bold text-brand-purple dark:text-brand-mint";
+                                    span.innerText = note;
+                                    span.onclick = (e) => {
+                                        e.stopPropagation();
+                                        playSingleNoteMidi(extraMidiList[idx]);
+                                    };
+                                    extraContainer.appendChild(span);
+                                    
+                                    if (idx < extraNotes.length - 1) {
+                                        extraContainer.appendChild(document.createTextNode(', '));
+                                    }
+                                });
+                            } else {
+                                extraContainer.classList.add('hidden');
+                            }
+                        }
                     } else {
                         notesDisplay.innerText = "—";
+                        if (extraContainer) extraContainer.classList.add('hidden');
                     }
                 } else {
                     notesDisplay.innerText = "—";
+                    if (extraContainer) extraContainer.classList.add('hidden');
                 }
             }
 
@@ -2394,8 +2536,6 @@
                 objectUrl = URL.createObjectURL(currentWavBlob);
                 mainPlayer.src = objectUrl;
 
-                btnDownloadAudio.href = objectUrl;
-                btnDownloadAudio.download = `BandInABox_${bpmInput.value || CONFIG.NATIVE_BPM}BPM.wav`;
                 btnDownloadAudio.classList.remove('pointer-events-none', 'opacity-50');
 
                 statusText.innerHTML = "<i class='fas fa-check-circle'></i> Áudio Consolidado! Tocando...";
@@ -2745,7 +2885,7 @@
             URL.revokeObjectURL(a.href);
         }
 
-        // --- 1. PROJETO (.txt) ---
+        // --- 1. PROJETO (.bias) ---
         document.getElementById('btn-save-project').addEventListener('click', () => {
             const content = JSON.stringify({
                 projeto: {
@@ -2759,7 +2899,7 @@
                     }))
                 }
             }, null, 2);
-            downloadContent(content, 'text/plain', getSanitizedFilename('txt'));
+            downloadContent(content, 'text/plain', getSanitizedFilename('bias'));
         });
 
         const fileImportInput = document.getElementById('file-import-input');
@@ -2811,51 +2951,37 @@
                 exportModal.classList.remove('flex');
             } catch (err) {
                 console.error(err);
-                alert("Erro ao ler o ficheiro do projeto.");
+                alert("Erro ao ler o arquivo do projeto.");
             }
             e.target.value = '';
         });
 
-        // --- EXPORTAÇÃO MOODLE (MP3 vs WAV) - COM BARRAS DE COMPASSO ---
-        async function generateMoodleHTML(useCompression) {
+        // --- EXPORTAÇÃO MOODLE (MP3 EMBUTIDO E ONLINE) - COM BARRAS DE COMPASSO ---
+        async function generateMoodleHTML() {
             if (!consolidatedBuffer) {
                 alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de exportar.");
                 return;
             }
 
             const btnMp3 = document.getElementById('btn-gen-moodle-mp3');
-            const btnWav = document.getElementById('btn-gen-moodle-wav');
+            const btnOnline = document.getElementById('btn-gen-moodle-online');
             const originalMp3Html = btnMp3.innerHTML;
-            const originalWavHtml = btnWav.innerHTML;
 
-            if (useCompression) {
-                btnMp3.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Comprimindo...';
-            } else {
-                btnWav.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Codificando...';
-            }
-            
+            btnMp3.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Comprimindo...';
             btnMp3.disabled = true;
-            btnWav.disabled = true;
+            btnOnline.disabled = true;
 
-            let finalBlob;
-            
-            if (useCompression) {
-                finalBlob = await encodeMp3(consolidatedBuffer);
-            } else {
-                finalBlob = currentWavBlob;
-            }
+            const finalBlob = await encodeMp3(consolidatedBuffer);
 
             const reader = new FileReader();
             reader.onloadend = function() {
                 const base64data = reader.result;
                 const sizeKb = Math.round(base64data.length / 1024);
 
-                // NOVA LÓGICA: Partitura (Lead Sheet) com Barras de Compasso
                 let measures = [];
                 let currentMeasure = [];
                 let currentBeats = 0;
 
-                // Agrupa a sequência em compassos de 4 tempos
                 sequence.forEach(chord => {
                     currentMeasure.push(chord);
                     currentBeats += chord.beats;
@@ -2870,11 +2996,9 @@
                 let chordsHtml = '<div style="display: flex; flex-wrap: wrap; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px 5px; font-family: monospace;">';
 
                 measures.forEach((measure, index) => {
-                    // Inicia o compasso com a barra à esquerda e o número do compasso
                     chordsHtml += `<div style="display: flex; align-items: center; border-left: 2px solid #475569; padding: 15px 10px 5px 10px; position: relative; min-width: 120px; margin-bottom: 10px;">`;
                     chordsHtml += `<span style="position: absolute; top: 2px; left: 6px; font-size: 11px; color: #64748b; font-weight: bold;">${index + 1}</span>`;
 
-                    // Desenha as cifras de dentro do compasso
                     measure.forEach(chord => {
                         const displayName = chord.name === "" ? "-" : chord.name;
                         chordsHtml += `<div style="flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: #1e293b; padding: 0 5px;">${displayName}</div>`;
@@ -2883,7 +3007,6 @@
                     chordsHtml += `</div>`;
                 });
 
-                // Fecha com a barra final à direita, se houver música
                 if (measures.length > 0) {
                     chordsHtml += `<div style="border-left: 2px solid #475569; margin-bottom: 10px;"></div>`;
                 }
@@ -2893,7 +3016,7 @@
                 const htmlStr = `
 <div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
 ========================================================<br>
-               INÍCIO DO CÓDIGO GL BIAS                 <br>
+               INÍCIO DO CÓDIGO GL BIAS (EMBUTIDO)      <br>
 ========================================================
 </div>
 
@@ -2909,30 +3032,259 @@
 
 <div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
 ========================================================<br>
-                FIM DO CÓDIGO GL BIAS                   <br>
+                 FIM DO CÓDIGO GL BIAS (EMBUTIDO)       <br>
 ========================================================
 </div>
 `;
                 
                 document.getElementById('export-moodle-text').value = htmlStr.trim();
-                
-                const formatLabel = useCompression ? 'MP3' : 'WAV';
-                document.getElementById('moodle-size-info').innerText = `Tamanho estimado (${formatLabel}): ${sizeKb} KB`;
+                document.getElementById('moodle-size-info').innerText = `Tamanho estimado (MP3 Embutido): ${sizeKb} KB`;
                 
                 const btnCopy = document.getElementById('btn-copy-moodle');
                 btnCopy.classList.remove('hidden');
                 btnCopy.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
                 
                 btnMp3.innerHTML = originalMp3Html;
-                btnWav.innerHTML = originalWavHtml;
                 btnMp3.disabled = false;
-                btnWav.disabled = false;
+                btnOnline.disabled = false;
             };
             reader.readAsDataURL(finalBlob);
         }
 
-        document.getElementById('btn-gen-moodle-mp3').addEventListener('click', () => generateMoodleHTML(true));
-        document.getElementById('btn-gen-moodle-wav').addEventListener('click', () => generateMoodleHTML(false));
+        async function generateMoodleOnlineHTML() {
+            const btnOnline = document.getElementById('btn-gen-moodle-online');
+            const btnMp3 = document.getElementById('btn-gen-moodle-mp3');
+            const originalOnlineHtml = btnOnline.innerHTML;
+
+            btnOnline.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Gerando...';
+            btnOnline.disabled = true;
+            btnMp3.disabled = true;
+
+            const uniqueId = Math.random().toString(36).substring(2, 9);
+
+            let measures = [];
+            let currentMeasure = [];
+            let currentBeats = 0;
+
+            sequence.forEach(chord => {
+                currentMeasure.push(chord);
+                currentBeats += chord.beats;
+                if (currentBeats >= 4) {
+                    measures.push(currentMeasure);
+                    currentMeasure = [];
+                    currentBeats = 0;
+                }
+            });
+            if (currentMeasure.length > 0) measures.push(currentMeasure);
+
+            let chordsHtml = '<div style="display: flex; flex-wrap: wrap; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px 5px; font-family: monospace;">';
+
+            measures.forEach((measure, index) => {
+                chordsHtml += `<div style="display: flex; align-items: center; border-left: 2px solid #475569; padding: 15px 10px 5px 10px; position: relative; min-width: 120px; margin-bottom: 10px;">`;
+                chordsHtml += `<span style="position: absolute; top: 2px; left: 6px; font-size: 11px; color: #64748b; font-weight: bold;">${index + 1}</span>`;
+
+                measure.forEach(chord => {
+                    const displayName = chord.name === "" ? "-" : chord.name;
+                    chordsHtml += `<div style="flex: 1; text-align: center; font-size: 18px; font-weight: bold; color: #1e293b; padding: 0 5px;">${displayName}</div>`;
+                });
+                chordsHtml += `</div>`;
+            });
+
+            if (measures.length > 0) {
+                chordsHtml += `<div style="border-left: 2px solid #475569; margin-bottom: 10px;"></div>`;
+            }
+            chordsHtml += '</div>';
+
+            const seqData = sequence.map(chord => ({
+                file: chord.name ? chord.file : "",
+                beats: chord.beats
+            }));
+            const bpmValue = parseFloat(bpmInput.value) || 130;
+
+            const htmlStr = `
+<div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
+========================================================<br>
+               INÍCIO DO CÓDIGO GL BIAS (ONLINE)        <br>
+========================================================
+</div>
+
+<div id="bias-player-${uniqueId}" style="border: 2px solid #E6E6FA; border-radius: 12px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8F8FF; max-width: 100%; box-sizing: border-box;">
+    <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical (Online)</h3>
+    <div style="margin-bottom: 20px;">
+        ${chordsHtml}
+    </div>
+    
+    <button id="btn-moodle-play-${uniqueId}" onclick="window['playMoodleOnline_${uniqueId}']()" style="width: 100%; border: none; border-radius: 9999px; background-color: #70E0A6; color: #36454F; padding: 12px; font-weight: bold; font-size: 14px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; outline: none; margin-top: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+        ▶ Tocar
+    </button>
+</div>
+
+<script>
+(function() {
+    const sequence = ${JSON.stringify(seqData)};
+    const bpm = ${bpmValue};
+    const nativeBPM = 130;
+    const targetBeatDuration = 60 / bpm;
+    const nativeBeatDuration = 60 / nativeBPM;
+    const playbackRate = bpm / nativeBPM;
+    const baseUrl = "https://glauberlasantiago.github.io/TocaSwing130/";
+    
+    let audioCtx = null;
+    let playing = false;
+    let activeSources = [];
+    let timeoutId = null;
+    
+    window['playMoodleOnline_${uniqueId}'] = function() {
+        const btn = document.getElementById('btn-moodle-play-${uniqueId}');
+        if (!btn) return;
+        
+        if (playing) {
+            stop();
+            return;
+        }
+        
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) {
+            alert("Seu navegador não suporta a reprodução de áudio.");
+            return;
+        }
+        
+        audioCtx = new AudioContextClass();
+        playing = true;
+        btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;margin-right:6px;">⌛</span> Carregando...';
+        btn.style.backgroundColor = '#f1c40f';
+        btn.style.color = '#36454F';
+        
+        if (!document.getElementById('moodle-spin-style')) {
+            const style = document.createElement('style');
+            style.id = 'moodle-spin-style';
+            style.innerHTML = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+            document.head.appendChild(style);
+        }
+        
+        const promises = sequence.map(chord => {
+            if (!chord.file) return Promise.resolve(null);
+            const url = baseUrl + chord.file + ".mp3";
+            return fetch(url)
+                .then(r => {
+                    if (!r.ok) throw new Error();
+                    return r.arrayBuffer();
+                })
+                .then(ab => audioCtx.decodeAudioData(ab))
+                .catch(e => null);
+        });
+        
+        Promise.all(promises).then(buffers => {
+            if (!playing) return;
+            btn.innerHTML = '⏹ Parar';
+            btn.style.backgroundColor = '#f87171';
+            btn.style.color = '#ffffff';
+            
+            let time = audioCtx.currentTime + 0.1;
+            
+            buffers.forEach((buffer, idx) => {
+                const chord = sequence[idx];
+                const duration = chord.beats * targetBeatDuration;
+                
+                if (buffer) {
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.playbackRate.value = playbackRate;
+                    
+                    const gain = audioCtx.createGain();
+                    gain.gain.setValueAtTime(1, time);
+                    gain.gain.setValueAtTime(1, Math.max(time, time + duration - 0.02));
+                    gain.gain.linearRampToValueAtTime(0, time + duration);
+                    
+                    source.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    source.start(time, 0, chord.beats * nativeBeatDuration);
+                    activeSources.push(source);
+                }
+                time += duration;
+            });
+            
+            const totalDuration = time - audioCtx.currentTime;
+            timeoutId = setTimeout(() => {
+                stop();
+            }, totalDuration * 1000);
+        });
+        
+        function stop() {
+            playing = false;
+            btn.innerHTML = '▶ Tocar';
+            btn.style.backgroundColor = '#70E0A6';
+            btn.style.color = '#36454F';
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
+            }
+            activeSources.forEach(s => {
+                try { s.stop(); } catch(e) {}
+            });
+            activeSources = [];
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
+        }
+    };
+})();
+<\/script>
+
+<div style="font-size: 0px; color: transparent; line-height: 0; margin: 0; height: 0; overflow: hidden;">
+========================================================<br>
+                 FIM DO CÓDIGO GL BIAS (ONLINE)          <br>
+========================================================
+</div>
+`.trim();
+
+            document.getElementById('export-moodle-text').value = htmlStr;
+            const sizeKb = Math.round(htmlStr.length / 1024);
+            document.getElementById('moodle-size-info').innerText = `Tamanho estimado (Online): ${sizeKb} KB`;
+
+            const btnCopy = document.getElementById('btn-copy-moodle');
+            btnCopy.classList.remove('hidden');
+            btnCopy.innerHTML = '<i class="fas fa-copy mr-2"></i> Copiar Código HTML';
+
+            btnOnline.innerHTML = originalOnlineHtml;
+            btnOnline.disabled = false;
+            btnMp3.disabled = false;
+        }
+
+        document.getElementById('btn-gen-moodle-mp3').addEventListener('click', () => generateMoodleHTML());
+        document.getElementById('btn-gen-moodle-online').addEventListener('click', () => generateMoodleOnlineHTML());
+
+        document.getElementById('btn-dl-audio-modal').addEventListener('click', async (e) => {
+            if (!consolidatedBuffer) {
+                alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de baixar.");
+                return;
+            }
+
+            const btn = e.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Convertendo para MP3...';
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.7';
+
+            try {
+                const mp3Blob = await encodeMp3(consolidatedBuffer);
+                const url = URL.createObjectURL(mp3Blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = getSanitizedFilename('mp3');
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (err) {
+                console.error(err);
+                alert("Erro ao converter áudio para MP3.");
+            }
+
+            btn.innerHTML = originalHtml;
+            btn.style.pointerEvents = 'auto';
+            btn.style.opacity = '1';
+        });
 
         document.getElementById('btn-copy-moodle').addEventListener('click', () => {
             const textArea = document.getElementById('export-moodle-text');
