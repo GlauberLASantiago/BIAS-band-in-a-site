@@ -88,4 +88,4 @@ A interface foi otimizada para ocupar **100% da largura da tela**, aproveitando 
 Desenvolvido pelo professor **Glauber Santiago**
 * Departamento de Artes e Comunicação (DAC) — Universidade Federal de São Carlos (**UFSCar**)
 * Portfólio acadêmico: [servidores.ufscar.br/glauber/](https://servidores.ufscar.br/glauber/)
-* Site Glauberian: [sites.google.com/view/glauberia](https://sites.google.com/view/glauberia)
+* Site Glauberia: [sites.google.com/view/glauberia](https://sites.google.com/view/glauberia)
