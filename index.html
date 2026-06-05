@@ -754,7 +754,7 @@
         });
 
         const CONFIG = {
-            REPO_BASE_URL: "https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/",
+            REPO_BASE_URL: "https://raw.githubusercontent.com/GlauberLASantiago/BIAS-band-in-a-site/main/",
             FILE_EXTENSION: ".mp3", 
             NATIVE_BPM: 130,
             BEATS_PER_MEASURE: 4,
@@ -2551,8 +2551,8 @@
             statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
             statusText.classList.remove('hidden');
 
-            const chordsUrl = `https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-${selectedStyle}-acordes.mp3`;
-            const drumsUrl = `https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-${selectedStyle}-bat.mp3`;
+            const chordsUrl = `https://raw.githubusercontent.com/GlauberLASantiago/BIAS-band-in-a-site/main/130-${selectedStyle}-acordes.mp3`;
+            const drumsUrl = `https://raw.githubusercontent.com/GlauberLASantiago/BIAS-band-in-a-site/main/130-${selectedStyle}-bat.mp3`;
 
             try {
                 const fetchAndDecode = async (url) => {
@@ -3441,8 +3441,8 @@
         }
         
         const selectedStyle = document.getElementById('moodle-style-select-${uniqueId}').value;
-        const chordsUrl = "https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-" + selectedStyle + "-acordes.mp3";
-        const drumsUrl = "https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-" + selectedStyle + "-bat.mp3";
+        const chordsUrl = "https://raw.githubusercontent.com/GlauberLASantiago/BIAS-band-in-a-site/main/130-" + selectedStyle + "-acordes.mp3";
+        const drumsUrl = "https://raw.githubusercontent.com/GlauberLASantiago/BIAS-band-in-a-site/main/130-" + selectedStyle + "-bat.mp3";
 
         const loadBuffer = (url) => fetch(url).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab));
 
