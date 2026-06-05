@@ -315,8 +315,8 @@
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Tipo (Clique para Adicionar)</label>
-                        <!-- Grid colunas modificado para 3 no sidebar no mobile e 6 no desktop -->
-                        <div id="quality-palette" class="grid grid-cols-3 lg:grid-cols-6 gap-1.5"></div>
+                        <!-- Layout flexível com wrap para evitar estouros de espaçamento -->
+                        <div id="quality-palette" class="flex flex-wrap gap-1.5"></div>
                     </div>
                     <div class="flex flex-col gap-3">
                         <label class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Fundamental</label>
@@ -430,6 +430,18 @@
                         <button id="btn-export" class="bg-brand-lavmist dark:bg-gray-700 text-brand-charcoal dark:text-gray-200 hover:text-brand-purple dark:hover:text-brand-purple text-xs font-semibold transition-colors py-1.5 px-3.5 rounded-full flex items-center gap-2 shrink-0 border border-transparent dark:border-gray-600 shadow-sm">
                             <i class="fas fa-file-export"></i> Dados & Exportação
                         </button>
+                        
+                        <div class="flex items-center gap-2 bg-brand-ghost dark:bg-gray-700 px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-600 focus-within:ring-2 focus-within:ring-brand-purple transition-all">
+                            <label for="style-select" class="text-[10px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-sliders-h text-brand-purple mr-1"></i> Estilo</label>
+                            <select id="style-select" class="bg-transparent font-bold text-brand-charcoal dark:text-white text-xs focus:outline-none cursor-pointer">
+                                <option value="bossa1" class="text-brand-charcoal dark:text-white dark:bg-gray-800">Bossa Nova 1</option>
+                                <option value="bossa2" class="text-brand-charcoal dark:text-white dark:bg-gray-800">Bossa Nova 2</option>
+                                <option value="swing1" class="text-brand-charcoal dark:text-white dark:bg-gray-800">Jazz Swing 1</option>
+                                <option value="swing2" class="text-brand-charcoal dark:text-white dark:bg-gray-800">Jazz Swing 2</option>
+                                <option value="soul" class="text-brand-charcoal dark:text-white dark:bg-gray-800">Soul</option>
+                                <option value="guajira" class="text-brand-charcoal dark:text-white dark:bg-gray-800">Guajira</option>
+                            </select>
+                        </div>
                         
                         <div class="flex items-center gap-3 bg-brand-ghost dark:bg-gray-700 px-3.5 py-1.5 rounded-full border border-gray-200 dark:border-gray-600">
                             <label for="reverb-slider" class="text-[10px] font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"><i class="fas fa-water text-brand-purple mr-1"></i> Reverb</label>
@@ -742,7 +754,7 @@
         });
 
         const CONFIG = {
-            REPO_BASE_URL: "https://glauberlasantiago.github.io/TocaSwing130/",
+            REPO_BASE_URL: "https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/",
             FILE_EXTENSION: ".mp3", 
             NATIVE_BPM: 130,
             BEATS_PER_MEASURE: 4,
@@ -766,13 +778,59 @@
                 { label: "maj7", fileSuffix: "maj7" },
                 { label: "9", fileSuffix: "9" },
                 { label: "7b9", fileSuffix: "7b9" },
+                { label: "m(maj7)", fileSuffix: "mmaj7" },
                 { label: "m7", fileSuffix: "m7" },
                 { label: "m7b5", fileSuffix: "m7b5" },
                 { label: "dim7", fileSuffix: "dim7" }
             ]
         };
 
+        const CHORDS_MAP = [
+            "CMaj7", "C9", "C7b9", "CmMaj7", "Cm7", "Cm7b5", "Cdim", "DbMaj7", "Db9",
+            "Db7b9", "DbmMaj7", "Dbm7", "Dbm7b5", "Dbdim", "DMaj7", "D9", "D7b9", "DmMaj7", "Dm7",
+            "Dm7b5", "Ddim", "EbMaj7", "Eb9", "Eb7b9", "EbmMaj7", "Ebm7", "Ebm7b5", "Ebdim",
+            "EMaj7", "E9", "E7b9", "EmMaj7", "Em7", "Em7b5", "Edim", "FMaj7", "F9",
+            "F7b9", "FmMaj7", "Fm7", "Fm7b5", "Fdim", "F#Maj7", "F#9", "F#7b9", "F#mMaj7", "F#m7",
+            "F#m7b5", "F#dim", "GMaj7", "G9", "G7b9", "GmMaj7", "Gm7", "Gm7b5", "Gdim",
+            "AbMaj7", "Ab9", "Ab7b9", "AbmMaj7", "Abm7", "Abm7b5", "Abdim", "AMaj7", "A9",
+            "A7b9", "AmMaj7", "Am7", "Am7b5", "Adim", "BbMaj7", "Bb9", "Bb7b9", "BbmMaj7", "Bbm7",
+            "Bbm7b5", "Bbdim", "BMaj7", "B9", "B7b9", "BmMaj7", "Bm7", "Bm7b5", "Bdim"
+        ];
+
+        function normalizeRoot(root) {
+            const rootEquivalents = {
+                "C#": "Db",
+                "D#": "Eb",
+                "Gb": "F#",
+                "G#": "Ab",
+                "A#": "Bb"
+            };
+            return rootEquivalents[root] || root;
+        }
+
+        function normalizeQuality(quality) {
+            const lower = quality.toLowerCase();
+            if (lower === "maj7") return "Maj7";
+            if (lower === "dim" || lower === "dim7") return "dim";
+            if (lower === "m(maj7)" || lower === "mmaj7" || lower === "m(maj)7") return "mMaj7";
+            return quality;
+        }
+
+        function getChordIndex(chordName) {
+            if (!chordName) return -1;
+            const match = chordName.match(/^([A-G][#b]?)(.*)$/);
+            if (!match) return -1;
+            const root = normalizeRoot(match[1]);
+            const quality = normalizeQuality(match[2]);
+            const targetName = root + quality;
+            return CHORDS_MAP.indexOf(targetName);
+        }
+
         const NATIVE_MEASURE_DURATION = (60 / CONFIG.NATIVE_BPM) * CONFIG.BEATS_PER_MEASURE;
+        let chordsAudioBuffer = null;
+        let drumsAudioBuffer = null;
+        let styleChordsBuffers = new Map();
+        let styleDrumsBuffers = new Map();
 
         let audioContext = null;         
         let sequence = [];               
@@ -1221,6 +1279,7 @@
             "Cmaj7": ["dó", "mi", "sol", "si"],
             "C9": ["dó", "mi", "sol", "sib", "ré"],
             "C7b9": ["dó", "mi", "sol", "sib", "réb"],
+            "Cmmaj7": ["dó", "mib", "sol", "si"],
             "Cm7": ["dó", "mib", "sol", "sib"],
             "Cm7b5": ["dó", "mib", "solb", "sib"],
             "Cdim7": ["dó", "mib", "solb", "sibb"],
@@ -1229,6 +1288,7 @@
             "C#maj7": ["dó#", "mi#", "sol#", "si#"],
             "C#9": ["dó#", "mi#", "sol#", "si", "ré#"],
             "C#7b9": ["dó#", "mi#", "sol#", "si", "ré"],
+            "C#mmaj7": ["dó#", "mi", "sol#", "si#"],
             "C#m7": ["dó#", "mi", "sol#", "si"],
             "C#m7b5": ["dó#", "mi", "sol", "si"],
             "C#dim7": ["dó#", "mi", "sol", "sib"],
@@ -1237,6 +1297,7 @@
             "Dbmaj7": ["réb", "fá", "láb", "dó"],
             "Db9": ["réb", "fá", "láb", "dób", "mib"],
             "Db7b9": ["réb", "fá", "láb", "dób", "mibb"],
+            "Dbmmaj7": ["réb", "fáb", "láb", "dó"],
             "Dbm7": ["réb", "fáb", "láb", "dób"],
             "Dbm7b5": ["réb", "fáb", "lább", "dób"],
             "Dbdim7": ["réb", "fáb", "lább", "dóbb"],
@@ -1245,6 +1306,7 @@
             "Dmaj7": ["ré", "fá#", "lá", "dó#"],
             "D9": ["ré", "fá#", "lá", "dó", "mi"],
             "D7b9": ["ré", "fá#", "lá", "dó", "mib"],
+            "Dmmaj7": ["ré", "fá", "lá", "dó#"],
             "Dm7": ["ré", "fá", "lá", "dó"],
             "Dm7b5": ["ré", "fá", "láb", "dó"],
             "Ddim7": ["ré", "fá", "láb", "dób"],
@@ -1253,6 +1315,7 @@
             "D#maj7": ["ré#", "fá##", "lá#", "dó##"],
             "D#9": ["ré#", "fá##", "lá#", "dó#", "mi#"],
             "D#7b9": ["ré#", "fá##", "lá#", "dó#", "mi"],
+            "D#mmaj7": ["ré#", "fá#", "lá#", "dó##"],
             "D#m7": ["ré#", "fá#", "lá#", "dó#"],
             "D#m7b5": ["ré#", "fá#", "lá", "dó#"],
             "D#dim7": ["ré#", "fá#", "lá", "dó"],
@@ -1261,6 +1324,7 @@
             "Ebmaj7": ["mib", "sol", "sib", "ré"],
             "Eb9": ["mib", "sol", "sib", "réb", "fá"],
             "Eb7b9": ["mib", "sol", "sib", "réb", "fáb"],
+            "Ebmmaj7": ["mib", "solb", "sib", "ré"],
             "Ebm7": ["mib", "solb", "sib", "réb"],
             "Ebm7b5": ["mib", "solb", "sibb", "réb"],
             "Ebdim7": ["mib", "solb", "sibb", "rébb"],
@@ -1269,6 +1333,7 @@
             "Emaj7": ["mi", "sol#", "si", "ré#"],
             "E9": ["mi", "sol#", "si", "ré", "fá#"],
             "E7b9": ["mi", "sol#", "si", "ré", "fá"],
+            "Emmaj7": ["mi", "sol", "si", "ré#"],
             "Em7": ["mi", "sol", "si", "ré"],
             "Em7b5": ["mi", "sol", "sib", "ré"],
             "Edim7": ["mi", "sol", "sib", "réb"],
@@ -1277,6 +1342,7 @@
             "Fmaj7": ["fá", "lá", "dó", "mi"],
             "F9": ["fá", "lá", "dó", "mib", "sol"],
             "F7b9": ["fá", "lá", "dó", "mib", "solb"],
+            "Fmmaj7": ["fá", "láb", "dó", "mi"],
             "Fm7": ["fá", "láb", "dó", "mib"],
             "Fm7b5": ["fá", "láb", "dób", "mib"],
             "Fdim7": ["fá", "láb", "dób", "mibb"],
@@ -1285,6 +1351,7 @@
             "F#maj7": ["fá#", "lá#", "dó#", "mi#"],
             "F#9": ["fá#", "lá#", "dó#", "mi", "sol#"],
             "F#7b9": ["fá#", "lá#", "dó#", "mi", "sol"],
+            "F#mmaj7": ["fá#", "lá", "dó#", "mi#"],
             "F#m7": ["fá#", "lá", "dó#", "mi"],
             "F#m7b5": ["fá#", "lá", "dó", "mi"],
             "F#dim7": ["fá#", "lá", "dó", "mib"],
@@ -1293,6 +1360,7 @@
             "Gbmaj7": ["solb", "sib", "réb", "fá"],
             "Gb9": ["solb", "sib", "réb", "fáb", "láb"],
             "Gb7b9": ["solb", "sib", "réb", "fáb", "lább"],
+            "Gbmmaj7": ["solb", "sibb", "réb", "fá"],
             "Gbm7": ["solb", "sibb", "réb", "fáb"],
             "Gbm7b5": ["solb", "sibb", "rébb", "fáb"],
             "Gbdim7": ["solb", "sibb", "rébb", "fább"],
@@ -1301,6 +1369,7 @@
             "Gmaj7": ["sol", "si", "ré", "fá#"],
             "G9": ["sol", "si", "ré", "fá", "lá"],
             "G7b9": ["sol", "si", "ré", "fá", "láb"],
+            "Gmmaj7": ["sol", "sib", "ré", "fá#"],
             "Gm7": ["sol", "sib", "ré", "fá"],
             "Gm7b5": ["sol", "sib", "réb", "fá"],
             "Gdim7": ["sol", "sib", "réb", "fáb"],
@@ -1309,6 +1378,7 @@
             "G#maj7": ["sol#", "si#", "ré#", "fá##"],
             "G#9": ["sol#", "si#", "ré#", "fá#", "lá#"],
             "G#7b9": ["sol#", "si#", "ré#", "fá#", "lá"],
+            "G#mmaj7": ["sol#", "si", "ré#", "fá##"],
             "G#m7": ["sol#", "si", "ré#", "fá#"],
             "G#m7b5": ["sol#", "si", "ré", "fá#"],
             "G#dim7": ["sol#", "si", "ré", "fá"],
@@ -1317,6 +1387,7 @@
             "Abmaj7": ["láb", "dó", "mib", "sol"],
             "Ab9": ["láb", "dó", "mib", "solb", "sib"],
             "Ab7b9": ["láb", "dó", "mib", "solb", "sibb"],
+            "Abmmaj7": ["láb", "dób", "mib", "sol"],
             "Abm7": ["láb", "dób", "mib", "solb"],
             "Abm7b5": ["láb", "dób", "mibb", "solb"],
             "Abdim7": ["láb", "dób", "mibb", "solbb"],
@@ -1325,6 +1396,7 @@
             "Amaj7": ["lá", "dó#", "mi", "sol#"],
             "A9": ["lá", "dó#", "mi", "sol", "si"],
             "A7b9": ["lá", "dó#", "mi", "sol", "sib"],
+            "Ammaj7": ["lá", "dó", "mi", "sol#"],
             "Am7": ["lá", "dó", "mi", "sol"],
             "Am7b5": ["lá", "dó", "mib", "sol"],
             "Adim7": ["lá", "dó", "mib", "solb"],
@@ -1333,6 +1405,7 @@
             "A#maj7": ["lá#", "dó##", "mi#", "sol##"],
             "A#9": ["lá#", "dó##", "mi#", "sol#", "si#"],
             "A#7b9": ["lá#", "dó##", "mi#", "sol#", "si"],
+            "A#mmaj7": ["lá#", "dó#", "mi#", "sol##"],
             "A#m7": ["lá#", "dó#", "mi#", "sol#"],
             "A#m7b5": ["lá#", "dó#", "mi", "sol#"],
             "A#dim7": ["lá#", "dó#", "mi", "sol"],
@@ -1341,6 +1414,7 @@
             "Bbmaj7": ["sib", "ré", "fá", "lá"],
             "Bb9": ["sib", "ré", "fá", "láb", "dó"],
             "Bb7b9": ["sib", "ré", "fá", "láb", "dób"],
+            "Bbmmaj7": ["sib", "réb", "fá", "lá"],
             "Bbm7": ["sib", "réb", "fá", "láb"],
             "Bbm7b5": ["sib", "réb", "fáb", "láb"],
             "Bbdim7": ["sib", "réb", "fáb", "lább"],
@@ -1349,6 +1423,7 @@
             "Bmaj7": ["si", "ré#", "fá#", "lá#"],
             "B9": ["si", "ré#", "fá#", "lá", "dó#"],
             "B7b9": ["si", "ré#", "fá#", "lá", "dó"],
+            "Bmmaj7": ["si", "ré", "fá#", "lá#"],
             "Bm7": ["si", "ré", "fá#", "lá"],
             "Bm7b5": ["si", "ré", "fá", "lá"],
             "Bdim7": ["si", "ré", "fá", "láb"]
@@ -1357,8 +1432,18 @@
         function getChordNotesPT(chordName) {
             if (!chordName) return [];
             
-            if (CHORD_NOTES_PT[chordName]) {
-                return CHORD_NOTES_PT[chordName];
+            const parsedName = parseChordBuffer(chordName);
+            let normalizedName = chordName;
+            if (parsedName.root) {
+                let suffix = parsedName.suffix;
+                if (suffix === "Maj7") suffix = "maj7";
+                if (suffix === "dim") suffix = "dim7";
+                if (suffix === "m(maj7)" || suffix === "mMaj7") suffix = "mmaj7";
+                normalizedName = parsedName.root + suffix;
+            }
+            
+            if (CHORD_NOTES_PT[normalizedName]) {
+                return CHORD_NOTES_PT[normalizedName];
             }
             
             if (chordName.endsWith('m')) {
@@ -1533,7 +1618,7 @@
                 if (suffix === "9" || suffix === "7b9") {
                     if (editMeasureIdx !== null && editSubIdx !== null) {
                         const newTargetIdx = getSequenceIndex(editMeasureIdx, editSubIdx);
-                        if (newTargetIdx !== -1 && sequence[newTargetIdx].name === "") {
+                        if (newTargetIdx !== -1 && !sequence[newTargetIdx].name) {
                             const nextRootName = getPerfectFourthAbove(root);
                             if (nextRootName) {
                                 selectRootByName(nextRootName);
@@ -1591,11 +1676,15 @@
             if (qualityLabel) {
                 const qualityOffsets = {
                     'maj7': [4, 7, 11],
+                    'Maj7': [4, 7, 11],
                     '9': [4, 7, 10, 14],
                     '7b9': [4, 7, 10, 13],
                     'm7': [3, 7, 10],
                     'm7b5': [3, 6, 10],
-                    'dim7': [3, 6, 9]
+                    'dim7': [3, 6, 9],
+                    'dim': [3, 6, 9],
+                    'm(maj7)': [3, 7, 11],
+                    'mMaj7': [3, 7, 11]
                 };
                 const offsets = qualityOffsets[qualityLabel];
                 if (offsets) {
@@ -1711,7 +1800,7 @@
             const qualityPalette = document.getElementById('quality-palette');
             CONFIG.QUALITIES.forEach(quality => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white dark:bg-gray-700 border-2 border-brand-lavmist dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple text-brand-charcoal dark:text-gray-200 font-bold py-1.5 rounded-lg shadow-sm transition-all text-xs";
+                btn.className = "bg-white dark:bg-gray-700 border-2 border-brand-lavmist dark:border-gray-600 hover:border-brand-purple dark:hover:border-brand-purple text-brand-charcoal dark:text-gray-200 font-bold py-1.5 px-2.5 rounded-lg shadow-sm transition-all text-xs";
                 btn.innerText = quality.label;
                 btn.onclick = () => {
                     const root = selectedRoot;
@@ -1727,6 +1816,18 @@
             btnPlaySelected.onclick = togglePlaySelected;
             btnStop.onclick = stopAudio;
             btnClear.onclick = clearSequence;
+
+            document.getElementById('style-select').addEventListener('change', () => {
+                needsConsolidation = true;
+                currentWavBlob = null;
+                if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+                mainPlayer.src = "";
+                btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
+                
+                chordsAudioBuffer = null;
+                drumsAudioBuffer = null;
+                audioCache.clear();
+            });
 
             // Bind selection copy/paste & measure count buttons
             document.getElementById('btn-copy').onclick = copySelectedMeasures;
@@ -1976,15 +2077,18 @@
             btnDownloadAudio.removeAttribute('href');
             btnDownloadAudio.classList.add('pointer-events-none', 'opacity-50');
             
-            if (editMeasureIdx !== null && editSubIdx !== null) {
-                setChordAtSlot(editMeasureIdx, editSubIdx, chordData);
-                advanceSelection();
-            } else {
+            if (editMeasureIdx === null || editSubIdx === null) {
                 let firstEmptyIndex = sequence.findIndex(c => c.name === "");
                 if (firstEmptyIndex !== -1) {
                     const { measureIdx, subIdx } = getMeasureAndSubIndex(firstEmptyIndex);
-                    setChordAtSlot(measureIdx, subIdx, chordData);
+                    editMeasureIdx = measureIdx;
+                    editSubIdx = subIdx;
                 }
+            }
+            
+            if (editMeasureIdx !== null && editSubIdx !== null) {
+                setChordAtSlot(editMeasureIdx, editSubIdx, chordData);
+                advanceSelection();
             }
         }
 
@@ -2193,7 +2297,7 @@
                                 return midiList;
                             };
 
-                            if (parsed.suffix === "dim7" && dim7Map[parsed.root]) {
+                             if ((parsed.suffix === "dim7" || parsed.suffix === "dim") && dim7Map[parsed.root]) {
                                 const info = dim7Map[parsed.root];
                                 const extraNotes = info.notes;
                                 
@@ -2208,7 +2312,7 @@
                                     
                                     const label = document.createElement('span');
                                     label.className = "text-gray-400 dark:text-gray-500 mr-1";
-                                    label.innerText = `Notas considerando que está invertido e que é ${info.target} dim7: `;
+                                    label.innerText = `Notas considerando que está invertido e que é ${info.target}dim: `;
                                     extraContainer.appendChild(label);
                                     
                                     const extraMidiList = calculateMidiForNotes(extraNotes, parsed.root);
@@ -2432,6 +2536,58 @@
             return audioContext;
         }
 
+        let isMasterLoading = false;
+        async function loadMasterAudios() {
+            const ctx = getAudioContext();
+            const selectedStyle = document.getElementById('style-select').value;
+            
+            if (styleChordsBuffers.has(selectedStyle) && styleDrumsBuffers.has(selectedStyle)) {
+                chordsAudioBuffer = styleChordsBuffers.get(selectedStyle);
+                drumsAudioBuffer = styleDrumsBuffers.get(selectedStyle);
+                return;
+            }
+
+            statusText.innerHTML = "<span class='loading-spinner'></span> Carregando arquivos de áudio principais...";
+            statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+            statusText.classList.remove('hidden');
+
+            const chordsUrl = `https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-${selectedStyle}-acordes.mp3`;
+            const drumsUrl = `https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-${selectedStyle}-bat.mp3`;
+
+            try {
+                const fetchAndDecode = async (url) => {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const arrayBuffer = await response.arrayBuffer();
+                    return await ctx.decodeAudioData(arrayBuffer);
+                };
+
+                const promises = [];
+                if (!styleChordsBuffers.has(selectedStyle)) {
+                    promises.push(fetchAndDecode(chordsUrl).then(buf => {
+                        styleChordsBuffers.set(selectedStyle, buf);
+                        chordsAudioBuffer = buf;
+                    }));
+                } else {
+                    chordsAudioBuffer = styleChordsBuffers.get(selectedStyle);
+                }
+                
+                if (!styleDrumsBuffers.has(selectedStyle)) {
+                    promises.push(fetchAndDecode(drumsUrl).then(buf => {
+                        styleDrumsBuffers.set(selectedStyle, buf);
+                        drumsAudioBuffer = buf;
+                    }));
+                } else {
+                    drumsAudioBuffer = styleDrumsBuffers.get(selectedStyle);
+                }
+
+                await Promise.all(promises);
+            } catch (error) {
+                console.error("Erro ao carregar arquivos principais:", error);
+                throw error;
+            }
+        }
+
         async function fetchAudioBuffer(chord) {
             const ctx = getAudioContext();
             
@@ -2445,20 +2601,40 @@
             const cacheKey = chord.name;
             if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
 
-            const url = `${CONFIG.REPO_BASE_URL}${chord.file}${CONFIG.FILE_EXTENSION}`;
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const arrayBuffer = await response.arrayBuffer();
-                const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-                audioCache.set(cacheKey, audioBuffer);
-                return audioBuffer;
-            } catch (error) {
-                console.warn(`Erro ao carregar ${url}. Gerando fallback.`);
+            await loadMasterAudios();
+
+            const chordIdx = getChordIndex(chord.name);
+            if (chordIdx === -1 || !chordsAudioBuffer) {
+                console.warn(`Acorde ${chord.name} não encontrado no mapa. Gerando fallback.`);
                 const synthBuffer = await createFallbackSynth(chord.name, ctx);
                 audioCache.set(cacheKey, synthBuffer);
                 return synthBuffer;
             }
+
+            const SEGMENT_DURATION = 1.846153846153846;
+            const startOffsetSecs = chordIdx * SEGMENT_DURATION;
+            const sampleRate = chordsAudioBuffer.sampleRate;
+            
+            const startSample = Math.floor(startOffsetSecs * sampleRate);
+            const numSamples = Math.floor(SEGMENT_DURATION * sampleRate);
+            
+            const sliceBuffer = ctx.createBuffer(
+                chordsAudioBuffer.numberOfChannels,
+                numSamples,
+                sampleRate
+            );
+            
+            for (let channel = 0; channel < chordsAudioBuffer.numberOfChannels; channel++) {
+                const srcData = chordsAudioBuffer.getChannelData(channel);
+                const destData = sliceBuffer.getChannelData(channel);
+                for (let i = 0; i < numSamples; i++) {
+                    const srcIndex = startSample + i;
+                    destData[i] = srcIndex < srcData.length ? srcData[srcIndex] : 0;
+                }
+            }
+            
+            audioCache.set(cacheKey, sliceBuffer);
+            return sliceBuffer;
         }
 
         async function createFallbackSynth(chordName, ctx) {
@@ -2497,15 +2673,37 @@
             const ctx = getAudioContext();
             statusText.innerHTML = "Processando áudios na memória...";
             statusText.className = "text-sm font-medium text-brand-purple w-full sm:w-auto text-center sm:text-left";
+            statusText.classList.remove('hidden');
 
             try {
+                await loadMasterAudios();
+
                 const NATIVE_BEAT_DURATION = 60 / CONFIG.NATIVE_BPM;
                 let totalDuration = sequence.reduce((acc, chord) => acc + (chord.beats * NATIVE_BEAT_DURATION), 0);
                 totalDuration += 2.0; 
                 
                 const offlineCtx = new OfflineAudioContext(2, ctx.sampleRate * totalDuration, ctx.sampleRate);
-                let currentStartTime = 0;
+                
+                // 1. Play continuous drums loop
+                if (drumsAudioBuffer) {
+                    const sourceDrums = offlineCtx.createBufferSource();
+                    sourceDrums.buffer = drumsAudioBuffer;
+                    sourceDrums.loop = true;
+                    
+                    const drumsGain = offlineCtx.createGain();
+                    const songEnd = totalDuration - 2.0;
+                    drumsGain.gain.setValueAtTime(1, 0);
+                    drumsGain.gain.setValueAtTime(1, Math.max(0, songEnd - 0.02));
+                    drumsGain.gain.linearRampToValueAtTime(0, songEnd);
 
+                    sourceDrums.connect(drumsGain);
+                    drumsGain.connect(offlineCtx.destination);
+                    
+                    sourceDrums.start(0, 0, totalDuration);
+                }
+
+                // 2. Play the guitar segments
+                let currentStartTime = 0;
                 for (let i = 0; i < sequence.length; i++) {
                     const chord = sequence[i];
                     const durationSecs = chord.beats * NATIVE_BEAT_DURATION;
@@ -2557,7 +2755,7 @@
             dryGainNode = ctx.createGain();
             wetGainNode = ctx.createGain();
             convolverNode = ctx.createConvolver();
-            convolverNode.buffer = createReverbImpulse(ctx, 2.5); 
+            convolverNode.buffer = createReverbImpulse(ctx, 1.2); 
             mediaElementSource.connect(dryGainNode);          
             mediaElementSource.connect(convolverNode);        
             convolverNode.connect(wetGainNode);                
@@ -2887,11 +3085,13 @@
 
         // --- 1. PROJETO (.bias) ---
         document.getElementById('btn-save-project').addEventListener('click', () => {
+            const currentStyle = document.getElementById('style-select').value;
             const content = JSON.stringify({
                 projeto: {
                     identificacao: {
                         titulo: workTitleInput.value,
-                        nome: authorNameInput.value
+                        nome: authorNameInput.value,
+                        estilo: currentStyle
                     },
                     dados_harmonicos: sequence.map(item => ({
                         label: item.name,
@@ -2921,6 +3121,10 @@
                 workTitleInput.value = info.identificacao?.titulo || info.title || "";
                 authorNameInput.value = info.identificacao?.nome || info.author || "";
                 
+                const estilo = info.identificacao?.estilo || info.estilo || 'bossa1';
+                const styleSelect = document.getElementById('style-select');
+                if (styleSelect) styleSelect.value = estilo;
+
                 // Sincronizar com os inputs da tela principal ao importar
                 const mainWorkTitle = document.getElementById('main-work-title');
                 const mainAuthorName = document.getElementById('main-author-name');
@@ -2942,6 +3146,9 @@
                 currentWavBlob = null;
                 if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
                 mainPlayer.src = "";
+                chordsAudioBuffer = null;
+                drumsAudioBuffer = null;
+                audioCache.clear();
                 
                 statusText.innerHTML = "Projeto carregado com sucesso. <span class='text-brand-purple'>Clique em Tocar.</span>";
                 renderSequence();
@@ -2962,6 +3169,17 @@
                 alert("Você precisa Tocar a música pelo menos uma vez para gerar o áudio antes de exportar.");
                 return;
             }
+
+            const currentStyle = document.getElementById('style-select').value;
+            const styleLabelMap = {
+                'bossa1': 'Bossa Nova 1',
+                'bossa2': 'Bossa Nova 2',
+                'swing1': 'Jazz Swing 1',
+                'swing2': 'Jazz Swing 2',
+                'soul': 'Soul',
+                'guajira': 'Guajira'
+            };
+            const currentStyleLabel = styleLabelMap[currentStyle] || 'Bossa Nova 1';
 
             const btnMp3 = document.getElementById('btn-gen-moodle-mp3');
             const btnOnline = document.getElementById('btn-gen-moodle-online');
@@ -3021,7 +3239,7 @@
 </div>
 
 <div style="border: 2px solid #E6E6FA; border-radius: 12px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8F8FF; max-width: 100%; box-sizing: border-box;">
-    <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical</h3>
+    <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical (${currentStyleLabel})</h3>
     <div style="margin-bottom: 20px;">
         ${chordsHtml}
     </div>
@@ -3061,6 +3279,17 @@
             btnMp3.disabled = true;
 
             const uniqueId = Math.random().toString(36).substring(2, 9);
+            
+            const currentStyle = document.getElementById('style-select').value;
+            const styleLabelMap = {
+                'bossa1': 'Bossa Nova 1',
+                'bossa2': 'Bossa Nova 2',
+                'swing1': 'Jazz Swing 1',
+                'swing2': 'Jazz Swing 2',
+                'soul': 'Soul',
+                'guajira': 'Guajira'
+            };
+            const currentStyleLabel = styleLabelMap[currentStyle] || 'Bossa Nova 1';
 
             let measures = [];
             let currentMeasure = [];
@@ -3096,7 +3325,7 @@
             chordsHtml += '</div>';
 
             const seqData = sequence.map(chord => ({
-                file: chord.name ? chord.file : "",
+                name: chord.name,
                 beats: chord.beats
             }));
             const bpmValue = parseFloat(bpmInput.value) || 130;
@@ -3109,12 +3338,25 @@
 </div>
 
 <div id="bias-player-${uniqueId}" style="border: 2px solid #E6E6FA; border-radius: 12px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8F8FF; max-width: 100%; box-sizing: border-box;">
-    <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical (Online)</h3>
+    <h3 style="color: #36454F; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #E6E6FA; padding-bottom: 10px; font-size: 18px;">🎶 Sequência Musical (${currentStyleLabel} - Online)</h3>
     <div style="margin-bottom: 20px;">
         ${chordsHtml}
     </div>
     
-    <button id="btn-moodle-play-${uniqueId}" onclick="window['playMoodleOnline_${uniqueId}']()" style="width: 100%; border: none; border-radius: 9999px; background-color: #70E0A6; color: #36454F; padding: 12px; font-weight: bold; font-size: 14px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; outline: none; margin-top: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
+    <!-- Seletor de Estilo no Moodle -->
+    <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #36454F;">
+        <label style="font-weight: bold;">Estilo:</label>
+        <select id="moodle-style-select-${uniqueId}" style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 12px; font-weight: bold; background-color: #ffffff; color: #36454F; cursor: pointer; font-size: 12px; outline: none;">
+            <option value="bossa1"${currentStyle === 'bossa1' ? ' selected' : ''}>Bossa Nova 1</option>
+            <option value="bossa2"${currentStyle === 'bossa2' ? ' selected' : ''}>Bossa Nova 2</option>
+            <option value="swing1"${currentStyle === 'swing1' ? ' selected' : ''}>Jazz Swing 1</option>
+            <option value="swing2"${currentStyle === 'swing2' ? ' selected' : ''}>Jazz Swing 2</option>
+            <option value="soul"${currentStyle === 'soul' ? ' selected' : ''}>Soul</option>
+            <option value="guajira"${currentStyle === 'guajira' ? ' selected' : ''}>Guajira</option>
+        </select>
+    </div>
+    
+    <button id="btn-moodle-play-${uniqueId}" onclick="window['playMoodleOnline_${uniqueId}']()" style="width: 100%; border: none; border-radius: 9999px; background-color: #70E0A6; color: #36454F; padding: 12px; font-weight: bold; font-size: 14px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; outline: none; margin-top: 5px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">
         ▶ Tocar
     </button>
 </div>
@@ -3127,7 +3369,43 @@
     const targetBeatDuration = 60 / bpm;
     const nativeBeatDuration = 60 / nativeBPM;
     const playbackRate = bpm / nativeBPM;
-    const baseUrl = "https://glauberlasantiago.github.io/TocaSwing130/";
+    
+    const CHORDS_MAP = [
+        "CMaj7", "C9", "C7b9", "CmMaj7", "Cm7", "Cm7b5", "Cdim", "DbMaj7", "Db9",
+        "Db7b9", "DbmMaj7", "Dbm7", "Dbm7b5", "Dbdim", "DMaj7", "D9", "D7b9", "DmMaj7", "Dm7",
+        "Dm7b5", "Ddim", "EbMaj7", "Eb9", "Eb7b9", "EbmMaj7", "Ebm7", "Ebm7b5", "Ebdim",
+        "EMaj7", "E9", "E7b9", "EmMaj7", "Em7", "Em7b5", "Edim", "FMaj7", "F9",
+        "F7b9", "FmMaj7", "Fm7", "Fm7b5", "Fdim", "F#Maj7", "F#9", "F#7b9", "F#mMaj7", "F#m7",
+        "F#m7b5", "F#dim", "GMaj7", "G9", "G7b9", "GmMaj7", "Gm7", "Gm7b5", "Gdim",
+        "AbMaj7", "Ab9", "Ab7b9", "AbmMaj7", "Abm7", "Abm7b5", "Abdim", "AMaj7", "A9",
+        "A7b9", "AmMaj7", "Am7", "Am7b5", "Adim", "BbMaj7", "Bb9", "Bb7b9", "BbmMaj7", "Bbm7",
+        "Bbm7b5", "Bbdim", "BMaj7", "B9", "B7b9", "BmMaj7", "Bm7", "Bm7b5", "Bdim"
+    ];
+
+    function normalizeRoot(root) {
+        const rootEquivalents = {
+            "C#": "Db", "D#": "Eb", "Gb": "F#", "G#": "Ab", "A#": "Bb"
+        };
+        return rootEquivalents[root] || root;
+    }
+
+    function normalizeQuality(quality) {
+        const lower = quality.toLowerCase();
+        if (lower === "maj7") return "Maj7";
+        if (lower === "dim" || lower === "dim7") return "dim";
+        if (lower === "m(maj7)" || lower === "mmaj7" || lower === "m(maj)7") return "mMaj7";
+        return quality;
+    }
+
+    function getChordIndex(chordName) {
+        if (!chordName) return -1;
+        const match = chordName.match(/^([A-G][#b]?)(.*)$/);
+        if (!match) return -1;
+        const root = normalizeRoot(match[1]);
+        const quality = normalizeQuality(match[2]);
+        const targetName = root + quality;
+        return CHORDS_MAP.indexOf(targetName);
+    }
     
     let audioCtx = null;
     let playing = false;
@@ -3162,53 +3440,75 @@
             document.head.appendChild(style);
         }
         
-        const promises = sequence.map(chord => {
-            if (!chord.file) return Promise.resolve(null);
-            const url = baseUrl + chord.file + ".mp3";
-            return fetch(url)
-                .then(r => {
-                    if (!r.ok) throw new Error();
-                    return r.arrayBuffer();
-                })
-                .then(ab => audioCtx.decodeAudioData(ab))
-                .catch(e => null);
-        });
-        
-        Promise.all(promises).then(buffers => {
+        const selectedStyle = document.getElementById('moodle-style-select-${uniqueId}').value;
+        const chordsUrl = "https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-" + selectedStyle + "-acordes.mp3";
+        const drumsUrl = "https://raw.githubusercontent.com/GlauberLASantiago/bias-in-a-site/main/130-" + selectedStyle + "-bat.mp3";
+
+        const loadBuffer = (url) => fetch(url).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab));
+
+        Promise.all([loadBuffer(chordsUrl), loadBuffer(drumsUrl)]).then(([chordsBuffer, drumsBuffer]) => {
             if (!playing) return;
             btn.innerHTML = '⏹ Parar';
             btn.style.backgroundColor = '#f87171';
             btn.style.color = '#ffffff';
             
+            const totalBeats = sequence.reduce((acc, c) => acc + c.beats, 0);
+            const totalRealDuration = totalBeats * targetBeatDuration;
             let time = audioCtx.currentTime + 0.1;
             
-            buffers.forEach((buffer, idx) => {
-                const chord = sequence[idx];
-                const duration = chord.beats * targetBeatDuration;
+            // 1. Play Drums
+            if (drumsBuffer) {
+                const drumsSource = audioCtx.createBufferSource();
+                drumsSource.buffer = drumsBuffer;
+                drumsSource.playbackRate.value = playbackRate;
+                drumsSource.loop = true;
                 
-                if (buffer) {
+                const drumsGain = audioCtx.createGain();
+                drumsGain.gain.setValueAtTime(1, time);
+                drumsGain.gain.setValueAtTime(1, Math.max(time, time + totalRealDuration - 0.02));
+                drumsGain.gain.linearRampToValueAtTime(0, time + totalRealDuration);
+                
+                drumsSource.connect(drumsGain);
+                drumsGain.connect(audioCtx.destination);
+                
+                drumsSource.start(time, 0, totalRealDuration * playbackRate);
+                activeSources.push(drumsSource);
+            }
+
+            // 2. Play Chords
+            let currentTrackTime = time;
+            sequence.forEach((chord, idx) => {
+                const realDuration = chord.beats * targetBeatDuration;
+                const bufferDuration = chord.beats * nativeBeatDuration;
+                
+                const chordIdx = getChordIndex(chord.name);
+                if (chordIdx !== -1 && chordsBuffer) {
                     const source = audioCtx.createBufferSource();
-                    source.buffer = buffer;
+                    source.buffer = chordsBuffer;
                     source.playbackRate.value = playbackRate;
                     
                     const gain = audioCtx.createGain();
-                    gain.gain.setValueAtTime(1, time);
-                    gain.gain.setValueAtTime(1, Math.max(time, time + duration - 0.02));
-                    gain.gain.linearRampToValueAtTime(0, time + duration);
+                    gain.gain.setValueAtTime(1, currentTrackTime);
+                    gain.gain.setValueAtTime(1, Math.max(currentTrackTime, currentTrackTime + realDuration - 0.02));
+                    gain.gain.linearRampToValueAtTime(0, currentTrackTime + realDuration);
                     
                     source.connect(gain);
                     gain.connect(audioCtx.destination);
                     
-                    source.start(time, 0, chord.beats * nativeBeatDuration);
+                    const offset = chordIdx * 1.846153846153846;
+                    source.start(currentTrackTime, offset, bufferDuration);
                     activeSources.push(source);
                 }
-                time += duration;
+                currentTrackTime += realDuration;
             });
             
-            const totalDuration = time - audioCtx.currentTime;
             timeoutId = setTimeout(() => {
                 stop();
-            }, totalDuration * 1000);
+            }, totalRealDuration * 1000);
+        }).catch(err => {
+            console.error(err);
+            stop();
+            alert("Erro ao carregar os áudios do Moodle.");
         });
         
         function stop() {
@@ -3432,7 +3732,10 @@
                         let kind = 'major';
                         let kindText = type;
 
-                        if (type === 'maj7') kind = 'major-seventh';
+                        if (type === 'maj7' || type === 'Maj7') {
+                            kind = 'major-seventh';
+                            kindText = 'maj7';
+                        }
                         else if (type === '9') kind = 'dominant-ninth';
                         else if (type === '7b9') {
                             kind = 'dominant';
@@ -3442,8 +3745,12 @@
                             kindText = 'm7(b5)';
                         } else if (type === 'm7') {
                             kind = 'minor-seventh';
-                        } else if (type === 'dim7') {
+                        } else if (type === 'm(maj7)' || type === 'mMaj7') {
+                            kind = 'major-minor';
+                            kindText = 'm(maj7)';
+                        } else if (type === 'dim7' || type === 'dim') {
                             kind = 'diminished-seventh';
+                            kindText = 'dim';
                         }
 
                         xml += `      <harmony><root><root-step>${step}</root-step>${alter !== '0' ? `<root-alter>${alter}</root-alter>` : ''}</root><kind text="${kindText}">${kind}</kind></harmony>\n`;
